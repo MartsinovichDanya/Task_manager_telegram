@@ -25,7 +25,7 @@ class UserModel:
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO users 
                           (user_name, tg_id, boss) 
-                          VALUES (?,?,?,?)''',
+                          VALUES (?,?,?)''',
                        (user_name, tg_id, boss))
         cursor.close()
         self.connection.commit()
