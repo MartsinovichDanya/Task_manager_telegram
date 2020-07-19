@@ -19,6 +19,7 @@ def echo(bot, update):
 
 
 def start(bot, update):
+    print(update.message.from_user.id)
     update.message.reply_text(
         'Привет, я Эхо-бот. Я буду повторять за вами!',
         reply_markup=markup
