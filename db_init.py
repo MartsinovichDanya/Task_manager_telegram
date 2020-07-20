@@ -7,7 +7,7 @@ def init_tm_db():
     um = UserModel(db.get_connection())
     um.init_table()
     um.insert(394406731, 'Danya')
-    um.insert(1027909953, 'Maxim', boss=True)
+    um.insert(1027909953, 'Maksim', boss=True)
 
 
 init_tm_db()
