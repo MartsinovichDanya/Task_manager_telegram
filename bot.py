@@ -224,6 +224,8 @@ def start(bot, update):
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
+    print(str(tg_id))
+
     # Левый чувак
     if not um.get(tg_id):
         update.message.reply_text('Вас нет в нашей базе данных.', reply_markup=markup)

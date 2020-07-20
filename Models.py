@@ -16,7 +16,7 @@ class UserModel:
         cursor = self.connection.cursor()
         cursor.execute('''UPDATE users SET 
                             boss = ?
-                            WHERE id = ?''', (True, str(tg_id)))
+                            WHERE id = ?''', (True, str(tg_id),))
         cursor.close()
         self.connection.commit()
 
@@ -25,13 +25,13 @@ class UserModel:
         cursor.execute('''INSERT INTO users 
                           (tg_id, user_name, boss) 
                           VALUES (?,?,?)''',
-                       (tg_id, user_name, boss))
+                       (tg_id, user_name, boss, ))
         cursor.close()
         self.connection.commit()
 
     def get(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE id = ?", (str(tg_id)))
+        cursor.execute("SELECT * FROM users WHERE id = ?", (str(tg_id),))
         row = cursor.fetchone()
         if not row:
             return False
@@ -39,7 +39,7 @@ class UserModel:
 
     def delete(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM users WHERE id = ?''', (str(tg_id)))
+        cursor.execute('''DELETE FROM users WHERE id = ?''', (str(tg_id),))
         cursor.close()
         self.connection.commit()
 
