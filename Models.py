@@ -178,4 +178,3 @@ class ProjectModel:
         cursor.execute('''DELETE FROM projects WHERE id = ?''', (str(id)))
         cursor.close()
         self.connection.commit()
-

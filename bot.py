@@ -213,9 +213,25 @@ TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 
+from DB import DB
+from Models import UserModel
+
+db = DB('tm.db')
+
 
 def start(bot, update):
-    update.message.reply_text('Вас приветствует командный Таскменеджер. В качестве теста нажмите: \n 1 - Вы босс \n 2 - Вы сотрудник', reply_markup=markup)
+    um = UserModel(db.get_connection())
+    tg_id = update.message.from_user.id
+
+    # Левый чувак
+    if not um.get(tg_id):
+        update.message.reply_text('Вас нет в нашей базе данных.', reply_markup=markup)
+    # Босс
+    elif um.get(tg_id)[2]:
+        update.message.reply_text('Добро пожаловать, Босс!', reply_markup=markup)
+    # Сотрудник
+    else:
+        update.message.reply_text('Добро пожаловать!', reply_markup=markup)
 
 
 def close_keyboard(bot, update):
