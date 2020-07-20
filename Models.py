@@ -5,40 +5,41 @@ class UserModel:
     def init_table(self):
         cursor = self.connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS users 
-                            (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                            (id INTEGER PRIMARY KEY, 
                              user_name VARCHAR(50),
-                             tg_id INTEGER,
                              boss BOOL
                              )''')
         cursor.close()
         self.connection.commit()
 
-    def make_boss(self, user_id):
+    def make_boss(self, tg_id):
         cursor = self.connection.cursor()
         cursor.execute('''UPDATE users SET 
                             boss = ?
-                            WHERE id = ?''', (True, str(user_id)))
+                            WHERE id = ?''', (True, str(tg_id)))
         cursor.close()
         self.connection.commit()
 
-    def insert(self, user_name, tg_id, boss=False):
+    def insert(self, tg_id, user_name, boss=False):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO users 
-                          (user_name, tg_id, boss) 
+                          (tg_id, user_name, boss) 
                           VALUES (?,?,?)''',
-                       (user_name, tg_id, boss))
+                       (tg_id, user_name, boss))
         cursor.close()
         self.connection.commit()
 
-    def get(self, user_id):
+    def get(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE id = ?", (str(user_id)))
+        cursor.execute("SELECT * FROM users WHERE id = ?", (str(tg_id)))
         row = cursor.fetchone()
+        if not row:
+            return False
         return row
 
-    def delete(self, user_id):
+    def delete(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM users WHERE id = ?''', (str(user_id)))
+        cursor.execute('''DELETE FROM users WHERE id = ?''', (str(tg_id)))
         cursor.close()
         self.connection.commit()
 
@@ -50,26 +51,25 @@ class EmployeeModel:
     def init_table(self):
         cursor = self.connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS staff 
-                                    (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                                    (id INTEGER PRIMARY KEY, 
                                      name VARCHAR(50),
-                                     tg_id INTEGER,
                                      project_id INTEGER
                                      )''')
         cursor.close()
         self.connection.commit()
 
-    def insert(self, name, tg_id, project_id):
+    def insert(self, tg_id, name, project_id):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO staff
-                                  (name, tg_id, project_id) 
+                                  (tg_id, name, project_id) 
                                   VALUES (?,?,?)''',
-                       (name, tg_id, project_id))
+                       (tg_id, name, project_id))
         cursor.close()
         self.connection.commit()
 
-    def get(self, user_id):
+    def get(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM staff WHERE id = ?", (str(user_id)))
+        cursor.execute("SELECT * FROM staff WHERE id = ?", (str(tg_id)))
         row = cursor.fetchone()
         return row
 
@@ -79,9 +79,9 @@ class EmployeeModel:
         rows = cursor.fetchall()
         return rows
 
-    def delete(self, user_id):
+    def delete(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM staff WHERE id = ?''', (str(user_id)))
+        cursor.execute('''DELETE FROM staff WHERE id = ?''', (str(tg_id)))
         cursor.close()
         self.connection.commit()
 
