@@ -58,8 +58,8 @@ employee_markup = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboar
 # Регистрируем обработчик команды "start" в диспетчере
 dp.add_handler(CommandHandler("start", start))
 dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), edit))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), edit))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_preview))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_preview))
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
