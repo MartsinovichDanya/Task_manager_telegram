@@ -158,6 +158,12 @@ class ProjectModel:
         cursor.close()
         self.connection.commit()
 
+    def get_id(self, name):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM projects WHERE name = ?", (name,))
+        row = cursor.fetchone()
+        return row[0]
+
     def get_all(self):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM projects")
