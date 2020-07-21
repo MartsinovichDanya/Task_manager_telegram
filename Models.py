@@ -63,25 +63,25 @@ class EmployeeModel:
         cursor.execute('''INSERT INTO staff
                                   (id, name, project_id) 
                                   VALUES (?,?,?)''',
-                       (tg_id, name, project_id))
+                       (tg_id, name, project_id, ))
         cursor.close()
         self.connection.commit()
 
     def get(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM staff WHERE id = ?", (str(tg_id)))
+        cursor.execute("SELECT * FROM staff WHERE id = ?", (str(tg_id), ))
         row = cursor.fetchone()
         return row
 
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM staff WHERE project_id = ?", (str(project_id)))
+        cursor.execute("SELECT * FROM staff WHERE project_id = ?", (str(project_id), ))
         rows = cursor.fetchall()
         return rows
 
     def delete(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM staff WHERE id = ?''', (str(tg_id)))
+        cursor.execute('''DELETE FROM staff WHERE id = ?''', (str(tg_id), ))
         cursor.close()
         self.connection.commit()
 
