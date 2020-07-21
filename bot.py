@@ -29,11 +29,15 @@ def edit(bot, update):
     update.message.reply_text('Редактирование', reply_markup=boss_markup2)
 
 
+def project_names(bot, update):
+    update.message.reply_text('Список проектов: 1) TEST, 2)...', reply_markup=boss_markup3)
+
+
 def project_preview(bot, update):
-    update.message.reply_text('Просмотр по проектам', reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text('Название проекта: TEST', reply_markup=ReplyKeyboardRemove())
 
 
-def employee_preview(bot, update):
+def employee_names(bot, update):
     update.message.reply_text('Просмотр по сотрудникам', reply_markup=ReplyKeyboardRemove())
 
 
@@ -45,8 +49,10 @@ dp = updater.dispatcher
 boss_reply_keyboard1 = [['Просмотр по проектам', 'Просмотр по сотрудникам', 'Редактирование']]
 boss_reply_keyboard2 = [['Добавить проект', 'Добавить задачу', 'Добавить сотрудника'],
                         ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника']]
+boss_reply_keyboard3 = [['1']]
 boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
 boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
+boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
 
 # Клавиатура сотрудника
 employee_reply_keyboard1 = [['Просмотр']]
@@ -58,8 +64,9 @@ employee_markup = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboar
 # Регистрируем обработчик команды "start" в диспетчере
 dp.add_handler(CommandHandler("start", start))
 dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_preview))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_preview))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
+dp.add_handler(MessageHandler(Filters.regex('1'), project_preview))
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
