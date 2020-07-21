@@ -1,4 +1,4 @@
-from Models import UserModel, TaskModel, ProjectModel
+from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 from DB import DB
 
 
@@ -16,6 +16,10 @@ def init_tm_db():
     tm = TaskModel(db.get_connection())
     tm.init_table()
     tm.insert('test_1', 'tttteeeessssttt', 394406731, pm.get_id('TEST'))
+
+    em = EmployeeModel(db.get_connection())
+    em.init_table()
+    em.insert(394406731, 'Danya', pm.get_id('TEST'))
 
 
 init_tm_db()

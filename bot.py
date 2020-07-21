@@ -2,7 +2,7 @@ from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 from DB import DB
-from Models import UserModel
+from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
@@ -34,7 +34,17 @@ def project_names(bot, update):
 
 
 def project_preview(bot, update):
-    update.message.reply_text('<b>Название проекта:</b> TEST', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+    update.message.reply_text('Просмотр по проектам', reply_markup=ReplyKeyboardRemove())
+    tm = TaskModel(db.get_connection())
+    pm = ProjectModel(db.get_connection())
+    em = EmployeeModel(db.get_connection())
+    tasks = tm.get_by_project(pm.get_id('TEST'))
+
+    for task in tasks:
+        update.message.reply_text(f'''{task[1]}
+                                        Описание: {task[2]}
+                                        Исполнитель: {em.get(task[3])[1]}
+                                        Статус: {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove())
 
 
 def employee_names(bot, update):
