@@ -30,11 +30,11 @@ def edit(bot, update):
 
 
 def project_names(bot, update):
-    update.message.reply_text('Список проектов: 1) TEST, 2)...', reply_markup=boss_markup3)
+    update.message.reply_text('<b>Список проектов:</b> 1) TEST, 2)... 3)...', reply_markup=boss_markup3, parse_mode='HTML')
 
 
 def project_preview(bot, update):
-    update.message.reply_text('Название проекта: TEST', reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text('<b>Название проекта:</b> TEST', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
 def employee_names(bot, update):
