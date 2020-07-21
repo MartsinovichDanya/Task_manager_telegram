@@ -153,7 +153,7 @@ class ProjectModel:
         cursor = self.connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS projects
                                     (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                     name VARCHAR(50),
+                                     name VARCHAR(50)
                                      )''')
         cursor.close()
         self.connection.commit()
