@@ -230,7 +230,7 @@ def start(bot, update):
         update.message.reply_text('Вас нет в нашей базе данных.', reply_markup=markup)
     # Босс
     elif um.get(tg_id)[2]:
-        update.message.reply_text('Добро пожаловать, Босс!', reply_markup=markup)
+        update.message.reply_text('Добро пожаловать, Босс!', reply_markup=boss_markup)
     # Сотрудник
     else:
         update.message.reply_text('Добро пожаловать!', reply_markup=markup)
@@ -250,13 +250,22 @@ updater = Updater(TOKEN)
 dp = updater.dispatcher
 
 reply_keyboard = [['закрыть клавиатуру', 'начать']]
+boss_reply_keyboard1 = [['Просмотр'], ['Закрыть клавиатуру']]
+boss_reply_keyboard2 = [['Добавить проект', 'Добавить задачу', 'Добавить сотрудника'],
+                        ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника'],
+                        ['Закрыть клавиатуру']]
+
+employee_reply_keyboard1 = [['Просмотр'], ['Закрыть клавиатуру']]
+employee_reply_keyboard2 = [['Выбрать задачу'], ['Закрыть клавиатуру']]
+employee_reply_keyboard3 = [['Выполнено'], ['Закрыть клавиатуру']]
 
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
+boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
+boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
 
 # Регистрируем обработчик команды "start" в диспетчере
-dp.add_handler(CommandHandler('start', start))
-dp.add_handler(MessageHandler(Filters.regex('закрыть клавиатуру'), close_keyboard))
 dp.add_handler(MessageHandler(Filters.regex('начать'), start))
+dp.add_handler(MessageHandler(Filters.regex('закрыть клавиатуру'), close_keyboard))
 
 # Создаём обработчик текстовых сообщений типа Filters.text
 text_handler = MessageHandler(Filters.text, echo)

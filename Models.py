@@ -23,7 +23,7 @@ class UserModel:
     def insert(self, tg_id, user_name, boss=False):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO users 
-                          (tg_id, user_name, boss) 
+                          (id, user_name, boss) 
                           VALUES (?,?,?)''',
                        (tg_id, user_name, boss, ))
         cursor.close()
@@ -61,7 +61,7 @@ class EmployeeModel:
     def insert(self, tg_id, name, project_id):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO staff
-                                  (tg_id, name, project_id) 
+                                  (id, name, project_id) 
                                   VALUES (?,?,?)''',
                        (tg_id, name, project_id))
         cursor.close()
