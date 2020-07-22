@@ -22,7 +22,7 @@ def start(bot, update):
         update.message.reply_text('Добро пожаловать, Босс!', reply_markup=boss_markup1)
     # Сотрудник
     else:
-        update.message.reply_text('Добро пожаловать!', reply_markup=employee_markup)
+        update.message.reply_text('Добро пожаловать!', reply_markup=employee_markup1)
 
 
 def edit(bot, update):
@@ -34,20 +34,25 @@ def project_names(bot, update):
 
 
 def project_preview(bot, update):
-    update.message.reply_text('Просмотр по проектам', reply_markup=ReplyKeyboardRemove())
+    # update.message.reply_text('Просмотр по проектам', reply_markup=ReplyKeyboardRemove())
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     tasks = tm.get_by_project(pm.get_id('TEST'))
 
     for task in tasks:
-        update.message.reply_text(f'''{task[1]}
-                                        Описание: {task[2]}
-                                        Исполнитель: {em.get(task[3])[1]}
-                                        Статус: {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove())
+        update.message.reply_text(f'''
+<b>Задача:</b><b><u>{task[1]}</u></b>
+<b>Описание:</b> {task[2]}
+<b>Исполнитель:</b> {em.get(task[3])[1]}
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
 def employee_names(bot, update):
+    update.message.reply_text('<b>Список исполнителей:</b> 1) Danya, 2)... 3)...', reply_markup=employee_markup3, parse_mode='HTML')
+
+
+def employee_preview(bot, update):
     update.message.reply_text('Просмотр по сотрудникам', reply_markup=ReplyKeyboardRemove())
 
 
@@ -66,9 +71,11 @@ boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False
 
 # Клавиатура сотрудника
 employee_reply_keyboard1 = [['Просмотр']]
-employee_reply_keyboard2 = [['Выбрать задачу']]
-employee_reply_keyboard3 = [['Выполнено']]
-employee_markup = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
+employee_reply_keyboard2 = [['Выбрать задачу', 'Выполнено']]
+employee_reply_keyboard3 = [['1']]
+employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
+employee_markup2 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
+employee_markup3 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
 
 
 # Регистрируем обработчик команды "start" в диспетчере
