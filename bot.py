@@ -60,7 +60,6 @@ def employee_preview(bot, update):
         update.message.reply_text(f'''
     <b>Задача:</b><b><u>{task[1]}</u></b>
     <b>Описание:</b> {task[2]}
-    <b>Исполнитель:</b> {em.get(task[3])[1]}
     <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
