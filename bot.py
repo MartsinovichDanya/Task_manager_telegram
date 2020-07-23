@@ -9,6 +9,8 @@ from keyboards import create_main_boss_keyboard, create_edit_boss_keyboard, crea
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
 
+is_boss = False
+
 
 def start(bot, update):
     um = UserModel(db.get_connection())
@@ -22,17 +24,18 @@ def start(bot, update):
     # Босс
     elif um.get(tg_id)[2]:
         update.message.reply_text('Добро пожаловать, Босс!', reply_markup=create_main_boss_keyboard())
+        is_boss = True
     # Сотрудник
     else:
         update.message.reply_text('Добро пожаловать!', reply_markup=employee_markup1)
 
 
 def edit(bot, update):
-    update.message.reply_text('Редактирование', reply_markup=boss_markup2)
+    update.message.reply_text('Редактирование', reply_markup=create_edit_boss_keyboard())
 
 
 def project_names(bot, update):
-    update.message.reply_text('<b>Список проектов:</b> 1) TEST, 2)... 3)...', reply_markup=boss_markup3, parse_mode='HTML')
+    update.message.reply_text('<b>Список проектов:</b> 1) TEST, 2)... 3)...', reply_markup=create_projects_boss_keyboard(db), parse_mode='HTML')
 
 
 def project_preview(bot, update):
@@ -75,8 +78,8 @@ boss_reply_keyboard2 = [['Добавить проект', 'Добавить за
                         ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника']]
 boss_reply_keyboard3 = [['1']]
 # boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
-boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
-boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
+# boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
+# boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
 
 # Клавиатура сотрудника
 employee_reply_keyboard1 = [['Просмотр']]
@@ -88,12 +91,22 @@ employee_markup3 = ReplyKeyboardMarkup(employee_reply_keyboard3, one_time_keyboa
 
 
 # Регистрируем обработчик команды "start" в диспетчере
-dp.add_handler(CommandHandler("start", start))
-dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
+# dp.add_handler(CommandHandler("start", start))
+# dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
+# dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
+# dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
 # dp.add_handler(MessageHandler(Filters.regex('1'), project_preview))
-dp.add_handler(MessageHandler(Filters.regex('1'), employee_preview))
+
+
+if is_boss:
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
+    dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
+    dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
+    dp.add_handler(MessageHandler(Filters.regex('1'), project_preview))
+else:
+
+    dp.add_handler(MessageHandler(Filters.regex('1'), employee_preview))
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
