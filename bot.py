@@ -4,6 +4,8 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
+from keyboards import create_main_boss_keyboard, create_edit_boss_keyboard, create_projects_boss_keyboard
+
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
 
@@ -19,7 +21,7 @@ def start(bot, update):
         update.message.reply_text('Вас нет в нашей базе данных.', reply_markup=ReplyKeyboardRemove())
     # Босс
     elif um.get(tg_id)[2]:
-        update.message.reply_text('Добро пожаловать, Босс!', reply_markup=boss_markup1)
+        update.message.reply_text('Добро пожаловать, Босс!', reply_markup=create_main_boss_keyboard())
     # Сотрудник
     else:
         update.message.reply_text('Добро пожаловать!', reply_markup=employee_markup1)
@@ -68,11 +70,11 @@ updater = Updater(TOKEN)
 dp = updater.dispatcher
 
 # Клавиатура Босса
-boss_reply_keyboard1 = [['Просмотр по проектам', 'Просмотр по сотрудникам', 'Редактирование']]
+# boss_reply_keyboard1 = [['Просмотр по проектам', 'Просмотр по сотрудникам', 'Редактирование']]
 boss_reply_keyboard2 = [['Добавить проект', 'Добавить задачу', 'Добавить сотрудника'],
                         ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника']]
 boss_reply_keyboard3 = [['1']]
-boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
+# boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
 boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
 boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
 
