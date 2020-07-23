@@ -120,25 +120,25 @@ class TaskModel:
 
     def get(self, id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (str(id)))
+        cursor.execute("SELECT * FROM tasks WHERE id = ?", (str(id), ))
         row = cursor.fetchone()
         return row
 
     def delete(self, id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM tasks WHERE id = ?''', (str(id)))
+        cursor.execute('''DELETE FROM tasks WHERE id = ?''', (str(id), ))
         cursor.close()
         self.connection.commit()
 
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id)))
+        cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id), ))
         rows = cursor.fetchall()
         return rows
 
     def get_by_emp(self, emp_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE emp_id = ?", (str(emp_id)))
+        cursor.execute("SELECT * FROM tasks WHERE emp_id = ?", (str(emp_id), ))
         rows = cursor.fetchall()
         return rows
 
