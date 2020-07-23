@@ -12,10 +12,12 @@ def init_tm_db():
     pm = ProjectModel(db.get_connection())
     pm.init_table()
     pm.insert('TEST')
+    pm.insert('TEST1')
 
     tm = TaskModel(db.get_connection())
     tm.init_table()
     tm.insert('test_1', 'tttteeeessssttt', 394406731, pm.get_id('TEST'))
+    tm.insert('test_2', 'ttsdfsdfsdfsftteeeessssttt', 394406731, pm.get_id('TEST1'))
 
     em = EmployeeModel(db.get_connection())
     em.init_table()
