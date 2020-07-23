@@ -18,8 +18,10 @@ def create_edit_boss_keyboard():
     return boss_markup2
 
 
-def create_projects_boss_keyboard():
-    boss_reply_keyboard3 = [['Проект1', 'Проект2', 'Проект3']]
+def create_boss_keyboard3(db):
+    pm = ProjectModel(db.get_connection())
+    projects = [el[1] for el in pm.get_all()]
+    boss_reply_keyboard3 = [projects]
     boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
     return boss_markup3
 
