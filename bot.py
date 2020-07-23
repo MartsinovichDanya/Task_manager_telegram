@@ -34,7 +34,6 @@ def project_names(bot, update):
 
 
 def project_preview(bot, update):
-    # update.message.reply_text('Просмотр по проектам', reply_markup=ReplyKeyboardRemove())
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
@@ -53,7 +52,16 @@ def employee_names(bot, update):
 
 
 def employee_preview(bot, update):
-    update.message.reply_text('Просмотр по сотрудникам', reply_markup=ReplyKeyboardRemove())
+    tm = TaskModel(db.get_connection())
+    em = EmployeeModel(db.get_connection())
+    tasks = tm.get_by_emp(em.get_id('Danya'))
+
+    for task in tasks:
+        update.message.reply_text(f'''
+    <b>Задача:</b><b><u>{task[1]}</u></b>
+    <b>Описание:</b> {task[2]}
+    <b>Исполнитель:</b> {em.get(task[3])[1]}
+    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
 updater = Updater(TOKEN)

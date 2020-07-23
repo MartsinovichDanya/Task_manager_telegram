@@ -73,6 +73,12 @@ class EmployeeModel:
         row = cursor.fetchone()
         return row
 
+    def get_id(self, name):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM staff WHERE name = ?", (name,))
+        row = cursor.fetchone()
+        return row[0]
+
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM staff WHERE project_id = ?", (str(project_id), ))
