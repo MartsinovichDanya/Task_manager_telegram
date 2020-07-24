@@ -61,7 +61,7 @@ class EmployeeModel:
     def insert(self, tg_id, name, project_id):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO staff
-                                  (id, name, project_id) 
+                                  (id, name, projects) 
                                   VALUES (?,?,?)''',
                        (tg_id, name, project_id, ))
         cursor.close()

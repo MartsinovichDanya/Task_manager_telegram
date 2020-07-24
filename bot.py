@@ -13,6 +13,7 @@ is_boss = False
 
 
 def start(bot, update):
+    global is_boss
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
@@ -27,7 +28,7 @@ def start(bot, update):
         is_boss = True
     # Сотрудник
     else:
-        update.message.reply_text('Добро пожаловать!', reply_markup=employee_markup1)
+        update.message.reply_text('Добро пожаловать!', reply_markup=ReplyKeyboardRemove())
 
 
 def edit(bot, update):
@@ -53,7 +54,7 @@ def project_preview(bot, update):
 
 
 def employee_names(bot, update):
-    update.message.reply_text('<b>Список исполнителей:</b> 1) Danya, 2)... 3)...', reply_markup=employee_markup3, parse_mode='HTML')
+    update.message.reply_text('<b>Список исполнителей:</b> 1) Danya, 2)... 3)...', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
 def employee_preview(bot, update):
@@ -68,46 +69,28 @@ def employee_preview(bot, update):
     <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
+def callback_method(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
 
 # Клавиатура Босса
-# boss_reply_keyboard1 = [['Просмотр по проектам', 'Просмотр по сотрудникам', 'Редактирование']]
-boss_reply_keyboard2 = [['Добавить проект', 'Добавить задачу', 'Добавить сотрудника'],
-                        ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника']]
-boss_reply_keyboard3 = [['1']]
-# boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
-# boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
-# boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
 
 # Клавиатура сотрудника
-employee_reply_keyboard1 = [['Просмотр']]
-employee_reply_keyboard2 = [['Выбрать задачу', 'Выполнено']]
-employee_reply_keyboard3 = [['1']]
-employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
-employee_markup2 = ReplyKeyboardMarkup(employee_reply_keyboard2, one_time_keyboard=False)
-employee_markup3 = ReplyKeyboardMarkup(employee_reply_keyboard3, one_time_keyboard=False)
 
-dp.add_handler(CommandHandler("start", start))
+# обработчики для босса ю ноу блин чортомба
 
-if is_boss:
-    # обработчики для босса ю ноу блин чортомба
-    dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
-    dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
-    dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
-    dp.add_handler(MessageHandler(Filters.regex('*project names'), project_preview))
-else:
-    # обработчики для сотрудника нахрен
-    dp.add_handler(MessageHandler(Filters.regex('1'), employee_preview))
+
+buttons = ['Start', 'Settings', 'Back']
+markup = ReplyKeyboardMarkup.from_column(buttons)
+dp.add_handler(MessageHandler(Filters.text(buttons), callback_method))
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
 
 # Ждём завершения приложения при нажатии клавиш Ctrl+C
 updater.idle()
-
-
-
-
-
