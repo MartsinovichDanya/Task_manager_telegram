@@ -21,7 +21,7 @@ def init_tm_db():
 
     em = EmployeeModel(db.get_connection())
     em.init_table()
-    em.insert(394406731, 'Danya', pm.get_id('TEST'))
+    em.insert(394406731, 'Danya', str(pm.get_id('TEST')))
 
 
 init_tm_db()

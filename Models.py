@@ -53,7 +53,7 @@ class EmployeeModel:
         cursor.execute('''CREATE TABLE IF NOT EXISTS staff 
                                     (id INTEGER PRIMARY KEY, 
                                      name VARCHAR(50),
-                                     project_id INTEGER
+                                     projects VARCHAR(200)
                                      )''')
         cursor.close()
         self.connection.commit()
@@ -81,9 +81,23 @@ class EmployeeModel:
 
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM staff WHERE project_id = ?", (str(project_id), ))
+        cursor.execute("SELECT * FROM staff WHERE project_id IN projects", (str(project_id), ))
         rows = cursor.fetchall()
         return rows
+
+    def add_project(self, tg_id, project_id):
+        projects = self.get(tg_id)[2]
+        projects += str(project_id) + '-'
+
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE staff SET projects = ? WHERE id = ?", (projects, tg_id,))
+
+    def del_project(self, tg_id, project_id):
+        projects = self.get(tg_id)[2]
+        projects = '-'.join([p for p in projects.split('-') if p != str(project_id)])
+
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE staff SET projects = ? WHERE id = ?", (projects, tg_id,))
 
     def delete(self, tg_id):
         cursor = self.connection.cursor()
