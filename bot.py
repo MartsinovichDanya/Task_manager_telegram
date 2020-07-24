@@ -89,23 +89,16 @@ employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboa
 employee_markup2 = ReplyKeyboardMarkup(employee_reply_keyboard2, one_time_keyboard=False)
 employee_markup3 = ReplyKeyboardMarkup(employee_reply_keyboard3, one_time_keyboard=False)
 
-
-# Регистрируем обработчик команды "start" в диспетчере
-# dp.add_handler(CommandHandler("start", start))
-# dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
-# dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
-# dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
-# dp.add_handler(MessageHandler(Filters.regex('1'), project_preview))
-
+dp.add_handler(CommandHandler("start", start))
 
 if is_boss:
-    dp.add_handler(CommandHandler("start", start))
+    # обработчики для босса ю ноу блин чортомба
     dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
     dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
     dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
-    dp.add_handler(MessageHandler(Filters.regex('1'), project_preview))
+    dp.add_handler(MessageHandler(Filters.regex('*project names'), project_preview))
 else:
-
+    # обработчики для сотрудника нахрен
     dp.add_handler(MessageHandler(Filters.regex('1'), employee_preview))
 
 # Запускаем цикл приема и обработки сообщений
