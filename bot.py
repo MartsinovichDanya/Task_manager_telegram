@@ -36,7 +36,7 @@ def edit(bot, update):
 
 
 def project_names(bot, update):
-    update.message.reply_text('<b>Список проектов:</b> 1) TEST, 2)... 3)...', reply_markup=create_projects_boss_keyboard(db), parse_mode='HTML')
+    update.message.reply_text('<b>Список проектов</b>', reply_markup=create_projects_boss_keyboard(db), parse_mode='HTML')
 
 
 def project_preview(bot, update):
@@ -114,6 +114,12 @@ dp.add_handler(CommandHandler("start", start))
 dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
 dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
 dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
+dp.add_handler(MessageHandler(Filters.regex('Добавить проект'), add_project))
+dp.add_handler(MessageHandler(Filters.regex('Добавить задачу'), add_task))
+dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудника'), add_employee))
+dp.add_handler(MessageHandler(Filters.regex('Удалить проект'), delete_project))
+dp.add_handler(MessageHandler(Filters.regex('Удалить задачу'), delete_task))
+dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника'), delete_employee))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), edit))
