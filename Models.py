@@ -73,6 +73,12 @@ class EmployeeModel:
         row = cursor.fetchone()
         return row
 
+    def get_all(self):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM staff")
+        rows = cursor.fetchall()
+        return rows
+
     def get_id(self, name):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM staff WHERE name = ?", (name,))

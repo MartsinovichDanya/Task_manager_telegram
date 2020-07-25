@@ -37,6 +37,25 @@ def create_projects_boss_keyboard(db):
     return boss_markup3
 
 
+def create_employee_boss_keyboard(db):
+    em = EmployeeModel(db.get_connection())
+    staff = [el[1] for el in em.get_all()]
+
+    boss_reply_keyboard4 = []
+
+    temp = []
+    for emp in staff:
+        temp.append(emp)
+        if len(temp) == 4:
+            boss_reply_keyboard4.append(temp)
+            temp = []
+    if temp:
+        boss_reply_keyboard4.append(temp)
+
+    boss_markup4 = ReplyKeyboardMarkup(boss_reply_keyboard4, one_time_keyboard=False)
+    return boss_markup4
+
+
 # Клавиатура сотрудника
 def create_preview_employee_keyboard():
     employee_reply_keyboard1 = [['Просмотр задач']]
