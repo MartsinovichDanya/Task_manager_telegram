@@ -69,6 +69,36 @@ def employee_preview(bot, update):
     <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
+def add_project(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
+def add_task(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
+def add_employee(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
+def delete_project(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
+def delete_task(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
+def delete_employee(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+
+
 def callback_method(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
@@ -78,16 +108,23 @@ updater = Updater(TOKEN)
 
 dp = updater.dispatcher
 
+dp.add_handler(CommandHandler("start", start))
+
 # Клавиатура Босса
+dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
 
 # Клавиатура сотрудника
+dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), edit))
+dp.add_handler(MessageHandler(Filters.regex('Выполнено'), edit))
 
-# обработчики для босса ю ноу блин чортомба
-
-
-buttons = ['Start', 'Settings', 'Back']
-markup = ReplyKeyboardMarkup.from_column(buttons)
-dp.add_handler(MessageHandler(Filters.text(buttons), callback_method))
+# Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
+test_buttons = ['Start', 'Settings', 'Back']
+test_markup = ReplyKeyboardMarkup.from_column(test_buttons)
+handler = MessageHandler(Filters.text(test_buttons), callback_method)
+dp.add_handler(handler)
+dp.remove_handler(handler)
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
