@@ -8,6 +8,7 @@ def init_tm_db():
     um.init_table()
     um.insert(394406731, 'Danya')
     um.insert(1027909953, 'Maksim', boss=True)
+    um.insert(1027909953, 'Maksik loh')
 
     pm = ProjectModel(db.get_connection())
     pm.init_table()
@@ -22,6 +23,7 @@ def init_tm_db():
     em = EmployeeModel(db.get_connection())
     em.init_table()
     em.insert(394406731, 'Danya', str(pm.get_id('TEST')))
+    em.insert(1027909953, 'Maksik loh', str(pm.get_id('TEST')))
 
 
 init_tm_db()
