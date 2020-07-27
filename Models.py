@@ -37,6 +37,12 @@ class UserModel:
             return False
         return row
 
+    def get_all(self):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM users")
+        rows = cursor.fetchall()
+        return rows
+
     def delete(self, tg_id):
         cursor = self.connection.cursor()
         cursor.execute('''DELETE FROM users WHERE id = ?''', (str(tg_id),))
@@ -58,6 +64,14 @@ class EmployeeModel:
         cursor.close()
         self.connection.commit()
 
+    def auto_update(self):
+        um = UserModel(self.connection)
+        users = um.get_all()
+
+        for u in users:
+            if not u[2] and not self.get(u[0]):
+                self.insert(u[0], u[1], '')
+
     def insert(self, tg_id, name, project_id):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO staff
@@ -71,6 +85,8 @@ class EmployeeModel:
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM staff WHERE id = ?", (str(tg_id), ))
         row = cursor.fetchone()
+        if not row:
+            return False
         return row
 
     def get_all(self):
