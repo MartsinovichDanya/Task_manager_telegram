@@ -10,12 +10,15 @@ from keyboards import create_employee_boss_keyboard
 
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
-
-is_boss = False
+is_add_project = False
+is_add_task = False
+is_add_employee = False
+is_delete_project = False
+is_delete_task = False
+is_delete_employee = False
 
 
 def start(bot, update):
-    global is_boss
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
@@ -71,7 +74,9 @@ def employee_preview(bot, update):
     <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
-def add_project(bot, update):
+def write_add_project(bot, update):
+    global is_add_project
+    is_add_project = True
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
     name = ''  # получить от пользователя
@@ -80,7 +85,9 @@ def add_project(bot, update):
     pm.insert(name)
 
 
-def add_task(bot, update):
+def write_add_task(bot, update):
+    global is_add_task
+    is_add_task = True
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
     name, description = '', ''  # получить от пользователя
@@ -90,7 +97,9 @@ def add_task(bot, update):
     tm.insert(name, description, emp_id, project_id)
 
 
-def add_employee(bot, update):
+def write_add_employee(bot, update):
+    global is_add_employee
+    is_add_employee = True
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
     name = ''  # получить от пользователя
@@ -103,7 +112,9 @@ def add_employee(bot, update):
     em.auto_update()
 
 
-def delete_project(bot, update):
+def write_delete_project(bot, update):
+    global is_delete_project
+    is_delete_project = True
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
 
@@ -113,7 +124,9 @@ def delete_project(bot, update):
     pm.delete(pm.get_id(name))
 
 
-def delete_task(bot, update):
+def write_delete_task(bot, update):
+    global is_delete_task
+    is_delete_task = True
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
 
@@ -123,7 +136,9 @@ def delete_task(bot, update):
     tm.delete(id)
 
 
-def delete_employee(bot, update):
+def write_delete_employee(bot, update):
+    global is_delete_employee
+    is_delete_employee = True
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
 
@@ -138,22 +153,46 @@ def callback_method(bot, update):
                               parse_mode='HTML')
 
 
+def global_function(bot, update):
+    update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
+    if is_add_project:
+        name = update.message['text']
+        print(name, 'add proj')
+    if is_add_task:
+        params = update.message['text']
+        print(params, 'add task')
+    if is_add_employee:
+        params = update.message['text']
+        print(params, 'add employee')
+    if is_delete_project:
+        params = update.message['text']
+        print(params, 'delete proj')
+    if is_delete_task:
+        params = update.message['text']
+        print(params, 'delete task')
+    if is_delete_employee:
+        params = update.message['text']
+        print(params, 'delete emplo')
+
+
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
 
 dp.add_handler(CommandHandler("start", start))
 
+
 # Клавиатура Босса
 dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
 dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
 dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
-dp.add_handler(MessageHandler(Filters.regex('Добавить проект'), add_project))
-dp.add_handler(MessageHandler(Filters.regex('Добавить задачу'), add_task))
-dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудника'), add_employee))
-dp.add_handler(MessageHandler(Filters.regex('Удалить проект'), delete_project))
-dp.add_handler(MessageHandler(Filters.regex('Удалить задачу'), delete_task))
-dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника'), delete_employee))
+dp.add_handler(MessageHandler(Filters.regex('Добавить проект'), write_add_project))
+dp.add_handler(MessageHandler(Filters.regex('Добавить задачу'), write_add_task))
+dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудника'), write_add_employee))
+dp.add_handler(MessageHandler(Filters.regex('Удалить проект'), write_delete_project))
+dp.add_handler(MessageHandler(Filters.regex('Удалить задачу'), write_delete_task))
+dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника'), write_delete_employee))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), edit))
@@ -165,6 +204,11 @@ test_markup = ReplyKeyboardMarkup.from_column(test_buttons)
 handler = MessageHandler(Filters.text(test_buttons), callback_method)
 dp.add_handler(handler)
 dp.remove_handler(handler)
+
+# Создаём обработчик текстовых сообщений типа Filters.text
+text_handler = MessageHandler(Filters.text, global_function)
+# Регистрируем обработчик в диспетчере.
+dp.add_handler(text_handler)
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
