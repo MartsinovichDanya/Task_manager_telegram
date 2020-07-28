@@ -74,31 +74,63 @@ def employee_preview(bot, update):
 def add_project(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
+    name = ''  # получить от пользователя
+
+    pm = ProjectModel(db.get_connection())
+    pm.insert(name)
 
 
 def add_task(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
+    name, description = '', ''  # получить от пользователя
+    emp_id, project_id = 0, 0  # получить от пользователя
+
+    tm = TaskModel(db.get_connection())
+    tm.insert(name, description, emp_id, project_id)
 
 
 def add_employee(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
+    name = ''  # получить от пользователя
+    id = 0  # получить от пользователя
+
+    um = UserModel(db.get_connection())
+    um.insert(id, name)
+
+    em = EmployeeModel(db.get_connection())
+    em.auto_update()
 
 
 def delete_project(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
 
+    name = ''  # получить от пользователя
+
+    pm = ProjectModel(db.get_connection())
+    pm.delete(pm.get_id(name))
+
 
 def delete_task(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
 
+    id = 0  # получить от пользователя
+
+    tm = TaskModel(db.get_connection())
+    tm.delete(id)
+
 
 def delete_employee(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
+
+    id = 0  # получить от пользователя
+
+    em = EmployeeModel(db.get_connection())
+    em.delete(id)
 
 
 def callback_method(bot, update):
