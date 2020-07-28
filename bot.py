@@ -5,6 +5,8 @@ from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 from keyboards import create_main_boss_keyboard, create_edit_boss_keyboard, create_projects_boss_keyboard
+from keyboards import create_employee_boss_keyboard
+
 
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
@@ -54,7 +56,7 @@ def project_preview(bot, update):
 
 
 def employee_names(bot, update):
-    update.message.reply_text('<b>Список исполнителей:</b> 1) Danya, 2)... 3)...', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+    update.message.reply_text('<b>Список исполнителей</b>', reply_markup=create_employee_boss_keyboard(db), parse_mode='HTML')
 
 
 def employee_preview(bot, update):
