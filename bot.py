@@ -145,22 +145,24 @@ def global_function(bot, update):
                               parse_mode='HTML')
     if is_add_project:
         name = update.message['text']
-        print(name, 'add proj')
+        add_project(name)
     if is_add_task:
         params = update.message['text']
-        print(params, 'add task')
+        name, description, emp_id, project_id = params.split(';')
+        add_task(name, description, emp_id, project_id)
     if is_add_employee:
         params = update.message['text']
-        print(params, 'add employee')
+        name, id = params.split(';')
+        add_employee(name, id)
     if is_delete_project:
-        params = update.message['text']
-        print(params, 'delete proj')
+        name = update.message['text']
+        delete_project(name)
     if is_delete_task:
-        params = update.message['text']
-        print(params, 'delete task')
+        id = int(update.message['text'])
+        delete_task(id)
     if is_delete_employee:
-        params = update.message['text']
-        print(params, 'delete emplo')
+        id = int(update.message['text'])
+        delete_employee()
 
 
 updater = Updater(TOKEN)
