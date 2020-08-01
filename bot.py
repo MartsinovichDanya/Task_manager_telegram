@@ -7,6 +7,8 @@ from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 from keyboards import create_main_boss_keyboard, create_edit_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_employee_boss_keyboard
 
+from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
+
 
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
@@ -77,75 +79,60 @@ def employee_preview(bot, update):
 def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-    name = ''  # получить от пользователя
-
-    pm = ProjectModel(db.get_connection())
-    pm.insert(name)
+    update.message.reply_text('<i><b>Напишите название проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
 
 
 def write_add_task(bot, update):
     global is_add_task
     is_add_task = True
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-    name, description = '', ''  # получить от пользователя
-    emp_id, project_id = 0, 0  # получить от пользователя
-
-    tm = TaskModel(db.get_connection())
-    tm.insert(name, description, emp_id, project_id)
+    update.message.reply_text('<i><b>Напишите название задачи, описание, ID сотрудника, ID проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
 
 
 def write_add_employee(bot, update):
     global is_add_employee
     is_add_employee = True
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-    name = ''  # получить от пользователя
-    id = 0  # получить от пользователя
-
-    um = UserModel(db.get_connection())
-    um.insert(id, name)
-
-    em = EmployeeModel(db.get_connection())
-    em.auto_update()
+    update.message.reply_text('<i><b>Напишите имя и ID сотрудника</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
 
 
 def write_delete_project(bot, update):
     global is_delete_project
     is_delete_project = True
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-
-    name = ''  # получить от пользователя
-
-    pm = ProjectModel(db.get_connection())
-    pm.delete(pm.get_id(name))
+    update.message.reply_text('<i><b>Напишите название проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
 
 
 def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-
-    id = 0  # получить от пользователя
-
-    tm = TaskModel(db.get_connection())
-    tm.delete(id)
+    update.message.reply_text('<i><b>Напишите ID задачи</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
 
 
 def write_delete_employee(bot, update):
     global is_delete_employee
     is_delete_employee = True
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-
-    id = 0  # получить от пользователя
-
-    em = EmployeeModel(db.get_connection())
-    em.delete(id)
+    update.message.reply_text('<i><b>Напишите ID сотрудника</b></i>', reply_markup=ReplyKeyboardRemove(),
+                              parse_mode='HTML')
 
 
 def callback_method(bot, update):
