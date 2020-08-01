@@ -223,6 +223,6 @@ class ProjectModel:
 
     def delete(self, id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM projects WHERE id = ?''', (str(id)))
+        cursor.execute('''DELETE FROM projects WHERE id = ?''', (str(id),))
         cursor.close()
         self.connection.commit()
