@@ -141,28 +141,35 @@ def callback_method(bot, update):
 
 
 def global_function(bot, update):
+    global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
     if is_add_project:
         name = update.message['text']
         add_project(name)
+        is_add_project = False
     if is_add_task:
         params = update.message['text']
         name, description, emp_id, project_id = params.split(';')
         add_task(name, description, int(emp_id), int(project_id))
+        is_add_task = False
     if is_add_employee:
         params = update.message['text']
         name, id = params.split(';')
         add_employee(name, id)
+        is_add_employee = False
     if is_delete_project:
         name = update.message['text']
         delete_project(name)
+        is_delete_project = False
     if is_delete_task:
         id = int(update.message['text'])
         delete_task(id)
+        is_delete_task = False
     if is_delete_employee:
         id = int(update.message['text'])
         delete_employee(id)
+        is_delete_employee = False
 
 
 updater = Updater(TOKEN)
