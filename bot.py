@@ -162,7 +162,7 @@ def global_function(bot, update):
         delete_task(id)
     if is_delete_employee:
         id = int(update.message['text'])
-        delete_employee()
+        delete_employee(id)
 
 
 updater = Updater(TOKEN)
