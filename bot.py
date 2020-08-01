@@ -149,7 +149,7 @@ def global_function(bot, update):
     if is_add_task:
         params = update.message['text']
         name, description, emp_id, project_id = params.split(';')
-        add_task(name, description, emp_id, project_id)
+        add_task(name, description, int(emp_id), int(project_id))
     if is_add_employee:
         params = update.message['text']
         name, id = params.split(';')
