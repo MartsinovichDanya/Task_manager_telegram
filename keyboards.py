@@ -34,6 +34,7 @@ def create_projects_boss_keyboard(db):
     if temp:
         boss_reply_keyboard3.append(temp)
 
+    boss_reply_keyboard3.append(['Главное меню'])
     boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
     return boss_markup3
 
@@ -52,7 +53,7 @@ def create_employee_boss_keyboard(db):
             temp = []
     if temp:
         boss_reply_keyboard4.append(temp)
-
+    boss_reply_keyboard4.append(['Главное меню'])
     boss_markup4 = ReplyKeyboardMarkup(boss_reply_keyboard4, one_time_keyboard=False)
     return boss_markup4
 
@@ -74,3 +75,10 @@ def create_done_employee_keyboard():
     employee_reply_keyboard3 = [['Выполнено']]
     employee_markup3 = ReplyKeyboardMarkup(employee_reply_keyboard3, one_time_keyboard=False)
     return employee_markup3
+
+
+# Клавиатура возврата на главное меню
+def create_menu_keyboard():
+    menu_keyboard = [['Главное меню']]
+    menu_markup = ReplyKeyboardMarkup(menu_keyboard, one_time_keyboard=False)
+    return menu_markup

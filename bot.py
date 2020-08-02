@@ -5,7 +5,7 @@ from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 from keyboards import create_main_boss_keyboard, create_edit_boss_keyboard, create_projects_boss_keyboard
-from keyboards import create_employee_boss_keyboard
+from keyboards import create_employee_boss_keyboard, create_menu_keyboard
 
 from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
@@ -28,18 +28,18 @@ def start(bot, update):
 
     # Левый чувак
     if not um.get(tg_id):
-        update.message.reply_text('Вас нет в нашей базе данных.', reply_markup=ReplyKeyboardRemove())
+        update.message.reply_text('<b>Вас нет в нашей базе данных.</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
     # Босс
     elif um.get(tg_id)[2]:
-        update.message.reply_text('Добро пожаловать, Босс!', reply_markup=create_main_boss_keyboard())
+        update.message.reply_text('<b>Добро пожаловать, Босс!</b>', reply_markup=create_main_boss_keyboard(), parse_mode='HTML')
         is_boss = True
     # Сотрудник
     else:
-        update.message.reply_text('Добро пожаловать!', reply_markup=ReplyKeyboardRemove())
+        update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
 def edit(bot, update):
-    update.message.reply_text('Редактирование', reply_markup=create_edit_boss_keyboard())
+    update.message.reply_text('<b>Редактирование</b>', reply_markup=create_edit_boss_keyboard(), parse_mode='HTML')
 
 
 def project_names(bot, update):
@@ -79,9 +79,7 @@ def employee_preview(bot, update):
 def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>', reply_markup=ReplyKeyboardRemove(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите название проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите название проекта</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -91,7 +89,7 @@ def write_add_task(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.\nПример: задача1;описание1;имя1;проект1</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -101,42 +99,33 @@ def write_add_employee(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите имя и ID сотрудника</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите имя и ID сотрудника.\nПример: имя1;0123456789</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
 def write_delete_project(bot, update):
     global is_delete_project
     is_delete_project = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=ReplyKeyboardRemove(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите название проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
 def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=ReplyKeyboardRemove(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите ID задачи</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите ID задачи, которую Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
 def write_delete_employee(bot, update):
     global is_delete_employee
     is_delete_employee = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=ReplyKeyboardRemove(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите ID сотрудника</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
 def callback_method(bot, update):
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
