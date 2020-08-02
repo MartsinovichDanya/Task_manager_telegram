@@ -130,6 +130,9 @@ def callback_method(bot, update):
 
 
 def global_function(bot, update):
+
+    print(type(update))
+
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
