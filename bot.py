@@ -91,7 +91,7 @@ def write_add_task(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите название задачи, описание, ID сотрудника, ID проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
+    update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
 
 
@@ -189,6 +189,8 @@ dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудник
 dp.add_handler(MessageHandler(Filters.regex('Удалить проект'), write_delete_project))
 dp.add_handler(MessageHandler(Filters.regex('Удалить задачу'), write_delete_task))
 dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника'), write_delete_employee))
+
+dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), edit))

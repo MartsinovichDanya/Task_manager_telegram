@@ -13,7 +13,8 @@ def create_main_boss_keyboard():
 
 def create_edit_boss_keyboard():
     boss_reply_keyboard2 = [['Добавить проект', 'Добавить задачу', 'Добавить сотрудника'],
-                            ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника']]
+                            ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника'],
+                            ['Главное меню']]
     boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
     return boss_markup2
 
