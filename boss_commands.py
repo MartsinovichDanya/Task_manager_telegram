@@ -9,12 +9,15 @@ def add_project(name):
     pm.insert(name)
 
 
-def add_task(name, description, emp_name, project_name):
+def add_task(bot, name, description, emp_name, project_name):
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     tm = TaskModel(db.get_connection())
-    tm.insert(name, description, em.get_id(emp_name), pm.get_id(project_name))
-    em.add_project(em.get_id(emp_name), pm.get_id(project_name))
+    emp_id = em.get_id(emp_name)
+    tm.insert(name, description, emp_id, pm.get_id(project_name))
+    em.add_project(emp_id, pm.get_id(project_name))
+    bot.sendMessage(emp_id, f'''Для вас новая задача: {name}
+                                Описание: {description}''')
 
 
 def add_employee(name, id):
