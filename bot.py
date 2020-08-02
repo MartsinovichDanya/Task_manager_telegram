@@ -145,31 +145,31 @@ def global_function(bot, update):
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=ReplyKeyboardRemove(),
                               parse_mode='HTML')
     if is_add_project:
+        is_add_project = False
         name = update.message['text']
         add_project(name)
-        is_add_project = False
     if is_add_task:
+        is_add_task = False
         params = update.message['text']
         name, description, emp_name, project_name = params.split(';')
         add_task(name, description, emp_name, project_name)
-        is_add_task = False
     if is_add_employee:
+        is_add_employee = False
         params = update.message['text']
         name, id = params.split(';')
         add_employee(name, id)
-        is_add_employee = False
     if is_delete_project:
+        is_delete_project = False
         name = update.message['text']
         delete_project(name)
-        is_delete_project = False
     if is_delete_task:
+        is_delete_task = False
         id = int(update.message['text'])
         delete_task(id)
-        is_delete_task = False
     if is_delete_employee:
+        is_delete_employee = False
         name = update.message['text']
         delete_employee(name)
-        is_delete_employee = False
 
 
 updater = Updater(TOKEN)
