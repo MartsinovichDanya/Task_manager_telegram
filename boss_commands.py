@@ -37,8 +37,8 @@ def delete_task(id):
 
 def delete_employee(name):
     em = EmployeeModel(db.get_connection())
-    id = em.get_id(name)
-    em.delete(id)
+    uid = em.get_id(name)
+    em.delete(uid)
 
     um = UserModel(db.get_connection())
-    um.delete(id)
+    um.delete(uid)
