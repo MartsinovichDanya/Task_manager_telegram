@@ -150,8 +150,8 @@ def global_function(bot, update):
         is_add_project = False
     if is_add_task:
         params = update.message['text']
-        name, description, emp_id, project_id = params.split(';')
-        add_task(name, description, int(emp_id), int(project_id))
+        name, description, emp_name, project_name = params.split(';')
+        add_task(name, description, emp_name, project_name)
         is_add_task = False
     if is_add_employee:
         params = update.message['text']
@@ -167,8 +167,8 @@ def global_function(bot, update):
         delete_task(id)
         is_delete_task = False
     if is_delete_employee:
-        id = int(update.message['text'])
-        delete_employee(id)
+        name = update.message['text']
+        delete_employee(name)
         is_delete_employee = False
 
 
