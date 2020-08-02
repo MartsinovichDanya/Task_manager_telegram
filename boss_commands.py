@@ -9,9 +9,12 @@ def add_project(name):
     pm.insert(name)
 
 
-def add_task(name, description, emp_id, project_id):
+def add_task(name, description, emp_name, project_name):
+    em = EmployeeModel(db.get_connection())
+    pm = ProjectModel(db.get_connection())
     tm = TaskModel(db.get_connection())
-    tm.insert(name, description, emp_id, project_id)
+    tm.insert(name, description, em.get_id(emp_name), pm.get_id(project_name))
+    em.add_project(em.get_id(emp_name), pm.get_id(project_name))
 
 
 def add_employee(name, id):
@@ -35,3 +38,6 @@ def delete_task(id):
 def delete_employee(id):
     em = EmployeeModel(db.get_connection())
     em.delete(id)
+
+    um = UserModel(db.get_connection())
+    um.delete(id)
