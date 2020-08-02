@@ -54,7 +54,7 @@ def project_preview(bot, update):
 
     for task in tasks:
         update.message.reply_text(f'''
-<b>Задача:</b><b><u>{task[1]}</u></b>
+<b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Исполнитель:</b> {em.get(task[3])[1]}
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
@@ -71,7 +71,7 @@ def employee_preview(bot, update):
 
     for task in tasks:
         update.message.reply_text(f'''
-    <b>Задача:</b><b><u>{task[1]}</u></b>
+    <b>Задача: <u>{task[1]}</u></b>
     <b>Описание:</b> {task[2]}
     <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
@@ -87,7 +87,7 @@ def write_add_task(bot, update):
     global is_add_task
     is_add_task = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=ReplyKeyboardRemove(),
+                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.\nПример: задача1;описание1;имя1;проект1</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -97,7 +97,7 @@ def write_add_employee(bot, update):
     global is_add_employee
     is_add_employee = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=ReplyKeyboardRemove(),
+                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     update.message.reply_text('<i><b>Напишите имя и ID сотрудника.\nПример: имя1;0123456789</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
