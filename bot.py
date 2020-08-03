@@ -79,7 +79,7 @@ def employee_preview(bot, update):
 def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
-    update.message.reply_text('<i><b>Напишите название проекта</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Напишите название проекта. Запрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
