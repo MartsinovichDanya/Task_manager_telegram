@@ -4,8 +4,9 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
-from keyboards import create_main_boss_keyboard, create_edit_boss_keyboard, create_projects_boss_keyboard
-from keyboards import create_employee_boss_keyboard, create_menu_keyboard
+from keyboards import create_main_boss_keyboard
+from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
+from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 
 from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
@@ -20,6 +21,7 @@ is_delete_task = False
 is_delete_employee = False
 
 
+# Приветствие
 def start(bot, update):
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
@@ -29,21 +31,27 @@ def start(bot, update):
         update.message.reply_text('<b>Вас нет в нашей базе данных.</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
     # Босс
     elif um.get(tg_id)[2]:
-        update.message.reply_text('<b>Добро пожаловать, Босс!</b>', reply_markup=create_main_boss_keyboard(), parse_mode='HTML')
+        update.message.reply_text('<b>Добро пожаловать, Лидер команды!</b>', reply_markup=create_main_boss_keyboard(), parse_mode='HTML')
         is_boss = True
     # Сотрудник
     else:
         update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
-def edit(bot, update):
-    update.message.reply_text('<b>Редактирование</b>', reply_markup=create_edit_boss_keyboard(), parse_mode='HTML')
+# Главное меню
+def project_options(bot, update):
+    update.message.reply_text('<b>Раздел "Проекты"</b>', reply_markup=create_project_options_boss_keyboard(), parse_mode='HTML')
 
 
-def project_names(bot, update):
-    update.message.reply_text('<b>Раздел "Проекты"</b>', reply_markup=create_projects_boss_keyboard(db), parse_mode='HTML')
+def employee_options(bot, update):
+    update.message.reply_text('<b>Раздел "Сотрудники"</b>', reply_markup=create_employee_options_boss_keyboard(), parse_mode='HTML')
 
 
+def task_options(bot, update):
+    update.message.reply_text('<b>Раздел "Задачи"</b>', reply_markup=create_task_options_boss_keyboard(), parse_mode='HTML')
+
+
+# Просмотр
 def project_preview(bot, update):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
@@ -58,10 +66,6 @@ def project_preview(bot, update):
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
-def employee_names(bot, update):
-    update.message.reply_text('<b>Список исполнителей</b>', reply_markup=create_employee_boss_keyboard(db), parse_mode='HTML')
-
-
 def employee_preview(bot, update):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
@@ -74,30 +78,23 @@ def employee_preview(bot, update):
     <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
 
 
+def task_preview(bot, update):
+    tm = TaskModel(db.get_connection())
+    em = EmployeeModel(db.get_connection())
+    tasks = tm.get_by_emp(em.get_id('Danya'))
+
+    for task in tasks:
+        update.message.reply_text(f'''
+    <b>Задача: <u>{task[1]}</u></b>
+    <b>Описание:</b> {task[2]}
+    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+
+
+# Проекты
 def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
     update.message.reply_text('<i><b>Напишите название проекта. Запрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-
-
-def write_add_task(bot, update):
-    global is_add_task
-    is_add_task = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.\nПример: задача1;описание1;имя1;проект1</b></i>', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-
-
-def write_add_employee(bot, update):
-    global is_add_employee
-    is_add_employee = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите имя и ID сотрудника.\nПример: имя1;0123456789</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -108,10 +105,32 @@ def write_delete_project(bot, update):
                               parse_mode='HTML')
 
 
+# Задачи
+def write_add_task(bot, update):
+    global is_add_task
+    is_add_task = True
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+    update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.\nПример: задача1;описание1;имя1;проект1</b></i>', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
 def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
     update.message.reply_text('<i><b>Напишите ID задачи, которую Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Сотрудники
+def write_add_employee(bot, update):
+    global is_add_employee
+    is_add_employee = True
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+    update.message.reply_text('<i><b>Напишите имя и ID сотрудника.\nПример: имя1;0123456789</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -122,11 +141,13 @@ def write_delete_employee(bot, update):
                               parse_mode='HTML')
 
 
+# Тестовая функция
 def callback_method(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
+# Глобальная функция
 def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
@@ -169,25 +190,27 @@ dp.add_handler(CommandHandler("start", start))
 
 
 # Клавиатура Босса
-# dp.add_handler(MessageHandler(Filters.regex('Редактирование'), edit))
-# dp.add_handler(MessageHandler(Filters.regex('Просмотр по проектам'), project_names))
-# dp.add_handler(MessageHandler(Filters.regex('Просмотр по сотрудникам'), employee_names))
-dp.add_handler(MessageHandler(Filters.regex('Проекты'), project_names))
-dp.add_handler(MessageHandler(Filters.regex('Задачи'), employee_names))
-dp.add_handler(MessageHandler(Filters.regex('Сотрудники'), employee_names))
+dp.add_handler(MessageHandler(Filters.regex('Проекты'), project_options))
+dp.add_handler(MessageHandler(Filters.regex('Задачи'), task_options))
+dp.add_handler(MessageHandler(Filters.regex('Сотрудники'), employee_options))
 
 dp.add_handler(MessageHandler(Filters.regex('Добавить проект'), write_add_project))
-dp.add_handler(MessageHandler(Filters.regex('Добавить задачу'), write_add_task))
-dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудника'), write_add_employee))
 dp.add_handler(MessageHandler(Filters.regex('Удалить проект'), write_delete_project))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр проектов'), project_preview))
+
+dp.add_handler(MessageHandler(Filters.regex('Добавить задачу'), write_add_task))
 dp.add_handler(MessageHandler(Filters.regex('Удалить задачу'), write_delete_task))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), task_preview))
+
+dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудника'), write_add_employee))
 dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника'), write_delete_employee))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), employee_preview))
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
 # Клавиатура сотрудника
-dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), edit))
-dp.add_handler(MessageHandler(Filters.regex('Выполнено'), edit))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), callback_method))
+dp.add_handler(MessageHandler(Filters.regex('Выполнено'), callback_method))
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
 projects_list = []

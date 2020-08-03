@@ -6,18 +6,30 @@ from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 # Клавиатура Босса
 def create_main_boss_keyboard():
-    # boss_reply_keyboard1 = [['Просмотр по проектам', 'Просмотр по сотрудникам', 'Редактирование']]
     boss_reply_keyboard1 = [['Проекты', 'Задачи', 'Сотрудники']]
     boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
     return boss_markup1
 
 
-def create_edit_boss_keyboard():
-    boss_reply_keyboard2 = [['Добавить проект', 'Добавить задачу', 'Добавить сотрудника'],
-                            ['Удалить проект', 'Удалить задачу', 'Удалить сотрудника'],
+def create_project_options_boss_keyboard():
+    boss_reply_keyboard1 = [['Добавить проект', 'Удалить проект', 'Просмотр проектов'],
                             ['Главное меню']]
-    boss_markup2 = ReplyKeyboardMarkup(boss_reply_keyboard2, one_time_keyboard=False)
-    return boss_markup2
+    boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
+    return boss_markup1
+
+
+def create_employee_options_boss_keyboard():
+    boss_reply_keyboard1 = [['Добавить сотрудника', 'Удалить сотрудника', 'Просмотр сотрудников'],
+                            ['Главное меню']]
+    boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
+    return boss_markup1
+
+
+def create_task_options_boss_keyboard():
+    boss_reply_keyboard1 = [['Добавить задачу', 'Удалить задачу', 'Просмотр задач'],
+                            ['Главное меню']]
+    boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
+    return boss_markup1
 
 
 def create_projects_boss_keyboard(db):
