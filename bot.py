@@ -24,8 +24,6 @@ def start(bot, update):
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
-    print(str(tg_id))
-
     # Левый чувак
     if not um.get(tg_id):
         update.message.reply_text('<b>Вас нет в нашей базе данных.</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
@@ -130,9 +128,6 @@ def callback_method(bot, update):
 
 
 def global_function(bot, update):
-
-    print(type(update))
-
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -140,6 +135,7 @@ def global_function(bot, update):
         is_add_project = False
         name = update.message['text']
         add_project(name)
+        projects_list.append(name)
     if is_add_task:
         is_add_task = False
         params = update.message['text']
@@ -154,6 +150,7 @@ def global_function(bot, update):
         is_delete_project = False
         name = update.message['text']
         delete_project(name)
+        del projects_list[projects_list.index(name)]
     if is_delete_task:
         is_delete_task = False
         id = int(update.message['text'])
@@ -193,9 +190,9 @@ dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), edit
 dp.add_handler(MessageHandler(Filters.regex('Выполнено'), edit))
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
-test_buttons = ['Start', 'Settings', 'Back']
-test_markup = ReplyKeyboardMarkup.from_column(test_buttons)
-handler = MessageHandler(Filters.text(test_buttons), callback_method)
+projects_list = []
+projects_murkup = ReplyKeyboardMarkup.from_column(projects_list)
+handler = MessageHandler(Filters.text(projects_list), callback_method)
 dp.add_handler(handler)
 dp.remove_handler(handler)
 
