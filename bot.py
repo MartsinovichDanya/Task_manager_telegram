@@ -10,6 +10,8 @@ from keyboards import create_employee_options_boss_keyboard, create_task_options
 
 from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
+from dynamic_handlers_update import update_projects_handler
+
 
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
@@ -157,6 +159,7 @@ def global_function(bot, update):
         name = update.message['text']
         add_project(name)
         projects_list.append(name)
+        update_projects_handler(dp, projects_handler, project_preview, projects_list)
     if is_add_task:
         is_add_task = False
         params = update.message['text']
@@ -172,6 +175,7 @@ def global_function(bot, update):
         name = update.message['text']
         delete_project(name)
         del projects_list[projects_list.index(name)]
+        update_projects_handler(dp, projects_handler, project_preview, projects_list)
     if is_delete_task:
         is_delete_task = False
         id = int(update.message['text'])
@@ -215,9 +219,9 @@ dp.add_handler(MessageHandler(Filters.regex('Выполнено'), callback_meth
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
 projects_list = []
 projects_murkup = ReplyKeyboardMarkup.from_column(projects_list)
-handler = MessageHandler(Filters.text(projects_list), callback_method)
-dp.add_handler(handler)
-dp.remove_handler(handler)
+projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
+dp.add_handler(projects_handler)
+dp.remove_handler(projects_handler)
 
 # Создаём обработчик текстовых сообщений типа Filters.text
 text_handler = MessageHandler(Filters.text, global_function)
