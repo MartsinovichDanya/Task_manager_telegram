@@ -59,12 +59,11 @@ def select_project(bot, update):
                               parse_mode='HTML')
 
 
-def project_preview(bot, update):
-    update.message.reply_text(f"Просмотр задач по проекту: {update.message['text']}")
+def project_preview(update, project):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
-    tasks = tm.get_by_project(pm.get_id(update.message['text']))
+    tasks = tm.get_by_project(pm.get_id(project))
 
     for task in tasks:
         update.message.reply_text(f'''
@@ -158,19 +157,19 @@ def callback_method(bot, update):
 # Глобальная функция
 def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
-    global projects_list, projects_handler
+    global projects_list
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
+
+    if update.message['text'] in projects_list:
+        project = update.message['text']
+        update.message.reply_text(f"Просмотр задач по проекту: {project}")
+        project_preview(update, project)
     if is_add_project:
         is_add_project = False
         name = update.message['text']
         add_project(name)
         projects_list.append(name)
-        print(projects_list)
-        # update_projects_handler(dp, projects_handler, project_preview, projects_list)
-        dp.remove_handler(projects_handler)
-        projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
-        dp.add_handler(projects_handler)
     if is_add_task:
         is_add_task = False
         params = update.message['text']
@@ -186,7 +185,6 @@ def global_function(bot, update):
         name = update.message['text']
         delete_project(name)
         del projects_list[projects_list.index(name)]
-        update_projects_handler(dp, projects_handler, project_preview, projects_list)
     if is_delete_task:
         is_delete_task = False
         id = int(update.message['text'])
@@ -229,9 +227,9 @@ dp.add_handler(MessageHandler(Filters.regex('Выполнено'), callback_meth
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
 projects_list = []
-projects_murkup = ReplyKeyboardMarkup.from_column(projects_list)
-projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
-dp.add_handler(projects_handler)
+# projects_murkup = ReplyKeyboardMarkup.from_column(projects_list)
+# projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
+# dp.add_handler(projects_handler)
 # dp.remove_handler(projects_handler)
 
 # Создаём обработчик текстовых сообщений типа Filters.text
