@@ -35,7 +35,6 @@ def create_task_options_boss_keyboard():
 def create_projects_boss_keyboard(db):
     pm = ProjectModel(db.get_connection())
     projects = [el[1] for el in pm.get_all()]
-    print(projects)
     boss_reply_keyboard3 = []
 
     temp = []

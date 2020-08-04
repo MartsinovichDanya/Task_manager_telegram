@@ -4,7 +4,7 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
-from keyboards import create_main_boss_keyboard
+from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 
@@ -54,11 +54,17 @@ def task_options(bot, update):
 
 
 # Просмотр
+def select_project(bot, update):
+    update.message.reply_text('<b>Выберите проект из предложенного списка</b>', reply_markup=create_projects_boss_keyboard(db),
+                              parse_mode='HTML')
+
+
 def project_preview(bot, update):
+    update.message.reply_text(f"Просмотр задач по проекту: {update.message['text']}")
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
-    tasks = tm.get_by_project(pm.get_id('TEST'))
+    tasks = tm.get_by_project(pm.get_id(update.message['text']))
 
     for task in tasks:
         update.message.reply_text(f'''
@@ -152,6 +158,7 @@ def callback_method(bot, update):
 # Глобальная функция
 def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
+    global projects_list, projects_handler
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     if is_add_project:
@@ -159,7 +166,11 @@ def global_function(bot, update):
         name = update.message['text']
         add_project(name)
         projects_list.append(name)
-        update_projects_handler(dp, projects_handler, project_preview, projects_list)
+        print(projects_list)
+        # update_projects_handler(dp, projects_handler, project_preview, projects_list)
+        dp.remove_handler(projects_handler)
+        projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
+        dp.add_handler(projects_handler)
     if is_add_task:
         is_add_task = False
         params = update.message['text']
@@ -200,7 +211,7 @@ dp.add_handler(MessageHandler(Filters.regex('Сотрудники'), employee_op
 
 dp.add_handler(MessageHandler(Filters.regex('Добавить проект'), write_add_project))
 dp.add_handler(MessageHandler(Filters.regex('Удалить проект'), write_delete_project))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр проектов'), project_preview))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр проектов'), select_project))
 
 dp.add_handler(MessageHandler(Filters.regex('Добавить задачу'), write_add_task))
 dp.add_handler(MessageHandler(Filters.regex('Удалить задачу'), write_delete_task))
@@ -221,7 +232,7 @@ projects_list = []
 projects_murkup = ReplyKeyboardMarkup.from_column(projects_list)
 projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
 dp.add_handler(projects_handler)
-dp.remove_handler(projects_handler)
+# dp.remove_handler(projects_handler)
 
 # Создаём обработчик текстовых сообщений типа Filters.text
 text_handler = MessageHandler(Filters.text, global_function)
