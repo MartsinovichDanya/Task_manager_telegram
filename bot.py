@@ -10,7 +10,7 @@ from keyboards import create_employee_options_boss_keyboard, create_task_options
 
 from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
-from dynamic_handlers_update import update_projects_handler
+from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
 
 
 db = DB('tm.db')
@@ -168,18 +168,29 @@ def global_function(bot, update):
     if is_add_project:
         is_add_project = False
         name = update.message['text']
-        add_project(name)
-        projects_list.append(name)
+        try:
+            add_project(name)
+            projects_list.append(name)
+        except ProjectAlreadyExist:
+            update.message.reply_text("Проект уже существует")
     if is_add_task:
         is_add_task = False
         params = update.message['text']
         name, description, emp_name, project_name = params.split(';')
-        add_task(bot, name, description, emp_name, project_name)
+        try:
+            add_task(bot, name, description, emp_name, project_name)
+        except ProjectNotFound:
+            update.message.reply_text("Проект не найден")
+        except UserNotFound:
+            update.message.reply_text("Сотрудник не найден")
     if is_add_employee:
         is_add_employee = False
         params = update.message['text']
         name, id = params.split(';')
-        add_employee(name, id)
+        try:
+            add_employee(name, id)
+        except UserAlreadyExist:
+            update.message.reply_text("Пользователь уже существует")
     if is_delete_project:
         is_delete_project = False
         name = update.message['text']

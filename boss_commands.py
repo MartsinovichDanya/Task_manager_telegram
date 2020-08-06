@@ -1,11 +1,15 @@
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
+from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
+
 db = DB('tm.db')
 
 
 def add_project(name):
     pm = ProjectModel(db.get_connection())
+    if pm.get_id(name):
+        raise ProjectAlreadyExist
     pm.insert(name)
 
 
@@ -14,7 +18,12 @@ def add_task(bot, name, description, emp_name, project_name):
     pm = ProjectModel(db.get_connection())
     tm = TaskModel(db.get_connection())
     emp_id = em.get_id(emp_name)
-    tm.insert(name, description, emp_id, pm.get_id(project_name))
+    if not emp_id:
+        raise UserNotFound
+    proj_id = pm.get_id(project_name)
+    if not emp_id:
+        raise ProjectNotFound
+    tm.insert(name, description, emp_id, proj_id)
     em.add_project(emp_id, pm.get_id(project_name))
     bot.sendMessage(emp_id, f'''
 <b><u>Проект:</u> {project_name}
@@ -22,9 +31,11 @@ def add_task(bot, name, description, emp_name, project_name):
 <u>Описание задачи:</u> {description}</b>''', parse_mode='HTML')
 
 
-def add_employee(name, id):
+def add_employee(name, eid):
     um = UserModel(db.get_connection())
-    um.insert(id, name)
+    if um.get(eid):
+        raise UserAlreadyExist
+    um.insert(eid, name)
 
     em = EmployeeModel(db.get_connection())
     em.auto_update()
