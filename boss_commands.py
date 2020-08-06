@@ -15,24 +15,18 @@ def add_project(name):
 
 
 def add_task(bot, name, description, emp_name, project_name):
-    norm_emp, norm_proj = True, True
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     tm = TaskModel(db.get_connection())
     emp_id = em.get_id(emp_name)
     if not emp_id:
-        global norm_emp
-        norm_emp = False
         raise UserNotFound
     proj_id = pm.get_id(project_name)
-    if not emp_id:
-        global norm_proj
-        norm_proj = False
+    if not proj_id:
         raise ProjectNotFound
-    if norm_emp and norm_proj:
-        tm.insert(name, description, emp_id, proj_id)
-        em.add_project(emp_id, pm.get_id(project_name))
-        bot.sendMessage(emp_id, f'''
+    tm.insert(name, description, emp_id, proj_id)
+    em.add_project(emp_id, pm.get_id(project_name))
+    bot.sendMessage(emp_id, f'''
 <b><u>Проект:</u> {project_name}
 <u>Задача:</u> {name}
 <u>Описание задачи:</u> {description}</b>''', parse_mode='HTML')

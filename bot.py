@@ -80,9 +80,10 @@ def employee_preview(bot, update):
 
     for task in tasks:
         update.message.reply_text(f'''
-    <b>Задача: <u>{task[1]}</u></b>
-    <b>Описание:</b> {task[2]}
-    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Проект: <u>ЗДЕСЬ ДОЛЖНО БЫТЬ НАЗВАНИЕ ПРОЕКТА</u></b>
+<b>Задача: {task[1]}</b>
+<b>Описание:</b> {task[2]}
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def task_preview(bot, update):
