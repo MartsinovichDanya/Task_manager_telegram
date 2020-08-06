@@ -173,6 +173,7 @@ def global_function(bot, update):
             projects_list.append(name)
         except ProjectAlreadyExist:
             update.message.reply_text("Проект уже существует")
+            is_add_project = True
     if is_add_task:
         is_add_task = False
         params = update.message['text']
@@ -181,8 +182,10 @@ def global_function(bot, update):
             add_task(bot, name, description, emp_name, project_name)
         except ProjectNotFound:
             update.message.reply_text("Проект не найден")
+            is_add_task = True
         except UserNotFound:
             update.message.reply_text("Сотрудник не найден")
+            is_add_task = True
     if is_add_employee:
         is_add_employee = False
         params = update.message['text']
@@ -191,6 +194,7 @@ def global_function(bot, update):
             add_employee(name, id)
         except UserAlreadyExist:
             update.message.reply_text("Пользователь уже существует")
+            is_add_employee = True
     if is_delete_project:
         is_delete_project = False
         name = update.message['text']
