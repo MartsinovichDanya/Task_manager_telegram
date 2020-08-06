@@ -10,22 +10,29 @@ def add_project(name):
     pm = ProjectModel(db.get_connection())
     if pm.get_id(name):
         raise ProjectAlreadyExist
-    pm.insert(name)
+    else:
+        pm.insert(name)
 
 
 def add_task(bot, name, description, emp_name, project_name):
+    norm_emp, norm_proj = True, True
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     tm = TaskModel(db.get_connection())
     emp_id = em.get_id(emp_name)
     if not emp_id:
+        global norm_emp
+        norm_emp = False
         raise UserNotFound
     proj_id = pm.get_id(project_name)
     if not emp_id:
+        global norm_proj
+        norm_proj = False
         raise ProjectNotFound
-    tm.insert(name, description, emp_id, proj_id)
-    em.add_project(emp_id, pm.get_id(project_name))
-    bot.sendMessage(emp_id, f'''
+    if norm_emp and norm_proj:
+        tm.insert(name, description, emp_id, proj_id)
+        em.add_project(emp_id, pm.get_id(project_name))
+        bot.sendMessage(emp_id, f'''
 <b><u>Проект:</u> {project_name}
 <u>Задача:</u> {name}
 <u>Описание задачи:</u> {description}</b>''', parse_mode='HTML')
@@ -35,10 +42,10 @@ def add_employee(name, eid):
     um = UserModel(db.get_connection())
     if um.get(eid):
         raise UserAlreadyExist
-    um.insert(eid, name)
-
-    em = EmployeeModel(db.get_connection())
-    em.auto_update()
+    else:
+        um.insert(eid, name)
+        em = EmployeeModel(db.get_connection())
+        em.auto_update()
 
 
 def delete_project(name):
@@ -46,9 +53,9 @@ def delete_project(name):
     pm.delete(pm.get_id(name))
 
 
-def delete_task(id):
+def delete_task(tid):
     tm = TaskModel(db.get_connection())
-    tm.delete(id)
+    tm.delete(tid)
 
 
 def delete_employee(name):
