@@ -156,15 +156,21 @@ class TaskModel:
         cursor.close()
         self.connection.commit()
 
-    def get(self, id):
+    def get(self, tid):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (str(id), ))
+        cursor.execute("SELECT * FROM tasks WHERE id = ?", (str(tid), ))
         row = cursor.fetchone()
         return row
 
-    def delete(self, id):
+    def get_all(self):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM tasks WHERE id = ?''', (str(id), ))
+        cursor.execute("SELECT * FROM tasks")
+        rows = cursor.fetchall()
+        return rows
+
+    def delete(self, tid):
+        cursor = self.connection.cursor()
+        cursor.execute('''DELETE FROM tasks WHERE id = ?''', (str(tid), ))
         cursor.close()
         self.connection.commit()
 
@@ -225,8 +231,8 @@ class ProjectModel:
         cursor.close()
         self.connection.commit()
 
-    def delete(self, id):
+    def delete(self, pid):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM projects WHERE id = ?''', (str(id),))
+        cursor.execute('''DELETE FROM projects WHERE id = ?''', (str(pid),))
         cursor.close()
         self.connection.commit()

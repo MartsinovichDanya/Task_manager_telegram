@@ -17,5 +17,10 @@ def view_tm_db():
     em = EmployeeModel(db.get_connection())
     print(em.get_all())
 
+    print('-----------------------------------------------')
+
+    tm = TaskModel(db.get_connection())
+    print(tm.get_all())
+
 
 view_tm_db()
