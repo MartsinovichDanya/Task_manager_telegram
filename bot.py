@@ -70,7 +70,7 @@ def project_preview(update, project):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Исполнитель:</b> {em.get(task[3])[1]}
-<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def employee_preview(bot, update):
@@ -82,7 +82,7 @@ def employee_preview(bot, update):
         update.message.reply_text(f'''
     <b>Задача: <u>{task[1]}</u></b>
     <b>Описание:</b> {task[2]}
-    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def task_preview(bot, update):
@@ -94,7 +94,7 @@ def task_preview(bot, update):
         update.message.reply_text(f'''
     <b>Задача: <u>{task[1]}</u></b>
     <b>Описание:</b> {task[2]}
-    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 # Проекты
