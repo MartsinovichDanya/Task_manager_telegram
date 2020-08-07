@@ -54,7 +54,7 @@ def task_options(bot, update):
     update.message.reply_text('<b>Раздел "Задачи"</b>', reply_markup=create_task_options_boss_keyboard(), parse_mode='HTML')
 
 
-# Просмотр
+# Выбор проекта/сотрудника
 def select_project(bot, update):
     update.message.reply_text('<b>Выберите проект из предложенного списка</b>', reply_markup=create_projects_boss_keyboard(db),
                               parse_mode='HTML')
@@ -65,6 +65,7 @@ def select_employee(bot, update):
                               parse_mode='HTML')
 
 
+# Просмотр
 def project_preview(update, project):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
