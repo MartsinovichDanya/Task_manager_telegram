@@ -26,6 +26,13 @@ is_delete_employee = False
 
 # Приветствие
 def start(bot, update):
+    global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
+    is_add_project = False
+    is_add_task = False
+    is_add_employee = False
+    is_delete_project = False
+    is_delete_task = False
+    is_delete_employee = False
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
@@ -98,13 +105,16 @@ def employee_preview(update, employee):
 def task_preview(bot, update):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
-    tasks = tm.get_by_emp(em.get_id('Danya'))
+    pm = ProjectModel(db.get_connection())
+    tasks = tm.get_all()
 
     for task in tasks:
         update.message.reply_text(f'''
-    <b>Задача: <u>{task[1]}</u></b>
-    <b>Описание:</b> {task[2]}
-    <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Задача: <u>{task[1]}</u></b>
+<b>Проект: {pm.get_name(task[4])}</b>
+<b>Описание: {task[2]}</b>
+<b>Сотрудник: {em.get(task[3])[1]}</b>
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 # Проекты
@@ -170,7 +180,7 @@ def global_function(bot, update):
     global projects_list, employee_list
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-
+    print(projects_list)
     if update.message['text'] in projects_list and not is_delete_project:
         project = update.message['text']
         update.message.reply_text(f"Просмотр задач по проекту: {project}")
@@ -184,9 +194,9 @@ def global_function(bot, update):
     elif is_add_project:
         is_add_project = False
         name = update.message['text']
+        projects_list.append(name)
         try:
             add_project(name)
-            projects_list.append(name)
         except ProjectAlreadyExist:
             update.message.reply_text("Проект уже существует")
             is_add_project = True
