@@ -73,14 +73,15 @@ def project_preview(update, project):
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
-def employee_preview(bot, update):
+def employee_preview(update, employee):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
-    tasks = tm.get_by_emp(em.get_id('Danya'))
+    pm = ProjectModel(db.get_connection())
+    tasks = tm.get_by_emp(em.get_id(employee))
 
     for task in tasks:
         update.message.reply_text(f'''
-<b>Проект: <u>ЗДЕСЬ ДОЛЖНО БЫТЬ НАЗВАНИЕ ПРОЕКТА</u></b>
+<b>Проект: <u>{pm.get_name(task[4])}</u></b>
 <b>Задача: {task[1]}</b>
 <b>Описание:</b> {task[2]}
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
@@ -158,15 +159,21 @@ def callback_method(bot, update):
 # Глобальная функция
 def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
-    global projects_list
+    global projects_list, employee_list
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
-    if update.message['text'] in projects_list:
+    if update.message['text'] in projects_list and not is_delete_project:
         project = update.message['text']
         update.message.reply_text(f"Просмотр задач по проекту: {project}")
         project_preview(update, project)
-    if is_add_project:
+
+    elif update.message['text'] in employee_list and not is_delete_employee:
+        employee = update.message['text']
+        update.message.reply_text(f"Просмотр задач сотрудника: {employee}")
+        employee_preview(update, employee)
+
+    elif is_add_project:
         is_add_project = False
         name = update.message['text']
         try:
@@ -175,7 +182,8 @@ def global_function(bot, update):
         except ProjectAlreadyExist:
             update.message.reply_text("Проект уже существует")
             is_add_project = True
-    if is_add_task:
+
+    elif is_add_task:
         is_add_task = False
         params = update.message['text']
         name, description, emp_name, project_name = params.split(';')
@@ -187,28 +195,34 @@ def global_function(bot, update):
         except UserNotFound:
             update.message.reply_text("Сотрудник не найден")
             is_add_task = True
-    if is_add_employee:
+
+    elif is_add_employee:
         is_add_employee = False
         params = update.message['text']
         name, id = params.split(';')
         try:
             add_employee(name, id)
+            employee_list.append(name)
         except UserAlreadyExist:
             update.message.reply_text("Пользователь уже существует")
             is_add_employee = True
-    if is_delete_project:
+
+    elif is_delete_project:
         is_delete_project = False
         name = update.message['text']
         delete_project(name)
         del projects_list[projects_list.index(name)]
-    if is_delete_task:
+
+    elif is_delete_task:
         is_delete_task = False
         id = int(update.message['text'])
         delete_task(id)
-    if is_delete_employee:
+
+    elif is_delete_employee:
         is_delete_employee = False
         name = update.message['text']
         delete_employee(name)
+        del employee_list[employee_list.index(name)]
 
 
 updater = Updater(TOKEN)
@@ -243,10 +257,11 @@ dp.add_handler(MessageHandler(Filters.regex('Выполнено'), callback_meth
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
 projects_list = []
-# projects_murkup = ReplyKeyboardMarkup.from_column(projects_list)
-# projects_handler = MessageHandler(Filters.text(projects_list), project_preview)
-# dp.add_handler(projects_handler)
-# dp.remove_handler(projects_handler)
+employee_list = []
+
+em = EmployeeModel(db.get_connection())
+for e in em.get_all():
+    employee_list.append(e[1])
 
 # Создаём обработчик текстовых сообщений типа Filters.text
 text_handler = MessageHandler(Filters.text, global_function)

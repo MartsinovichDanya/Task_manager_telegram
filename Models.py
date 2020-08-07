@@ -208,6 +208,14 @@ class ProjectModel:
         cursor.close()
         self.connection.commit()
 
+    def get_name(self, pid):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM projects WHERE id = ?", (str(pid), ))
+        row = cursor.fetchone()
+        if not row:
+            return False
+        return row[0]
+
     def get_id(self, name):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM projects WHERE name = ?", (name,))
