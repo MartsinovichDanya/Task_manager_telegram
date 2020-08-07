@@ -7,6 +7,7 @@ from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
+from keyboards import create_employee_boss_keyboard
 
 from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
@@ -56,6 +57,11 @@ def task_options(bot, update):
 # Просмотр
 def select_project(bot, update):
     update.message.reply_text('<b>Выберите проект из предложенного списка</b>', reply_markup=create_projects_boss_keyboard(db),
+                              parse_mode='HTML')
+
+
+def select_employee(bot, update):
+    update.message.reply_text('<b>Выберите сотрудника из предложенного списка</b>', reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 
@@ -247,7 +253,7 @@ dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), task
 
 dp.add_handler(MessageHandler(Filters.regex('Добавить сотрудника'), write_add_employee))
 dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника'), write_delete_employee))
-dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), employee_preview))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), select_employee))
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
