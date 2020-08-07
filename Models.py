@@ -214,7 +214,7 @@ class ProjectModel:
         row = cursor.fetchone()
         if not row:
             return False
-        return row[0]
+        return row[1]
 
     def get_id(self, name):
         cursor = self.connection.cursor()
