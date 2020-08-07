@@ -83,7 +83,8 @@ def employee_preview(update, employee):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
-    tasks = tm.get_by_emp(employee)
+    eid = em.get_id(employee)
+    tasks = tm.get_by_emp(eid)
 
     for task in tasks:
         update.message.reply_text(f'''
