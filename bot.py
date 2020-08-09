@@ -226,15 +226,16 @@ def global_function(bot, update):
             is_add_employee = True
 
     elif is_delete_project:
-        tm = TaskModel(db.get_conection())
-        project_tasks = tm.get_by_project(pm.get_id(name))
-        for task in project_tasks:
-            tm.delete(task[0])
-
         is_delete_project = False
         name = update.message['text']
         delete_project(name)
         del projects_list[projects_list.index(name)]
+
+        tm = TaskModel(db.get_connection())
+        pm = ProjectModel(db.get_connection())
+        project_tasks = tm.get_by_project(pm.get_id(name))
+        for task in project_tasks:
+            tm.delete(task[0])
 
     elif is_delete_task:
         is_delete_task = False
@@ -242,15 +243,15 @@ def global_function(bot, update):
         delete_task(id)
 
     elif is_delete_employee:
-        tm = TaskModel(db.get_conection())
-        project_tasks = tm.get_by_emp(em.get_id(name))
-        for task in project_tasks:
-            tm.delete(task[0])
-
         is_delete_employee = False
         name = update.message['text']
         delete_employee(name)
         del employee_list[employee_list.index(name)]
+
+        tm = TaskModel(db.get_connection())
+        project_tasks = tm.get_by_emp(em.get_id(name))
+        for task in project_tasks:
+            tm.delete(task[0])
 
 
 updater = Updater(TOKEN)
