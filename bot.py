@@ -228,14 +228,8 @@ def global_function(bot, update):
     elif is_delete_project:
         is_delete_project = False
         name = update.message['text']
-        del projects_list[projects_list.index(name)]
-
-        tm = TaskModel(db.get_connection())
-        pm = ProjectModel(db.get_connection())
-        project_tasks = tm.get_by_project(pm.get_id(name))
-        for task in project_tasks:
-            tm.delete(task[0])
         delete_project(name)
+        del projects_list[projects_list.index(name)]
 
     elif is_delete_task:
         is_delete_task = False

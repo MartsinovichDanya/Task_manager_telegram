@@ -174,6 +174,12 @@ class TaskModel:
         cursor.close()
         self.connection.commit()
 
+    def delete_by_project(self, pid):
+        cursor = self.connection.cursor()
+        cursor.execute('''DELETE FROM tasks WHERE project_id = ?''', (str(pid),))
+        cursor.close()
+        self.connection.commit()
+
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id), ))
