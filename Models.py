@@ -178,6 +178,7 @@ class TaskModel:
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id), ))
         rows = cursor.fetchall()
+        cursor.close()
         return rows
 
     def get_by_emp(self, emp_id):
@@ -220,6 +221,7 @@ class ProjectModel:
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM projects WHERE name = ?", (name,))
         row = cursor.fetchone()
+        cursor.close()
         if not row:
             return False
         return row[0]
