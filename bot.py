@@ -146,7 +146,7 @@ def write_add_task(bot, update):
 def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
-    update.message.reply_text('<i><b>Напишите ID задачи, которую Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Напишите Имя проекта и Название задачи</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -233,8 +233,9 @@ def global_function(bot, update):
 
     elif is_delete_task:
         is_delete_task = False
-        id = int(update.message['text'])
-        delete_task(id)
+        params = update.message['text']
+        project_name, task_name = params.split(';')
+        delete_task(project_name, task_name)
 
     elif is_delete_employee:
         is_delete_employee = False

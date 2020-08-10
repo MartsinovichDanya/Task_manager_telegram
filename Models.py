@@ -168,9 +168,9 @@ class TaskModel:
         rows = cursor.fetchall()
         return rows
 
-    def delete(self, tid):
+    def delete(self, project_id, task_name):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM tasks WHERE id = ?''', (str(tid), ))
+        cursor.execute('''DELETE FROM tasks WHERE project_id = ? AND name = ?''', (str(project_id), task_name, ))
         cursor.close()
         self.connection.commit()
 
