@@ -44,7 +44,11 @@ def add_employee(name, eid):
 
 def delete_project(name):
     pm = ProjectModel(db.get_connection())
-    pm.delete(pm.get_id(name))
+    pid = pm.get_id(name)
+    pm.delete(pid)
+
+    tm = TaskModel(db.get_connection())
+    tm.delete_by_project(pid)
 
 
 def delete_task(tid):
