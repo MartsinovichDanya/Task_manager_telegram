@@ -128,7 +128,7 @@ def write_add_project(bot, update):
 def write_delete_project(bot, update):
     global is_delete_project
     is_delete_project = True
-    update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>', reply_markup=create_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
@@ -164,7 +164,7 @@ def write_add_employee(bot, update):
 def write_delete_employee(bot, update):
     global is_delete_employee
     is_delete_employee = True
-    update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>', reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 
