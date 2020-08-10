@@ -146,7 +146,10 @@ def write_add_task(bot, update):
 def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
-    update.message.reply_text('<i><b>Напишите Имя проекта и Название задачи</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+    update.message.reply_text('<i><b>Напишите название проекта и название задачи.\nПример: проект1;задача1</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -164,7 +167,7 @@ def write_add_employee(bot, update):
 def write_delete_employee(bot, update):
     global is_delete_employee
     is_delete_employee = True
-    update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>', reply_markup=create_employee_boss_keyboard(db),
+    update.message.reply_text('<i><b>Выберите имя сотрудника, которого Вы хотели бы удалить</b></i>', reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 
