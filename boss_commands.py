@@ -63,3 +63,6 @@ def delete_employee(name):
 
     um = UserModel(db.get_connection())
     um.delete(uid)
+
+    tm = TaskModel(db.get_connection())
+    tm.delete_by_emp(uid)

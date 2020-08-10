@@ -242,11 +242,6 @@ def global_function(bot, update):
         delete_employee(name)
         del employee_list[employee_list.index(name)]
 
-        tm = TaskModel(db.get_connection())
-        project_tasks = tm.get_by_emp(em.get_id(name))
-        for task in project_tasks:
-            tm.delete(task[0])
-
 
 updater = Updater(TOKEN)
 

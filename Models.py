@@ -180,6 +180,12 @@ class TaskModel:
         cursor.close()
         self.connection.commit()
 
+    def delete_by_emp(self, eid):
+        cursor = self.connection.cursor()
+        cursor.execute('''DELETE FROM tasks WHERE emp_id = ?''', (str(eid),))
+        cursor.close()
+        self.connection.commit()
+
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id), ))
