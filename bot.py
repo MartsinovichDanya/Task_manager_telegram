@@ -258,7 +258,7 @@ def global_function(bot, update):
         delete_employee(name)
         del employee_list[employee_list.index(name)]
 
-# часть сотрудника
+# часть сотрудника нахрен
 
 
 def employee_task_preview(update):
