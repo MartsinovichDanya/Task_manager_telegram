@@ -199,7 +199,15 @@ class TaskModel:
         rows = cursor.fetchall()
         return rows
 
-    def set_done(self, done, task_id):
+    def search(self, name, project):
+        cursor = self.connection.cursor()
+        cursor.execute('''SELECT FROM tasks WHERE project_id = ? AND name = ?''', (str(project), name,))
+        result = cursor.fetchone()
+        if result:
+            return result[0]
+        return False
+
+    def set_done(self, task_id, done=True):
         cursor = self.connection.cursor()
         cursor.execute('''UPDATE tasks SET 
                                 done = ?

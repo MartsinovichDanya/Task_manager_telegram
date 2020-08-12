@@ -9,7 +9,7 @@ from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 from keyboards import create_employee_boss_keyboard
 
-from boss_commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
+from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
 
@@ -25,7 +25,7 @@ is_delete_employee = False
 
 
 # Приветствие
-def start(bot, update):
+def start(update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     is_add_project = False
     is_add_task = False
@@ -38,10 +38,12 @@ def start(bot, update):
 
     # Левый чувак
     if not um.get(tg_id):
-        update.message.reply_text('<b>Вас нет в нашей базе данных.</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+        update.message.reply_text('<b>Вас нет в нашей базе данных.</b>', reply_markup=ReplyKeyboardRemove(),
+                                  parse_mode='HTML')
     # Босс
     elif um.get(tg_id)[2]:
-        update.message.reply_text('<b>Добро пожаловать, Лидер команды!</b>', reply_markup=create_main_boss_keyboard(), parse_mode='HTML')
+        update.message.reply_text('<b>Добро пожаловать, Лидер команды!</b>', reply_markup=create_main_boss_keyboard(),
+                                  parse_mode='HTML')
         is_boss = True
     # Сотрудник
     else:
@@ -49,26 +51,31 @@ def start(bot, update):
 
 
 # Главное меню
-def project_options(bot, update):
-    update.message.reply_text('<b>Раздел "Проекты"</b>', reply_markup=create_project_options_boss_keyboard(), parse_mode='HTML')
-
-
-def employee_options(bot, update):
-    update.message.reply_text('<b>Раздел "Сотрудники"</b>', reply_markup=create_employee_options_boss_keyboard(), parse_mode='HTML')
-
-
-def task_options(bot, update):
-    update.message.reply_text('<b>Раздел "Задачи"</b>', reply_markup=create_task_options_boss_keyboard(), parse_mode='HTML')
-
-
-# Выбор проекта/сотрудника
-def select_project(bot, update):
-    update.message.reply_text('<b>Выберите проект из предложенного списка</b>', reply_markup=create_projects_boss_keyboard(db),
+def project_options(update):
+    update.message.reply_text('<b>Раздел "Проекты"</b>', reply_markup=create_project_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
-def select_employee(bot, update):
-    update.message.reply_text('<b>Выберите сотрудника из предложенного списка</b>', reply_markup=create_employee_boss_keyboard(db),
+def employee_options(update):
+    update.message.reply_text('<b>Раздел "Сотрудники"</b>', reply_markup=create_employee_options_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+def task_options(update):
+    update.message.reply_text('<b>Раздел "Задачи"</b>', reply_markup=create_task_options_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+# Выбор проекта/сотрудника
+def select_project(update):
+    update.message.reply_text('<b>Выберите проект из предложенного списка</b>',
+                              reply_markup=create_projects_boss_keyboard(db),
+                              parse_mode='HTML')
+
+
+def select_employee(update):
+    update.message.reply_text('<b>Выберите сотрудника из предложенного списка</b>',
+                              reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 
@@ -102,7 +109,7 @@ def employee_preview(update, employee):
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
-def task_preview(bot, update):
+def task_preview(update):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
@@ -118,58 +125,66 @@ def task_preview(bot, update):
 
 
 # Проекты
-def write_add_project(bot, update):
+def write_add_project(update):
     global is_add_project
     is_add_project = True
-    update.message.reply_text('<i><b>Напишите название проекта. Запрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
+    update.message.reply_text(
+        '<i><b>Напишите название проекта. Запрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>',
+        reply_markup=create_menu_keyboard(),
+        parse_mode='HTML')
 
 
-def write_delete_project(bot, update):
+def write_delete_project(update):
     global is_delete_project
     is_delete_project = True
-    update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>', reply_markup=create_projects_boss_keyboard(db),
+    update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>',
+                              reply_markup=create_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
 # Задачи
-def write_add_task(bot, update):
+def write_add_task(update):
     global is_add_task
     is_add_task = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.\nПример: задача1;описание1;имя1;проект1</b></i>', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
+    update.message.reply_text(
+        '''<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.
+        Пример: задача1;описание1;имя1;проект1</b></i>''', reply_markup=create_menu_keyboard(),
+        parse_mode='HTML')
 
 
-def write_delete_task(bot, update):
+def write_delete_task(update):
     global is_delete_task
     is_delete_task = True
-    update.message.reply_text('<i><b>Напишите Имя проекта и Название задачи</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Напишите Имя проекта и Название задачи</b></i>',
+                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
 # Сотрудники
-def write_add_employee(bot, update):
+def write_add_employee(update):
     global is_add_employee
     is_add_employee = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Напишите имя и ID сотрудника.\nПример: имя1;0123456789</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Напишите имя и ID сотрудника.\nПример: имя1;0123456789</b></i>',
+                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
-def write_delete_employee(bot, update):
+def write_delete_employee(update):
     global is_delete_employee
     is_delete_employee = True
-    update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>', reply_markup=create_employee_boss_keyboard(db),
+    update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>',
+                              reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 
 # Тестовая функция
-def callback_method(bot, update):
+def callback_method(update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
@@ -217,9 +232,9 @@ def global_function(bot, update):
     elif is_add_employee:
         is_add_employee = False
         params = update.message['text']
-        name, id = params.split(';')
+        name, uid = params.split(';')
         try:
-            add_employee(name, id)
+            add_employee(name, uid)
             employee_list.append(name)
         except UserAlreadyExist:
             update.message.reply_text("Пользователь уже существует")
@@ -242,6 +257,21 @@ def global_function(bot, update):
         name = update.message['text']
         delete_employee(name)
         del employee_list[employee_list.index(name)]
+
+# часть сотрудника
+
+
+def employee_task_preview(update):
+    tm = TaskModel(db.get_connection())
+    pm = ProjectModel(db.get_connection())
+    tasks = tm.get_by_emp(update.message.from_user.id)
+
+    for task in tasks:
+        update.message.reply_text(f'''
+<b>Задача: <u>{task[1]}</u></b>
+<b>Описание:</b> {task[2]}
+<b>Проект: {pm.get_name(task[4])}</b>
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 updater = Updater(TOKEN)

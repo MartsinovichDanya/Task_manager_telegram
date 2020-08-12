@@ -1,9 +1,11 @@
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
-from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
+from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
 db = DB('tm.db')
+
+# boss functions
 
 
 def add_project(name):
@@ -69,3 +71,15 @@ def delete_employee(name):
 
     tm = TaskModel(db.get_connection())
     tm.delete_by_emp(uid)
+
+
+# employee functions
+
+
+def set_done(name, project):
+    tm = TaskModel(db.get_connection())
+    tid = tm.search(name, project)
+    if tid:
+        tm.set_done(tid)
+    else:
+        raise TaskNotFound

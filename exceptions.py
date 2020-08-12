@@ -12,3 +12,7 @@ class ProjectAlreadyExist(Exception):
 
 class UserAlreadyExist(Exception):
     pass
+
+
+class TaskNotFound(Exception):
+    pass
