@@ -71,8 +71,8 @@ def create_employee_boss_keyboard(db):
 
 
 # Клавиатура сотрудника
-def create_preview_employee_keyboard():
-    employee_reply_keyboard1 = [['Просмотр задач']]
+def create_main_employee_keyboard():
+    employee_reply_keyboard1 = [['Просмотр задач', 'Выполнено']]
     employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
     return employee_markup1
 
