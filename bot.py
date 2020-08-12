@@ -8,6 +8,7 @@ from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 from keyboards import create_employee_boss_keyboard
+from keyboards import create_main_employee_keyboard, create_tasks_employee_keyboard, create_done_employee_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
 
@@ -25,7 +26,7 @@ is_delete_employee = False
 
 
 # Приветствие
-def start(update):
+def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     is_add_project = False
     is_add_task = False
@@ -51,29 +52,29 @@ def start(update):
 
 
 # Главное меню
-def project_options(update):
+def project_options(bot, update):
     update.message.reply_text('<b>Раздел "Проекты"</b>', reply_markup=create_project_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
-def employee_options(update):
+def employee_options(bot, update):
     update.message.reply_text('<b>Раздел "Сотрудники"</b>', reply_markup=create_employee_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
-def task_options(update):
+def task_options(bot, update):
     update.message.reply_text('<b>Раздел "Задачи"</b>', reply_markup=create_task_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
 # Выбор проекта/сотрудника
-def select_project(update):
+def select_project(bot, update):
     update.message.reply_text('<b>Выберите проект из предложенного списка</b>',
                               reply_markup=create_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
-def select_employee(update):
+def select_employee(bot, update):
     update.message.reply_text('<b>Выберите сотрудника из предложенного списка</b>',
                               reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
@@ -109,7 +110,7 @@ def employee_preview(update, employee):
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
-def task_preview(update):
+def task_preview(bot, update):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
@@ -125,7 +126,7 @@ def task_preview(update):
 
 
 # Проекты
-def write_add_project(update):
+def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
     update.message.reply_text(
@@ -134,7 +135,7 @@ def write_add_project(update):
         parse_mode='HTML')
 
 
-def write_delete_project(update):
+def write_delete_project(bot, update):
     global is_delete_project
     is_delete_project = True
     update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>',
@@ -143,7 +144,7 @@ def write_delete_project(update):
 
 
 # Задачи
-def write_add_task(update):
+def write_add_task(bot, update):
     global is_add_task
     is_add_task = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
@@ -155,7 +156,7 @@ def write_add_task(update):
         parse_mode='HTML')
 
 
-def write_delete_task(update):
+def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
     update.message.reply_text('<i><b>Напишите Имя проекта и Название задачи</b></i>',
@@ -164,7 +165,7 @@ def write_delete_task(update):
 
 
 # Сотрудники
-def write_add_employee(update):
+def write_add_employee(bot, update):
     global is_add_employee
     is_add_employee = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
@@ -175,7 +176,7 @@ def write_add_employee(update):
                               parse_mode='HTML')
 
 
-def write_delete_employee(update):
+def write_delete_employee(bot, update):
     global is_delete_employee
     is_delete_employee = True
     update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>',
@@ -184,7 +185,7 @@ def write_delete_employee(update):
 
 
 # Тестовая функция
-def callback_method(update):
+def callback_method(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
@@ -261,7 +262,7 @@ def global_function(bot, update):
 # часть сотрудника нахрен
 
 
-def employee_task_preview(update):
+def employee_task_preview(bot, update):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     tasks = tm.get_by_emp(update.message.from_user.id)
@@ -271,7 +272,7 @@ def employee_task_preview(update):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Проект: {pm.get_name(task[4])}</b>
-<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
 
 updater = Updater(TOKEN)
