@@ -259,7 +259,11 @@ def global_function(bot, update):
         delete_employee(name)
         del employee_list[employee_list.index(name)]
 
+
 # часть сотрудника нахрен
+def done_task(bot, update):
+    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
 
 
 def employee_task_preview(bot, update):
@@ -303,7 +307,7 @@ dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), callback_method))
-dp.add_handler(MessageHandler(Filters.regex('Выполнено'), callback_method))
+dp.add_handler(MessageHandler(Filters.regex('Выполнено'), done_task))
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
 projects_list = []
