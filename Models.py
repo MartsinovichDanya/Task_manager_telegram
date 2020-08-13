@@ -201,7 +201,7 @@ class TaskModel:
 
     def search(self, name, project):
         cursor = self.connection.cursor()
-        cursor.execute('''SELECT FROM tasks WHERE project_id = ? AND name = ?''', (str(project), name,))
+        cursor.execute('''SELECT * FROM tasks WHERE project_id = ? AND name = ?''', (str(project), name,))
         result = cursor.fetchone()
         if result:
             return result[0]
