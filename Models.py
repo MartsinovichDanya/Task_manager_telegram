@@ -37,6 +37,14 @@ class UserModel:
             return False
         return row
 
+    def get_boss_id(self):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE boss = ?", (True,))
+        row = cursor.fetchone()
+        if not row:
+            return False
+        return row
+
     def get_all(self):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM users")

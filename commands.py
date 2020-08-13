@@ -80,9 +80,19 @@ def delete_employee(name):
 def set_done(bot, name, project):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
+    um = UserModel(db.get_connection())
+
     project_id = pm.get_id(project)
     tid = tm.search(name, project_id)
+    task = tm.get(tid)
+    boss_id = um.get_boss_id()
+
     if tid:
         tm.set_done(tid)
+        bot.sendMessage(boss_id, f'''
+        Задача выполнена!
+        <b><u>Проект:</u> {pm.get_name(task[4])}
+        <u>Задача:</u> {task[1]}
+        <u>Описание задачи:</u> {task[2]}</b>''', parse_mode='HTML')
     else:
         raise TaskNotFound
