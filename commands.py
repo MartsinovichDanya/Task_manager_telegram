@@ -78,7 +78,9 @@ def delete_employee(name):
 
 def set_done(bot, name, project):
     tm = TaskModel(db.get_connection())
-    tid = tm.search(name, project)
+    pm = ProjectModel(db.get_connection())
+    project_id = pm.get_id(project)
+    tid = tm.search(name, project_id)
     if tid:
         tm.set_done(tid)
     else:
