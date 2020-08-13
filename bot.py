@@ -270,7 +270,7 @@ def global_function(bot, update):
         try:
             set_done(bot, name, project)
         except TaskNotFound:
-            update.message.reply_text("Задача не найден")
+            update.message.reply_text("Задача или проект не найден")
             is_done_task = True
 
 
