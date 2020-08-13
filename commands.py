@@ -29,6 +29,7 @@ def add_task(bot, name, description, emp_name, project_name):
     tm.insert(name, description, emp_id, proj_id)
     em.add_project(emp_id, pm.get_id(project_name))
     bot.sendMessage(emp_id, f'''
+У Вас новая задача
 <b><u>Проект:</u> {project_name}
 <u>Задача:</u> {name}
 <u>Описание задачи:</u> {description}</b>''', parse_mode='HTML')
