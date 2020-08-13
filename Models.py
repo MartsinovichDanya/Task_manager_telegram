@@ -43,7 +43,7 @@ class UserModel:
         row = cursor.fetchone()
         if not row:
             return False
-        return row
+        return row[0]
 
     def get_all(self):
         cursor = self.connection.cursor()
