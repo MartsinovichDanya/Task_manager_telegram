@@ -84,11 +84,11 @@ def set_done(bot, name, project):
 
     project_id = pm.get_id(project)
     tid = tm.search(name, project_id)
-    task = tm.get(tid)
     boss_id = um.get_boss_id()
 
     if tid:
         tm.set_done(tid)
+        task = tm.get(tid)
         bot.sendMessage(boss_id, f'''
         Задача выполнена!
         <b><u>Проект:</u> {pm.get_name(task[4])}
