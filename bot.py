@@ -51,7 +51,7 @@ def start(bot, update):
         is_boss = True
     # Сотрудник
     else:
-        update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+        update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
 
 # Главное меню
@@ -274,9 +274,14 @@ def global_function(bot, update):
             is_done_task = True
 
 
-# часть сотрудника нахрен
+# Часть сотрудника нахрен
 def select_done_task(bot, update):
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
+    global is_done_task
+    is_done_task = True
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+    update.message.reply_text('<i><b>Название задачи и название проекта</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
