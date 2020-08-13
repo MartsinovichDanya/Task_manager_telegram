@@ -76,7 +76,7 @@ def delete_employee(name):
 # employee functions
 
 
-def set_done(name, project):
+def set_done(bot, name, project):
     tm = TaskModel(db.get_connection())
     tid = tm.search(name, project)
     if tid:

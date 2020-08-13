@@ -10,9 +10,9 @@ from keyboards import create_employee_options_boss_keyboard, create_task_options
 from keyboards import create_employee_boss_keyboard
 from keyboards import create_main_employee_keyboard, create_tasks_employee_keyboard, create_done_employee_keyboard
 
-from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee
+from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 
-from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
+from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
 
 db = DB('tm.db')
@@ -23,17 +23,20 @@ is_add_employee = False
 is_delete_project = False
 is_delete_task = False
 is_delete_employee = False
+is_done_task = False
 
 
 # Приветствие
 def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
+    global is_done_task
     is_add_project = False
     is_add_task = False
     is_add_employee = False
     is_delete_project = False
     is_delete_task = False
     is_delete_employee = False
+    is_done_task = False
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
@@ -194,6 +197,7 @@ def callback_method(bot, update):
 def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global projects_list, employee_list
+    global is_done_task
     update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     print(projects_list)
@@ -259,9 +263,19 @@ def global_function(bot, update):
         delete_employee(name)
         del employee_list[employee_list.index(name)]
 
+    elif is_done_task:
+        is_done_task = False
+        params = update.message['text']
+        name, project = params.split(';')
+        try:
+            set_done(bot, name, project)
+        except TaskNotFound:
+            update.message.reply_text("Задача не найден")
+            is_done_task = True
+
 
 # часть сотрудника нахрен
-def done_task(bot, update):
+def select_done_task(bot, update):
     update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
@@ -307,7 +321,7 @@ dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), callback_method))
-dp.add_handler(MessageHandler(Filters.regex('Выполнено'), done_task))
+dp.add_handler(MessageHandler(Filters.regex('Выполнено'), select_done_task))
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
 projects_list = []
