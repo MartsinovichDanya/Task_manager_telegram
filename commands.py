@@ -90,9 +90,9 @@ def set_done(bot, name, project):
         tm.set_done(tid)
         task = tm.get(tid)
         bot.sendMessage(boss_id, f'''
-        Задача выполнена!
-        <b><u>Проект:</u> {pm.get_name(task[4])}
-        <u>Задача:</u> {task[1]}
-        <u>Описание задачи:</u> {task[2]}</b>''', parse_mode='HTML')
+Задача выполнена
+<b><u>Проект:</u> {pm.get_name(task[4])}
+<u>Задача:</u> {task[1]}
+<u>Описание задачи:</u> {task[2]}</b>''', parse_mode='HTML')
     else:
         raise TaskNotFound
