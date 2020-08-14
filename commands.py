@@ -81,6 +81,7 @@ def set_done(bot, name, project):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     um = UserModel(db.get_connection())
+    em = EmployeeModel(db.get_connection())
 
     project_id = pm.get_id(project)
     tid = tm.search(name, project_id)
@@ -90,8 +91,9 @@ def set_done(bot, name, project):
         tm.set_done(tid)
         task = tm.get(tid)
         bot.sendMessage(boss_id, f'''
-Задача выполнена
-<b><u>Проект:</u> {pm.get_name(task[4])}
+<b>Задача выполнена
+<u>Исполнитель</u>: {em.get(task[3])[1]}
+<u>Проект:</u> {pm.get_name(task[4])}
 <u>Задача:</u> {task[1]}
 <u>Описание задачи:</u> {task[2]}</b>''', parse_mode='HTML')
     else:

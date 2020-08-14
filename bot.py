@@ -1,5 +1,5 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import ReplyKeyboardRemove
 
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
@@ -8,7 +8,7 @@ from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 from keyboards import create_employee_boss_keyboard
-from keyboards import create_main_employee_keyboard, create_tasks_employee_keyboard, create_done_employee_keyboard
+from keyboards import create_main_employee_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 
@@ -42,13 +42,12 @@ def start(bot, update):
 
     # Левый чувак
     if not um.get(tg_id):
-        update.message.reply_text('<b>Вас нет в нашей базе данных.</b>', reply_markup=ReplyKeyboardRemove(),
+        update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>', reply_markup=ReplyKeyboardRemove(),
                                   parse_mode='HTML')
     # Босс
     elif um.get(tg_id)[2]:
         update.message.reply_text('<b>Добро пожаловать, Лидер команды!</b>', reply_markup=create_main_boss_keyboard(),
                                   parse_mode='HTML')
-        is_boss = True
     # Сотрудник
     else:
         update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
@@ -133,7 +132,7 @@ def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
     update.message.reply_text(
-        '<i><b>Напишите название проекта. Запрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>',
+        '<i><b>Напишите название проекта.\nЗапрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>',
         reply_markup=create_menu_keyboard(),
         parse_mode='HTML')
 
@@ -153,10 +152,9 @@ def write_add_task(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text(
-        '''<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.
-        Пример: задача1;описание1;имя1;проект1</b></i>''', reply_markup=create_menu_keyboard(),
-        parse_mode='HTML')
+    update.message.reply_text('''
+<i><b>Напишите название задачи, описание, имя сотрудника, название проекта.
+Пример: задача1;описание1;имя1;проект1</b></i>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def write_delete_task(bot, update):
@@ -198,7 +196,7 @@ def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global projects_list, employee_list
     global is_done_task
-    update.message.reply_text('<i><b>Глобал ю ноу блин</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     print(projects_list)
     if update.message['text'] in projects_list and not is_delete_project:

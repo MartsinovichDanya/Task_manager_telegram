@@ -1,7 +1,5 @@
-from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
-from DB import DB
-from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
+from telegram import ReplyKeyboardMarkup
+from Models import ProjectModel, EmployeeModel
 
 
 # Клавиатура Босса
@@ -75,12 +73,6 @@ def create_main_employee_keyboard():
     employee_reply_keyboard1 = [['Просмотр задач', 'Выполнено']]
     employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
     return employee_markup1
-
-
-def create_tasks_employee_keyboard():
-    employee_reply_keyboard2 = [['Задача1', 'Задача2', 'Задача3']]
-    employee_markup2 = ReplyKeyboardMarkup(employee_reply_keyboard2, one_time_keyboard=False)
-    return employee_markup2
 
 
 def create_done_employee_keyboard():
