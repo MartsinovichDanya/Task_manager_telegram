@@ -27,6 +27,8 @@ is_done_task = False
 is_proj_add_task = False
 is_proj_delete_task = False
 
+latest_project = ''
+
 
 # Приветствие
 def start(bot, update):
@@ -220,12 +222,14 @@ def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global projects_list, employee_list
     global is_done_task
+    global latest_project, is_proj_add_task, is_proj_delete_task
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     if update.message['text'] in projects_list and not is_delete_project:
         project = update.message['text']
         update.message.reply_text(f"Просмотр задач по проекту: {project}")
         project_preview(update, project)
+        latest_project = update.message['text']
 
     elif update.message['text'] in employee_list and not is_delete_employee:
         employee = update.message['text']
@@ -244,8 +248,15 @@ def global_function(bot, update):
 
     elif is_add_task:
         is_add_task = False
-        params = update.message['text']
-        name, description, emp_name, project_name = params.split(';')
+        if is_proj_add_task:
+            is_proj_add_task = False
+            params = update.message['text']
+            name, description, emp_name = params.split(';')
+            project_name = latest_project
+        else:
+            params = update.message['text']
+            name, description, emp_name, project_name = params.split(';')
+
         try:
             add_task(bot, name, description, emp_name, project_name)
         except ProjectNotFound:
