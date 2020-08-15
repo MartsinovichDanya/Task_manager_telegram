@@ -294,7 +294,6 @@ def global_function(bot, update):
             params = update.message['text']
             project_name, task_name = params.split(';')
         delete_task(project_name, task_name)
-        print(is_proj_delete_task)
 
     elif is_delete_employee:
         is_delete_employee = False
