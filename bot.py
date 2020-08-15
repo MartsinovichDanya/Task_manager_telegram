@@ -173,8 +173,8 @@ def write_delete_task(bot, update):
 
 # Задачи в проекте
 def write_proj_add_task(bot, update):
-    global is_proj_add_task
-    is_proj_add_task = True
+    global is_proj_add_task, is_add_task
+    is_proj_add_task, is_add_task = True, True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -184,8 +184,8 @@ def write_proj_add_task(bot, update):
 
 
 def write_proj_delete_task(bot, update):
-    global is_proj_delete_task
-    is_proj_delete_task = True
+    global is_proj_delete_task, is_delete_task
+    is_proj_delete_task, is_delete_task = True, True
     update.message.reply_text('<i><b>Напишите название задачи, которую Вы хотели бы удалить в данном проекте</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
