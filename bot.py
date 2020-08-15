@@ -286,9 +286,15 @@ def global_function(bot, update):
 
     elif is_delete_task:
         is_delete_task = False
-        params = update.message['text']
-        project_name, task_name = params.split(';')
+        if is_proj_delete_task:
+            is_proj_delete_task = False
+            task_name = update.message['text']
+            project_name = latest_project
+        else:
+            params = update.message['text']
+            project_name, task_name = params.split(';')
         delete_task(project_name, task_name)
+        print(is_proj_delete_task)
 
     elif is_delete_employee:
         is_delete_employee = False
