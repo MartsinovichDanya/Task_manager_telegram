@@ -24,12 +24,14 @@ is_delete_project = False
 is_delete_task = False
 is_delete_employee = False
 is_done_task = False
+is_proj_add_task = False
+is_proj_delete_task = False
 
 
 # Приветствие
 def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
-    global is_done_task
+    global is_done_task, is_proj_add_task, is_proj_delete_task
     is_add_project = False
     is_add_task = False
     is_add_employee = False
@@ -37,6 +39,8 @@ def start(bot, update):
     is_delete_task = False
     is_delete_employee = False
     is_done_task = False
+    is_proj_add_task = False
+    is_proj_delete_task = False
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
@@ -160,7 +164,27 @@ def write_add_task(bot, update):
 def write_delete_task(bot, update):
     global is_delete_task
     is_delete_task = True
-    update.message.reply_text('<i><b>Напишите Имя проекта и Название задачи</b></i>',
+    update.message.reply_text('<i><b>Напишите название проекта и название задачи</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Задачи в проекте
+def write_proj_add_task(bot, update):
+    global is_proj_add_task
+    is_proj_add_task = True
+    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+    update.message.reply_text('''
+<i><b>Напишите название задачи, описание задачи, имя сотрудника.
+Пример: задача1;описание1;имя1;проект1</b></i>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+
+
+def write_proj_delete_task(bot, update):
+    global is_proj_delete_task
+    is_proj_delete_task = True
+    update.message.reply_text('<i><b>Напишите название задачи, которую Вы хотели бы удалить в данном проекте</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
@@ -321,6 +345,9 @@ dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), select_employee))
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
+
+dp.add_handler(MessageHandler(Filters.regex('Добавить задачу в проект'), write_proj_add_task))
+dp.add_handler(MessageHandler(Filters.regex('Удалить задачу из проекта'), write_proj_delete_task))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), callback_method))
