@@ -228,13 +228,15 @@ def global_function(bot, update):
                               parse_mode='HTML')
     if update.message['text'] in projects_list and not is_delete_project:
         project = update.message['text']
-        update.message.reply_text(f"Просмотр задач по проекту: {project}")
+        update.message.reply_text(f"<i><b>Просмотр задач по проекту: {project}</b></i>", reply_markup=create_tasks_in_project_boss_keyboard(),
+                              parse_mode='HTML')
         project_preview(update, project)
         latest_project = update.message['text']
 
     elif update.message['text'] in employee_list and not is_delete_employee:
         employee = update.message['text']
-        update.message.reply_text(f"Просмотр задач сотрудника: {employee}")
+        update.message.reply_text(f"<i><b>Просмотр задач сотрудника: {employee}</b></i>", reply_markup=create_tasks_in_project_boss_keyboard(),
+                              parse_mode='HTML')
         employee_preview(update, employee)
 
     elif is_add_project:
