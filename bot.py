@@ -198,7 +198,6 @@ def global_function(bot, update):
     global is_done_task
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    print(projects_list)
     if update.message['text'] in projects_list and not is_delete_project:
         project = update.message['text']
         update.message.reply_text(f"Просмотр задач по проекту: {project}")
@@ -293,7 +292,8 @@ def employee_task_preview(bot, update):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Проект: {pm.get_name(task[4])}</b>
-<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''',
+                                  reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
 
 updater = Updater(TOKEN)
