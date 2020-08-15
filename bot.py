@@ -9,6 +9,7 @@ from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 from keyboards import create_employee_boss_keyboard
 from keyboards import create_main_employee_keyboard
+from keyboards import create_tasks_in_project_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 
@@ -100,7 +101,7 @@ def project_preview(update, project):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Исполнитель:</b> {em.get(task[3])[1]}
-<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
 
 
 def employee_preview(update, employee):
@@ -180,7 +181,7 @@ def write_proj_add_task(bot, update):
                               parse_mode='HTML')
     update.message.reply_text('''
 <i><b>Напишите название задачи, описание задачи, имя сотрудника.
-Пример: задача1;описание1;имя1;проект1</b></i>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+Пример: задача1;описание1;имя1</b></i>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def write_proj_delete_task(bot, update):
@@ -339,6 +340,9 @@ dp.add_handler(CommandHandler("start", start))
 
 
 # Клавиатура Босса
+dp.add_handler(MessageHandler(Filters.regex('Добавить задачу в проект'), write_proj_add_task))
+dp.add_handler(MessageHandler(Filters.regex('Удалить задачу из проекта'), write_proj_delete_task))
+
 dp.add_handler(MessageHandler(Filters.regex('Проекты'), project_options))
 dp.add_handler(MessageHandler(Filters.regex('Задачи'), task_options))
 dp.add_handler(MessageHandler(Filters.regex('Сотрудники'), employee_options))
@@ -356,9 +360,6 @@ dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), select_employee))
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
-
-dp.add_handler(MessageHandler(Filters.regex('Добавить задачу в проект'), write_proj_add_task))
-dp.add_handler(MessageHandler(Filters.regex('Удалить задачу из проекта'), write_proj_delete_task))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), callback_method))
