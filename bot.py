@@ -334,6 +334,10 @@ em = EmployeeModel(db.get_connection())
 for e in em.get_all():
     employee_list.append(e[1])
 
+pm = ProjectModel(db.get_connection())
+for p in pm.get_all():
+    projects_list.append(p[1])
+
 # Создаём обработчик текстовых сообщений типа Filters.text
 text_handler = MessageHandler(Filters.text, global_function)
 # Регистрируем обработчик в диспетчере.
