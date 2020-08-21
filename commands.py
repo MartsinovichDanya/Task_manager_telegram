@@ -89,6 +89,7 @@ def set_done(bot, name, project):
 
     if tid:
         tm.set_done(tid)
+        tm.set_done_date(tid)
         task = tm.get(tid)
         bot.sendMessage(boss_id, f'''
 <b>Задача выполнена
