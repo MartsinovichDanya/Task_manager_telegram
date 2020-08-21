@@ -4,7 +4,8 @@ from Models import ProjectModel, EmployeeModel
 
 # Клавиатура Босса
 def create_main_boss_keyboard():
-    boss_reply_keyboard1 = [['Проекты', 'Задачи', 'Сотрудники', 'Отчёты']]
+    boss_reply_keyboard1 = [['Проекты', 'Задачи', 'Сотрудники'],
+                            ['Отчёты']]
     boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
     return boss_markup1
 
