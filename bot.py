@@ -94,7 +94,7 @@ def project_preview(update, project):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
-    tasks = tm.get_by_project(pm.get_id(project))
+    tasks = sorted(tm.get_by_project(pm.get_id(project)), key=lambda t: t[5])
 
     for task in tasks:
         update.message.reply_text(f'''
@@ -109,7 +109,7 @@ def employee_preview(update, employee):
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     eid = em.get_id(employee)
-    tasks = tm.get_by_emp(eid)
+    tasks = sorted(tm.get_by_emp(eid), key=lambda t: t[5])
 
     for task in tasks:
         update.message.reply_text(f'''
@@ -123,7 +123,7 @@ def task_preview(bot, update):
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
-    tasks = tm.get_all()
+    tasks = sorted(tm.get_all(), key=lambda t: t[5])
 
     for task in tasks:
         update.message.reply_text(f'''
