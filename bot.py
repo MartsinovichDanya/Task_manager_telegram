@@ -47,7 +47,7 @@ def start(bot, update):
     is_proj_delete_task = False
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
-    print(tg_id)
+
     # Левый чувак
     if not um.get(tg_id):
         update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>', reply_markup=ReplyKeyboardRemove(),
