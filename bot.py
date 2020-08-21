@@ -10,6 +10,7 @@ from keyboards import create_employee_options_boss_keyboard, create_task_options
 from keyboards import create_employee_boss_keyboard
 from keyboards import create_main_employee_keyboard
 from keyboards import create_tasks_in_project_boss_keyboard
+from keyboards import create_report_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 
@@ -58,6 +59,12 @@ def start(bot, update):
     # Сотрудник
     else:
         update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
+
+
+# Раздел "Отчёты"
+def report(bot, update):
+    update.message.reply_text('<b>Раздел "Отчёты"</b>', reply_markup=create_report_boss_keyboard(),
+                              parse_mode='HTML')
 
 
 # Главное меню
@@ -367,6 +374,7 @@ dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), select_employee))
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
+dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр моих задач'), employee_task_preview))
