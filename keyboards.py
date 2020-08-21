@@ -77,7 +77,7 @@ def create_tasks_in_project_boss_keyboard():
 
 # Клавиатура сотрудника
 def create_main_employee_keyboard():
-    employee_reply_keyboard1 = [['Просмотр задач', 'Выполнено']]
+    employee_reply_keyboard1 = [['Просмотр моих задач', 'Выполнено']]
     employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
     return employee_markup1
 

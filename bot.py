@@ -46,7 +46,7 @@ def start(bot, update):
     is_proj_delete_task = False
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
-
+    print(tg_id)
     # Левый чувак
     if not um.get(tg_id):
         update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>', reply_markup=ReplyKeyboardRemove(),
@@ -369,7 +369,7 @@ dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудник
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
 # Клавиатура сотрудника
-dp.add_handler(MessageHandler(Filters.regex('Просмотр задач'), callback_method))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр моих задач'), employee_task_preview))
 dp.add_handler(MessageHandler(Filters.regex('Выполнено'), select_done_task))
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
