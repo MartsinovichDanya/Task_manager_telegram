@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class UserModel:
     def __init__(self, connection):
         self.connection = connection
@@ -151,7 +153,7 @@ class TaskModel:
                                      emp_id INTEGER,
                                      project_id INTEGER,
                                      done BOOL,
-                                     done_date VARCHAR(20)
+                                     done_date INTEGER
                                      )''')
         cursor.close()
         self.connection.commit()
@@ -221,6 +223,15 @@ class TaskModel:
         cursor.execute('''UPDATE tasks SET 
                                 done = ?
                                 WHERE id = ?''', (done, task_id,))
+        cursor.close()
+        self.connection.commit()
+
+    def set_done_date(self, task_id):
+        date = datetime.toordinal(datetime.today())
+        cursor = self.connection.cursor()
+        cursor.execute('''UPDATE tasks SET 
+                                        done_date = ?
+                                        WHERE id = ?''', (date, task_id,))
         cursor.close()
         self.connection.commit()
 
