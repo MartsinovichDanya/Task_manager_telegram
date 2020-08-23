@@ -11,6 +11,8 @@ from keyboards import create_employee_boss_keyboard
 from keyboards import create_main_employee_keyboard
 from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
+from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
+from keyboards import create_report_task_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 
@@ -28,6 +30,10 @@ is_delete_employee = False
 is_done_task = False
 is_proj_add_task = False
 is_proj_delete_task = False
+
+is_report_proj = False
+is_report_task = False
+is_report_employee = False
 
 latest_project = ''
 
@@ -64,6 +70,21 @@ def start(bot, update):
 # Раздел "Отчёты"
 def report(bot, update):
     update.message.reply_text('<b>Раздел "Отчёты"</b>', reply_markup=create_report_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+def project_report(bot, update):
+    update.message.reply_text('<b>Раздел "Отчёт по Проектам"</b>', reply_markup=create_report_projects_boss_keyboard(db),
+                              parse_mode='HTML')
+
+
+def employee_report(bot, update):
+    update.message.reply_text('<b>Раздел "Отчёт по Сотрудникам"</b>', reply_markup=create_report_employee_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+def task_report(bot, update):
+    update.message.reply_text('<b>Раздел "Отчёт по Задачам"</b>', reply_markup=create_report_task_boss_keyboard(),
                               parse_mode='HTML')
 
 
@@ -375,6 +396,9 @@ dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудник
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
+dp.add_handler(MessageHandler(Filters.regex('Отчёт по Проектам'), project_report))
+dp.add_handler(MessageHandler(Filters.regex('Отчёт по Задачам'), task_report))
+dp.add_handler(MessageHandler(Filters.regex('Отчёт по Сотрудникам'), employee_report))
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр моих задач'), employee_task_preview))

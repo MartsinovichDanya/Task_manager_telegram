@@ -76,8 +76,42 @@ def create_tasks_in_project_boss_keyboard():
     return boss_markup
 
 
+# ОТЧЁТЫ
 def create_report_boss_keyboard():
-    boss_reply_keyboard = [['Проекты', 'Задачи', 'Сотрудники'],
+    boss_reply_keyboard = [['Отчёт по Проектам', 'Отчёт по Задачам', 'Отчёт по Сотрудникам'],
+                           ['Главное меню']]
+    boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
+    return boss_markup
+
+
+def create_report_projects_boss_keyboard(db):
+    pm = ProjectModel(db.get_connection())
+    projects = [el[1] for el in pm.get_all()]
+    boss_reply_keyboard = []
+
+    temp = []
+    for p in projects:
+        temp.append(p)
+        if len(temp) == 4:
+            boss_reply_keyboard.append(temp)
+            temp = []
+    if temp:
+        boss_reply_keyboard.append(temp)
+
+    boss_reply_keyboard.append(['Главное меню'])
+    boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
+    return boss_markup
+
+
+def create_report_employee_boss_keyboard():
+    boss_reply_keyboard = [['Отчёты по Проектам', 'Отчёты по Задачам', 'Отчёты по Сотрудникам'],
+                           ['Главное меню']]
+    boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
+    return boss_markup
+
+
+def create_report_task_boss_keyboard():
+    boss_reply_keyboard = [['Отчёты по Проектам', 'Отчёты по Задачам', 'Отчёты по Сотрудникам'],
                            ['Главное меню']]
     boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
     return boss_markup
