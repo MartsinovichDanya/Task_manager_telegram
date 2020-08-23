@@ -69,7 +69,10 @@ def start(bot, update):
 
 # Раздел "Отчёты"
 def report(bot, update):
-    update.message.reply_text('<b>Раздел "Отчёты"</b>', reply_markup=create_report_boss_keyboard(),
+    update.message.reply_text('''
+<b>Раздел "Отчёты"
+Напишите временной промежуток.
+Пример: дд.мм.гггг-дд.мм.гггг</b>''', reply_markup=create_report_boss_keyboard(),
                               parse_mode='HTML')
 
 

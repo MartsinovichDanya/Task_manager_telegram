@@ -78,8 +78,9 @@ def create_tasks_in_project_boss_keyboard():
 
 # ОТЧЁТЫ
 def create_report_boss_keyboard():
-    boss_reply_keyboard = [['Отчёт по Проектам', 'Отчёт по Задачам', 'Отчёт по Сотрудникам'],
-                           ['Главное меню']]
+    # boss_reply_keyboard = [['Отчёт по Проектам', 'Отчёт по Задачам', 'Отчёт по Сотрудникам'],
+    #                        ['Главное меню']]
+    boss_reply_keyboard = [['Главное меню']]
     boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
     return boss_markup
 
