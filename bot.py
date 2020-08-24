@@ -1,6 +1,8 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from telegram import ReplyKeyboardRemove
 
+from datetime import datetime
+
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
@@ -31,17 +33,22 @@ is_done_task = False
 is_proj_add_task = False
 is_proj_delete_task = False
 
+is_report = False
 is_report_proj = False
 is_report_task = False
 is_report_employee = False
 
 latest_project = ''
+l_d = 0
+r_d = 0
 
 
 # Приветствие
 def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
-    global is_done_task, is_proj_add_task, is_proj_delete_task
+    global is_done_task, is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee, is_report_task
+    global is_report
+
     is_add_project = False
     is_add_task = False
     is_add_employee = False
@@ -51,6 +58,12 @@ def start(bot, update):
     is_done_task = False
     is_proj_add_task = False
     is_proj_delete_task = False
+
+    is_report = False
+    is_report_proj = False
+    is_report_task = False
+    is_report_employee = False
+
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
 
@@ -69,6 +82,10 @@ def start(bot, update):
 
 # Раздел "Отчёты"
 def report(bot, update):
+    global is_report
+
+    is_report = True
+
     update.message.reply_text('''
 <b>Раздел "Отчёты"
 Напишите временной промежуток.
@@ -255,6 +272,8 @@ def global_function(bot, update):
     global projects_list, employee_list
     global is_done_task
     global latest_project, is_proj_add_task, is_proj_delete_task
+    global is_report, is_report_task, is_report_employee, is_report_proj, r_d, l_d
+
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     if update.message['text'] in projects_list and not is_delete_project:
@@ -343,6 +362,13 @@ def global_function(bot, update):
         except TaskNotFound:
             update.message.reply_text("Задача или проект не найден")
             is_done_task = True
+
+    elif is_report:
+        l_string, r_string = update.message['text'].split('-')
+        l_day, l_month, l_year = [int(el) for el in l_string.split('.')]
+        r_day, r_month, r_year = [int(el) for el in r_string.split('.')]
+        l_d = datetime.toordinal(datetime(l_year, l_month, l_day))
+        r_d = datetime.toordinal(datetime(r_year, r_month, r_day))
 
 
 # Часть сотрудника нахрен

@@ -3,6 +3,8 @@ from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
+from datetime import datetime
+
 db = DB('tm.db')
 
 # boss functions
@@ -72,6 +74,45 @@ def delete_employee(name):
 
     tm = TaskModel(db.get_connection())
     tm.delete_by_emp(uid)
+
+
+def proj_report(bot, l_date, r_date, proj):
+    pm = ProjectModel(db.get_connection())
+    pid = pm.get_id(proj)
+
+    tm = TaskModel(db.get_connection())
+    all_tasks = tm.get_by_project(pid)
+
+    for task in all_tasks:
+        if not task[5]:
+            continue
+        if l_date <= task[6] <= r_date:
+            pass
+
+
+def emp_report(bot, l_date, r_date, emp):
+    em = EmployeeModel(db.get_connection())
+    eid = em.get_id(emp)
+
+    tm = TaskModel(db.get_connection())
+    all_tasks = tm.get_by_emp(eid)
+
+    for task in all_tasks:
+        if not task[5]:
+            continue
+        if l_date <= task[6] <= r_date:
+            pass
+
+
+def all_task_report(bot, l_date, r_date):
+    tm = TaskModel(db.get_connection())
+    all_tasks = tm.get_all()
+
+    for task in all_tasks:
+        if not task[5]:
+            continue
+        if l_date <= task[6] <= r_date:
+            pass
 
 
 # employee functions
