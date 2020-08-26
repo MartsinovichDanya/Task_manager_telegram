@@ -94,17 +94,17 @@ def report(bot, update):
 
 
 def project_report(bot, update):
-    update.message.reply_text('<b>Раздел "Отчёт по Проектам"</b>', reply_markup=create_report_projects_boss_keyboard(db),
+    update.message.reply_text('<b>Раздел "Отчёты по Проектам"</b>', reply_markup=create_report_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
 def employee_report(bot, update):
-    update.message.reply_text('<b>Раздел "Отчёт по Сотрудникам"</b>', reply_markup=create_report_employee_boss_keyboard(),
+    update.message.reply_text('<b>Раздел "Отчёты по Сотрудникам"</b>', reply_markup=create_report_employee_boss_keyboard(),
                               parse_mode='HTML')
 
 
 def task_report(bot, update):
-    update.message.reply_text('<b>Раздел "Отчёт по Задачам"</b>', reply_markup=create_report_task_boss_keyboard(),
+    update.message.reply_text('<b>Раздел "Отчёты по Задачам"</b>', reply_markup=create_report_task_boss_keyboard(),
                               parse_mode='HTML')
 
 
@@ -364,6 +364,9 @@ def global_function(bot, update):
             is_done_task = True
 
     elif is_report:
+        is_report = False
+        update.message.reply_text('<i><b>Выберите тип отчёта</b></i>', reply_markup=create_report_employee_boss_keyboard(),
+                                  parse_mode='HTML')
         l_string, r_string = update.message['text'].split('-')
         l_day, l_month, l_year = [int(el) for el in l_string.split('.')]
         r_day, r_month, r_year = [int(el) for el in r_string.split('.')]
@@ -424,10 +427,12 @@ dp.add_handler(MessageHandler(Filters.regex('Удалить сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр сотрудников'), select_employee))
 
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
+
+dp.add_handler(MessageHandler(Filters.regex('Отчёты по Проектам'), project_report))
+dp.add_handler(MessageHandler(Filters.regex('Отчёты по Задачам'), task_report))
+dp.add_handler(MessageHandler(Filters.regex('Отчёты по Сотрудникам'), employee_report))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
-dp.add_handler(MessageHandler(Filters.regex('Отчёт по Проектам'), project_report))
-dp.add_handler(MessageHandler(Filters.regex('Отчёт по Задачам'), task_report))
-dp.add_handler(MessageHandler(Filters.regex('Отчёт по Сотрудникам'), employee_report))
+
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр моих задач'), employee_task_preview))

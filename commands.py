@@ -3,6 +3,8 @@ from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
+from keyboards import create_menu_keyboard
+
 from datetime import datetime
 
 db = DB('tm.db')
@@ -76,7 +78,9 @@ def delete_employee(name):
     tm.delete_by_emp(uid)
 
 
-def proj_report(bot, l_date, r_date, proj):
+# report functions
+def proj_report(update, l_date, r_date, proj):
+    em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     pid = pm.get_id(proj)
 
@@ -87,11 +91,18 @@ def proj_report(bot, l_date, r_date, proj):
         if not task[5]:
             continue
         if l_date <= task[6] <= r_date:
-            pass
+            update.message.reply_text(f'''
+<b>Проект: {pm.get_name(task[4])}</b>
+<b>Задача: {task[1]}</b>
+<b>Описание: {task[2]}</b>
+<b>Сотрудник: {em.get(task[3])[1]}</b>
+<b>Статус: Выполнена</b>
+<b>Дата выполнения: {em}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
-def emp_report(bot, l_date, r_date, emp):
+def emp_report(update, l_date, r_date, emp):
     em = EmployeeModel(db.get_connection())
+    pm = ProjectModel(db.get_connection())
     eid = em.get_id(emp)
 
     tm = TaskModel(db.get_connection())
@@ -101,22 +112,35 @@ def emp_report(bot, l_date, r_date, emp):
         if not task[5]:
             continue
         if l_date <= task[6] <= r_date:
-            pass
+            update.message.reply_text(f'''
+<b>Проект: {pm.get_name(task[4])}</b>
+<b>Задача: {task[1]}</b>
+<b>Описание: {task[2]}</b>
+<b>Сотрудник: {em.get(task[3])[1]}</b>
+<b>Статус: Выполнена</b>
+<b>Дата выполнения: {em}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
-def all_task_report(bot, l_date, r_date):
+def all_task_report(update, l_date, r_date):
+    em = EmployeeModel(db.get_connection())
     tm = TaskModel(db.get_connection())
+    pm = ProjectModel(db.get_connection())
     all_tasks = tm.get_all()
 
     for task in all_tasks:
         if not task[5]:
             continue
         if l_date <= task[6] <= r_date:
-            pass
+            update.message.reply_text(f'''
+<b>Проект: {pm.get_name(task[4])}</b>
+<b>Задача: {task[1]}</b>
+<b>Описание: {task[2]}</b>
+<b>Сотрудник: {em.get(task[3])[1]}</b>
+<b>Статус: Выполнена</b>
+<b>Дата выполнения: {em}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 # employee functions
-
 
 def set_done(bot, name, project):
     tm = TaskModel(db.get_connection())
