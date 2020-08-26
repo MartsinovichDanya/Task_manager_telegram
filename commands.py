@@ -97,7 +97,7 @@ def proj_report(update, l_date, r_date, proj):
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
 <b>Статус: Выполнена</b>
-<b>Дата выполнения: {em}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Дата выполнения: {datetime.fromordinal(task[6])}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def emp_report(update, l_date, r_date, emp):
@@ -118,7 +118,7 @@ def emp_report(update, l_date, r_date, emp):
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
 <b>Статус: Выполнена</b>
-<b>Дата выполнения: {em}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Дата выполнения: {datetime.fromordinal(task[6])}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 def all_task_report(update, l_date, r_date):
@@ -137,7 +137,7 @@ def all_task_report(update, l_date, r_date):
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
 <b>Статус: Выполнена</b>
-<b>Дата выполнения: {em}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
+<b>Дата выполнения: {datetime.fromordinal(task[6])}</b>''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
 # employee functions

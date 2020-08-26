@@ -17,6 +17,7 @@ from keyboards import create_report_projects_boss_keyboard, create_report_employ
 from keyboards import create_report_task_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
+from commands import all_task_report, emp_report, proj_report
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
@@ -35,7 +36,6 @@ is_proj_delete_task = False
 
 is_report = False
 is_report_proj = False
-is_report_task = False
 is_report_employee = False
 
 latest_project = ''
@@ -46,7 +46,7 @@ r_d = 0
 # Приветствие
 def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
-    global is_done_task, is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee, is_report_task
+    global is_done_task, is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
     global is_report
 
     is_add_project = False
@@ -61,7 +61,6 @@ def start(bot, update):
 
     is_report = False
     is_report_proj = False
-    is_report_task = False
     is_report_employee = False
 
     um = UserModel(db.get_connection())
@@ -94,11 +93,15 @@ def report(bot, update):
 
 
 def project_report(bot, update):
+    global is_report_proj
+    is_report_proj = True
     update.message.reply_text('<b>Раздел "Отчёты по Проектам"</b>', reply_markup=create_report_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
 def employee_report(bot, update):
+    global is_report_employee
+    is_report_employee = True
     update.message.reply_text('<b>Раздел "Отчёты по Сотрудникам"</b>', reply_markup=create_report_employee_boss_keyboard(),
                               parse_mode='HTML')
 
@@ -106,6 +109,7 @@ def employee_report(bot, update):
 def task_report(bot, update):
     update.message.reply_text('<b>Раздел "Отчёты по Задачам"</b>', reply_markup=create_report_task_boss_keyboard(),
                               parse_mode='HTML')
+    all_task_report(update, l_d, r_d)
 
 
 # Главное меню
@@ -272,22 +276,30 @@ def global_function(bot, update):
     global projects_list, employee_list
     global is_done_task
     global latest_project, is_proj_add_task, is_proj_delete_task
-    global is_report, is_report_task, is_report_employee, is_report_proj, r_d, l_d
+    global is_report, is_report_employee, is_report_proj, r_d, l_d
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     if update.message['text'] in projects_list and not is_delete_project:
         project = update.message['text']
-        update.message.reply_text(f"<i><b>Просмотр задач по проекту: {project}</b></i>", reply_markup=create_tasks_in_project_boss_keyboard(),
-                              parse_mode='HTML')
-        project_preview(update, project)
-        latest_project = update.message['text']
+
+        if is_report_proj:
+            proj_report(update, l_d, r_d, project)
+        else:
+            update.message.reply_text(f"<i><b>Просмотр задач по проекту: {project}</b></i>",
+                                      reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
+            project_preview(update, project)
+            latest_project = update.message['text']
 
     elif update.message['text'] in employee_list and not is_delete_employee:
         employee = update.message['text']
-        update.message.reply_text(f"<i><b>Просмотр задач сотрудника: {employee}</b></i>", reply_markup=create_tasks_in_project_boss_keyboard(),
-                              parse_mode='HTML')
-        employee_preview(update, employee)
+
+        if is_report_employee:
+            emp_report(update, l_d, r_d, employee)
+        else:
+            update.message.reply_text(f"<i><b>Просмотр задач сотрудника: {employee}</b></i>",
+                                      reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
+            employee_preview(update, employee)
 
     elif is_add_project:
         is_add_project = False
