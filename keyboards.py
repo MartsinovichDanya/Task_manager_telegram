@@ -136,3 +136,11 @@ def create_menu_keyboard():
     menu_keyboard = [['Главное меню']]
     menu_markup = ReplyKeyboardMarkup(menu_keyboard, one_time_keyboard=False)
     return menu_markup
+
+
+# Клавиатура возврата на
+def create_back_to_reports_keyboard():
+    menu_keyboard = [['Назад'],
+                     ['Главное меню']]
+    menu_markup = ReplyKeyboardMarkup(menu_keyboard, one_time_keyboard=False)
+    return menu_markup

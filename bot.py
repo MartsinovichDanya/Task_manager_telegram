@@ -15,6 +15,7 @@ from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
 from keyboards import create_report_task_boss_keyboard
+from keyboards import create_back_to_reports_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report
@@ -80,6 +81,11 @@ def start(bot, update):
 
 
 # Раздел "Отчёты"
+def back_to_report(bot, update):
+    update.message.reply_text('<i><b>Выберите тип отчёта</b></i>', reply_markup=create_report_employee_boss_keyboard(),
+                              parse_mode='HTML')
+
+
 def report(bot, update):
     global is_report
 
@@ -102,7 +108,7 @@ def project_report(bot, update):
 def employee_report(bot, update):
     global is_report_employee
     is_report_employee = True
-    update.message.reply_text('<b>Раздел "Отчёты по Сотрудникам"</b>', reply_markup=create_report_employee_boss_keyboard(),
+    update.message.reply_text('<b>Раздел "Отчёты по Сотрудникам"</b>', reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 
@@ -444,6 +450,8 @@ dp.add_handler(MessageHandler(Filters.regex('Отчёты по Проектам'
 dp.add_handler(MessageHandler(Filters.regex('Отчёты по Задачам'), task_report))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты по Сотрудникам'), employee_report))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
+
+dp.add_handler(MessageHandler(Filters.regex('Назад'), back_to_report))
 
 
 # Клавиатура сотрудника
