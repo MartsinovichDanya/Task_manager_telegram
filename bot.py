@@ -15,7 +15,6 @@ from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
 from keyboards import create_report_task_boss_keyboard
-from keyboards import create_back_to_reports_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report
@@ -88,7 +87,6 @@ def back_to_report(bot, update):
 
 def report(bot, update):
     global is_report
-
     is_report = True
 
     update.message.reply_text('''
@@ -270,12 +268,6 @@ def write_delete_employee(bot, update):
                               parse_mode='HTML')
 
 
-# Тестовая функция
-def callback_method(bot, update):
-    update.message.reply_text('<i><b>Ю НОУ БЛИН</b></i>', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-
-
 # Глобальная функция
 def global_function(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
@@ -388,8 +380,14 @@ def global_function(bot, update):
         l_string, r_string = update.message['text'].split('-')
         l_day, l_month, l_year = [int(el) for el in l_string.split('.')]
         r_day, r_month, r_year = [int(el) for el in r_string.split('.')]
-        l_d = datetime.toordinal(datetime(l_year, l_month, l_day))
-        r_d = datetime.toordinal(datetime(r_year, r_month, r_day))
+        try:
+            l_d = datetime.toordinal(datetime(l_year, l_month, l_day))
+            r_d = datetime.toordinal(datetime(r_year, r_month, r_day))
+        except ValueError:
+            update.message.reply_text('<i><b>Некорректно введена дата</b></i>',
+                                      reply_markup=create_menu_keyboard(),
+                                      parse_mode='HTML')
+            report(bot, update)
 
 
 # Часть сотрудника нахрен
@@ -399,7 +397,7 @@ def select_done_task(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Название задачи и название проекта</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Название задачи и название проекта</b></i>', reply_markup=create_main_employee_keyboard(),
                               parse_mode='HTML')
 
 
@@ -450,6 +448,7 @@ dp.add_handler(MessageHandler(Filters.regex('Отчёты по Проектам'
 dp.add_handler(MessageHandler(Filters.regex('Отчёты по Задачам'), task_report))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты по Сотрудникам'), employee_report))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
+
 
 dp.add_handler(MessageHandler(Filters.regex('Назад'), back_to_report))
 
