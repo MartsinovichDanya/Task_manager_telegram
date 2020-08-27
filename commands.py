@@ -88,17 +88,24 @@ def proj_report(update, l_date, r_date, proj):
     tm = TaskModel(db.get_connection())
     all_tasks = tm.get_by_project(pid)
 
+    done_task_counter = 0
+
     for task in all_tasks:
         if not task[5]:
             continue
         if l_date <= task[6] <= r_date:
+            done_task_counter += 1
+            date = datetime.fromordinal(task[6])
             update.message.reply_text(f'''
 <b>Проект: {pm.get_name(task[4])}</b>
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
 <b>Статус: Выполнена</b>
-<b>Дата выполнения: {datetime.fromordinal(task[6])}</b>''', reply_markup=create_back_to_reports_keyboard(), parse_mode='HTML')
+<b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
+
+    update.message.reply_text(f'<b>Выполнено {done_task_counter} задач из {len(all_tasks)}</b>',
+                              reply_markup=create_back_to_reports_keyboard(), parse_mode='HTML')
 
 
 def emp_report(update, l_date, r_date, emp):
@@ -109,17 +116,24 @@ def emp_report(update, l_date, r_date, emp):
     tm = TaskModel(db.get_connection())
     all_tasks = tm.get_by_emp(eid)
 
+    done_task_counter = 0
+
     for task in all_tasks:
         if not task[5]:
             continue
         if l_date <= task[6] <= r_date:
+            done_task_counter += 1
+            date = datetime.fromordinal(task[6])
             update.message.reply_text(f'''
 <b>Проект: {pm.get_name(task[4])}</b>
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
 <b>Статус: Выполнена</b>
-<b>Дата выполнения: {datetime.fromordinal(task[6])}</b>''', reply_markup=create_back_to_reports_keyboard(), parse_mode='HTML')
+<b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
+
+    update.message.reply_text(f'<b>Выполнено {done_task_counter} задач из {len(all_tasks)}</b>',
+                              reply_markup=create_back_to_reports_keyboard(), parse_mode='HTML')
 
 
 def all_task_report(update, l_date, r_date):
@@ -128,17 +142,24 @@ def all_task_report(update, l_date, r_date):
     pm = ProjectModel(db.get_connection())
     all_tasks = tm.get_all()
 
+    done_task_counter = 0
+
     for task in all_tasks:
         if not task[5]:
             continue
         if l_date <= task[6] <= r_date:
+            done_task_counter += 1
+            date = datetime.fromordinal(task[6])
             update.message.reply_text(f'''
 <b>Проект: {pm.get_name(task[4])}</b>
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
 <b>Статус: Выполнена</b>
-<b>Дата выполнения: {datetime.fromordinal(task[6])}</b>''', reply_markup=create_back_to_reports_keyboard(), parse_mode='HTML')
+<b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
+
+    update.message.reply_text(f'<b>Выполнено {done_task_counter} задач из {len(all_tasks)}</b>',
+                              reply_markup=create_back_to_reports_keyboard(), parse_mode='HTML')
 
 
 # employee functions
