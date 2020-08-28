@@ -21,6 +21,7 @@ from commands import all_task_report, emp_report, proj_report
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
+import requests
 
 db = DB('tm.db')
 TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"
@@ -370,7 +371,8 @@ def global_function(bot, update):
         try:
             set_done(bot, name, project)
         except TaskNotFound:
-            update.message.reply_text("Задача или проект не найден")
+            update.message.reply_text("<i><b>Задача или проект не найден</b></i>", reply_markup=create_main_employee_keyboard(),
+                                  parse_mode='HTML')
             is_done_task = True
 
     elif is_report:
@@ -476,6 +478,11 @@ dp.add_handler(text_handler)
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
+
+# Отправляем http запрос
+url = 'https://api.telegram.org/bot1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao/deleteWebhook'
+req = requests.get(url)
+print(req.status_code)
 
 # Ждём завершения приложения при нажатии клавиш Ctrl+C
 updater.idle()
