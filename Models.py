@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class UserModel:
     def __init__(self, connection):
         self.connection = connection
