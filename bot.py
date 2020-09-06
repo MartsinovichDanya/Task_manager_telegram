@@ -26,7 +26,8 @@ import requests
 URL = 'https://api.telegram.org/bot1155701472:AAHbVkzHh1-nqZkdScyw0rbdzgNhYcBFUSE/deleteWebhook'
 db = DB('tm.db')
 # TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"  старый токен
-TOKEN = "1155701472:AAHbVkzHh1-nqZkdScyw0rbdzgNhYcBFUSE"
+# TOKEN = "1155701472:AAHbVkzHh1-nqZkdScyw0rbdzgNhYcBFUSE"
+TOKEN = "1155701472:AAH_9KuTFP0VZCYurTszcmXl4yvra6ri8P8"
 
 is_add_project = False
 is_add_task = False
@@ -69,7 +70,7 @@ def start(bot, update):
 
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
-
+    print(update.message['chat']['username'])
     # Левый чувак
     if not um.get(tg_id):
         update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>', reply_markup=ReplyKeyboardRemove(),
@@ -199,7 +200,7 @@ def write_add_project(bot, update):
     global is_add_project
     is_add_project = True
     update.message.reply_text(
-        '<i><b>Напишите название проекта.\nЗапрещаются специальные символы: !, `, @, №, $, %, &, ?, /</b></i>',
+        '<i><b>Напишите название проекта.\nЗапрещаются специальные символы: !, `, @, №, $, %, &, ?, /, :, ;</b></i>',
         reply_markup=create_menu_keyboard(),
         parse_mode='HTML')
 
@@ -328,7 +329,7 @@ def global_function(bot, update):
             name, description, emp_name, project_name = params.split(';')
 
         try:
-            add_task(bot, name, description, emp_name, project_name)
+            add_task(bot, name, description, emp_name, project_name, update.message['chat']['username'])
         except ProjectNotFound:
             update.message.reply_text("Проект не найден")
             is_add_task = True
