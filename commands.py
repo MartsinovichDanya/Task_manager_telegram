@@ -21,7 +21,7 @@ def add_project(name):
         pm.insert(name)
 
 
-def add_task(bot, name, description, emp_name, project_name, boss_name):
+def add_task(bot, name, description, emp_name, project_name, boss_link):
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     tm = TaskModel(db.get_connection())
@@ -31,14 +31,14 @@ def add_task(bot, name, description, emp_name, project_name, boss_name):
     proj_id = pm.get_id(project_name)
     if not proj_id:
         raise ProjectNotFound
-    tm.insert(name, description, emp_id, proj_id)
+    tm.insert(name, description, emp_id, proj_id, boss_link)
     em.add_project(emp_id, pm.get_id(project_name))
     bot.sendMessage(emp_id, f'''
 У Вас новая задача
 <b><u>Проект:</u> {project_name}
 <u>Задача:</u> {name}
 <u>Описание задачи:</u> {description}
-<u>Ссылка:</u> @{boss_name}</b>''', parse_mode='HTML')
+<u>Ссылка:</u> {boss_link}</b>''', parse_mode='HTML')
 
 
 def add_employee(name, eid):

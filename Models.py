@@ -154,17 +154,18 @@ class TaskModel:
                                      emp_id INTEGER,
                                      project_id INTEGER,
                                      done BOOL,
-                                     done_date INTEGER
+                                     done_date INTEGER,
+                                     boss_link VARCHAR(100)
                                      )''')
         cursor.close()
         self.connection.commit()
 
-    def insert(self, name, description, emp_id, project_id, done=False, done_date=-1):
+    def insert(self, name, description, emp_id, project_id, boss_link, done=False, done_date=-1):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO tasks 
-                                  (name, description, emp_id, project_id, done, done_date) 
+                                  (name, description, emp_id, project_id, done, done_date, boss_link) 
                                   VALUES (?,?,?,?,?,?)''',
-                       (name, description, emp_id, project_id, done, done_date))
+                       (name, description, emp_id, project_id, done, done_date, boss_link))
         cursor.close()
         self.connection.commit()
 

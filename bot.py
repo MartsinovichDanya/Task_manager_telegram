@@ -38,6 +38,7 @@ is_delete_employee = False
 is_done_task = False
 is_proj_add_task = False
 is_proj_delete_task = False
+is_make_boss = False
 
 is_report = False
 is_report_proj = False
@@ -63,6 +64,7 @@ def start(bot, update):
     is_done_task = False
     is_proj_add_task = False
     is_proj_delete_task = False
+    is_make_boss = False
 
     is_report = False
     is_report_proj = False
@@ -329,7 +331,7 @@ def global_function(bot, update):
             name, description, emp_name, project_name = params.split(';')
 
         try:
-            add_task(bot, name, description, emp_name, project_name, update.message['chat']['username'])
+            add_task(bot, name, description, emp_name, project_name, '@'+update.message['chat']['username'])
         except ProjectNotFound:
             update.message.reply_text("Проект не найден")
             is_add_task = True
