@@ -164,7 +164,7 @@ class TaskModel:
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO tasks 
                                   (name, description, emp_id, project_id, done, done_date, boss_link) 
-                                  VALUES (?,?,?,?,?,?)''',
+                                  VALUES (?,?,?,?,?,?,?)''',
                        (name, description, emp_id, project_id, done, done_date, boss_link))
         cursor.close()
         self.connection.commit()
