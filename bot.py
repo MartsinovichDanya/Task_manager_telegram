@@ -168,7 +168,10 @@ def project_preview(update, project):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Исполнитель:</b> {em.get(task[3])[1]}
-<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
+<b>Время выполнения: {'-' if task[5] else task[8]}</b>
+<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}
+''',
+                                  reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
 
 
 def employee_preview(update, employee):
@@ -183,6 +186,7 @@ def employee_preview(update, employee):
 <b>Проект: <u>{pm.get_name(task[4])}</u></b>
 <b>Задача: {task[1]}</b>
 <b>Описание:</b> {task[2]}
+<b>Время выполнения: {'-' if task[5] else task[8]}</b>
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
@@ -198,6 +202,7 @@ def task_preview(bot, update):
 <b>Проект: {pm.get_name(task[4])}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
+<b>Время выполнения: {'-' if task[5] else task[8]}</b>
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
@@ -425,6 +430,7 @@ def employee_task_preview(bot, update):
 <b>Описание:</b> {task[2]}
 <b>Проект: {pm.get_name(task[4])}</b>
 <b>Контакты Лидера Команды: {task[7]}</b>
+<b>Время выполнения: {'-' if task[5] else task[8]}</b>
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''',
                                   reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
