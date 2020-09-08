@@ -420,7 +420,7 @@ def employee_task_preview(bot, update):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Проект: {pm.get_name(task[4])}</b>
-<b>Ссылка: {task[7]}</b>
+<b>Контакты Лидера Команды: {task[7]}</b>
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''',
                                   reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 

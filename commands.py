@@ -38,7 +38,7 @@ def add_task(bot, name, description, emp_name, project_name, boss_link):
 <b><u>Проект:</u> {project_name}
 <u>Задача:</u> {name}
 <u>Описание задачи:</u> {description}
-<u>Ссылка:</u> {boss_link}</b>''', parse_mode='HTML')
+<u>Контакты Лидера Команды:</u> {boss_link}</b>''', parse_mode='HTML')
 
 
 def add_employee(name, eid):
