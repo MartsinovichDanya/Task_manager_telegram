@@ -155,17 +155,18 @@ class TaskModel:
                                      project_id INTEGER,
                                      done BOOL,
                                      done_date INTEGER,
-                                     boss_link VARCHAR(100)
+                                     boss_link VARCHAR(100),
+                                     timer INTEGER
                                      )''')
         cursor.close()
         self.connection.commit()
 
-    def insert(self, name, description, emp_id, project_id, boss_link, done=False, done_date=-1):
+    def insert(self, name, description, emp_id, project_id, boss_link, timer, done=False, done_date=-1):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO tasks 
-                                  (name, description, emp_id, project_id, done, done_date, boss_link) 
-                                  VALUES (?,?,?,?,?,?,?)''',
-                       (name, description, emp_id, project_id, done, done_date, boss_link))
+                                  (name, description, emp_id, project_id, done, done_date, boss_link, timer) 
+                                  VALUES (?,?,?,?,?,?,?,?)''',
+                       (name, description, emp_id, project_id, done, done_date, boss_link, timer))
         cursor.close()
         self.connection.commit()
 
@@ -234,6 +235,14 @@ class TaskModel:
         cursor.execute('''UPDATE tasks SET 
                                         done_date = ?
                                         WHERE id = ?''', (date, task_id,))
+        cursor.close()
+        self.connection.commit()
+
+    def set_timer(self, task_id, timer):
+        cursor = self.connection.cursor()
+        cursor.execute('''UPDATE tasks SET 
+                                        timer = ?
+                                        WHERE id = ?''', (timer, task_id,))
         cursor.close()
         self.connection.commit()
 
