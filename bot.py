@@ -410,7 +410,7 @@ def select_done_task(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Название задачи и название проекта</b></i>', reply_markup=create_main_employee_keyboard(),
+    update.message.reply_text('<i><b>Название задачи и название проекта</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
