@@ -23,11 +23,17 @@ from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectA
 
 import requests
 
-URL = 'https://api.telegram.org/bot1155701472:AAHbVkzHh1-nqZkdScyw0rbdzgNhYcBFUSE/deleteWebhook'
+import os
+from dotenv import load_dotenv
+
+
+dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+TOKEN = os.getenv('TOKEN')
+
 db = DB('tm.db')
-# TOKEN = "1306952282:AAEYQicKyWmBDHGmJ-vhrgmOladw6AYpNao"  старый токен
-# TOKEN = "1155701472:AAHbVkzHh1-nqZkdScyw0rbdzgNhYcBFUSE"
-TOKEN = "1155701472:AAH_9KuTFP0VZCYurTszcmXl4yvra6ri8P8"
 
 is_add_project = False
 is_add_task = False
@@ -276,8 +282,6 @@ def write_delete_employee(bot, update):
 # Глобальная функция
 def global_function(bot, update):
     # Отправляем http запрос
-    req = requests.get(URL)
-    print(req.status_code)
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global projects_list, employee_list
     global is_done_task
@@ -486,10 +490,6 @@ dp.add_handler(text_handler)
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
-
-# Отправляем http запрос
-r = requests.get(URL)
-print(r.status_code)
 
 # Ждём завершения приложения при нажатии клавиш Ctrl+C
 updater.idle()
