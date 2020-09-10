@@ -168,8 +168,8 @@ def project_preview(update, project):
 <b>Задача: <u>{task[1]}</u></b>
 <b>Описание:</b> {task[2]}
 <b>Исполнитель:</b> {em.get(task[3])[1]}
-<b>Время выполнения: {'-' if task[5] else task[8]}</b>
-<b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}
+<b>Время выполнения: {'-' if not task[5] else task[8] + ' часа(-ов)'} </b> 
+<b>Статус: {'Выполнена' if task[5] else 'В процессе'}</b>
 ''',
                                   reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
 
@@ -385,7 +385,7 @@ def global_function(bot, update):
         params = update.message['text']
         name, project, time = params.split(';')
         try:
-            set_done(bot, name, project, int(time))
+            set_done(bot, name, project, time)
         except TaskNotFound:
             update.message.reply_text("<i><b>Задача или проект не найден</b></i>", reply_markup=create_main_employee_keyboard(),
                                   parse_mode='HTML')

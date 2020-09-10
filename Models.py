@@ -156,7 +156,7 @@ class TaskModel:
                                      done BOOL,
                                      done_date INTEGER,
                                      boss_link VARCHAR(100),
-                                     timer INTEGER
+                                     timer VARCHAR(10)
                                      )''')
         cursor.close()
         self.connection.commit()
