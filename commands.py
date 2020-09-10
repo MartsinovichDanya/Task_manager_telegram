@@ -7,7 +7,6 @@ from keyboards import create_back_to_reports_keyboard
 
 from datetime import datetime
 
-import time
 
 db = DB('tm.db')
 
@@ -32,7 +31,7 @@ def add_task(bot, name, description, emp_name, project_name, boss_link):
     proj_id = pm.get_id(project_name)
     if not proj_id:
         raise ProjectNotFound
-    tm.insert(name, description, emp_id, proj_id, boss_link, time.time())
+    tm.insert(name, description, emp_id, proj_id, boss_link, 0)
     em.add_project(emp_id, pm.get_id(project_name))
     bot.sendMessage(emp_id, f'''
 У Вас новая задача
@@ -169,7 +168,7 @@ def all_task_report(update, l_date, r_date):
 
 # employee functions
 
-def set_done(bot, name, project):
+def set_done(bot, name, project, time):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     um = UserModel(db.get_connection())
@@ -183,7 +182,7 @@ def set_done(bot, name, project):
         tm.set_done(tid)
         tm.set_done_date(tid)
         task = tm.get(tid)
-        tm.set_timer(tid, time.time() - task[8])
+        tm.set_timer(tid, time)
         bot.sendMessage(boss_id, f'''
 <b>Задача выполнена
 <u>Исполнитель</u>: {em.get(task[3])[1]}
