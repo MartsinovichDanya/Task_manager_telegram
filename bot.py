@@ -383,9 +383,9 @@ def global_function(bot, update):
     elif is_done_task:
         is_done_task = False
         params = update.message['text']
-        name, project = params.split(';')
+        name, project, time = params.split(';')
         try:
-            set_done(bot, name, project)
+            set_done(bot, name, project, int(time))
         except TaskNotFound:
             update.message.reply_text("<i><b>Задача или проект не найден</b></i>", reply_markup=create_main_employee_keyboard(),
                                   parse_mode='HTML')
@@ -415,7 +415,7 @@ def select_done_task(bot, update):
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text('<i><b>Название задачи и название проекта</b></i>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<i><b>Название задачи, название проекта и время</b></i>', reply_markup=create_main_employee_keyboard(),
                               parse_mode='HTML')
 
 
