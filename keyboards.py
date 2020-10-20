@@ -144,3 +144,20 @@ def create_back_to_reports_keyboard():
                      ['Главное меню']]
     menu_markup = ReplyKeyboardMarkup(menu_keyboard, one_time_keyboard=False)
     return menu_markup
+
+
+# КЛАВИАТУРА PRAVO_HELP
+
+
+# Главная клавиатура
+def create_main_pravo_help_keyboard():
+    pravo_help_keyboard = [['Консультация', 'Оплата']]
+    pravo_help_markup = ReplyKeyboardMarkup(pravo_help_keyboard, one_time_keyboard=False)
+    return pravo_help_markup
+
+
+# Выбор оплаты
+def create_payment_pravo_help_keyboard():
+    pravo_help_keyboard = [['Выставить счёт (для юр.лиц)', 'Оплатить картой (для физ.лиц)']]
+    pravo_help_markup = ReplyKeyboardMarkup(pravo_help_keyboard, one_time_keyboard=False)
+    return pravo_help_markup
