@@ -19,6 +19,8 @@ from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectA
 
 import requests
 
+from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
+
 import os
 from dotenv import load_dotenv
 
@@ -31,14 +33,44 @@ TOKEN = os.getenv('TOKEN2')
 
 # Приветствие
 def start(bot, update):
-    update.message.reply_text('<b>Это бот по юридической помощи</b>', parse_mode='HTML')
+    update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить за ранее оказанную помощь</b>',
+                              reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
+
+
+# Раздел "Оплата"
+def payment(bot, update):
+    update.message.reply_text('<b>Выберите способ оплаты</b>', reply_markup=create_payment_pravo_help_keyboard(),
+                              parse_mode='HTML')
+
+
+# Раздел "Оплата" (Выставить счёт (юр. лицо))
+def juristic_person(bot, update):
+    update.message.reply_text('<b>Напишите свой ИНН (ОГРН)</b>', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Раздел "Оплата" (Оплата картой (физ. лицо))
+def natural_person(bot, update):
+    update.message.reply_text('<b>Переходим к "РобоКассе"</b>', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Раздел "Консультация"
+def consultation(bot, update):
+    update.message.reply_text('<b>Опишите проблему и задайте вопрос</b>', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
 
 
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
 
-dp.add_handler(CommandHandler("start", start))
+dp.add_handler(CommandHandler('start', start))
+dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
+dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
+dp.add_handler(MessageHandler(Filters.regex('Выставить счёт для юр.лиц'), juristic_person))
+dp.add_handler(MessageHandler(Filters.regex('Оплата картой'), natural_person))
+dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
 
 
 # Запускаем цикл приема и обработки сообщений
