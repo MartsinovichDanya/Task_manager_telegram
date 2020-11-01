@@ -26,7 +26,7 @@ dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv('TOKEN2')
 
 
 # Приветствие
@@ -40,10 +40,6 @@ dp = updater.dispatcher
 
 dp.add_handler(CommandHandler("start", start))
 
-# Создаём обработчик текстовых сообщений типа Filters.text
-text_handler = MessageHandler(Filters.text, global_function)
-# Регистрируем обработчик в диспетчере.
-dp.add_handler(text_handler)
 
 # Запускаем цикл приема и обработки сообщений
 updater.start_polling()
