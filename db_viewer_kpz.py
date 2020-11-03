@@ -3,7 +3,7 @@ from DB import DB
 
 
 def view_kpz_db():
-    db = DB('tm.db')
+    db = DB('kpz.db')
     um = InnModel(db.get_connection())
     print('ИНН: ', um.get_all())
 

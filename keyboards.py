@@ -12,6 +12,7 @@ def create_main_boss_keyboard():
 
 def create_project_options_boss_keyboard():
     boss_reply_keyboard1 = [['Добавить проект', 'Удалить проект', 'Просмотр проектов'],
+                            ['КПЗ'],
                             ['Главное меню']]
     boss_markup1 = ReplyKeyboardMarkup(boss_reply_keyboard1, one_time_keyboard=False)
     return boss_markup1

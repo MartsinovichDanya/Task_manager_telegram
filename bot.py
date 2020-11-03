@@ -435,6 +435,13 @@ def employee_task_preview(bot, update):
                                   reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
 
+# КЫ ПЫ ЗЫ нахрен
+def kpz(bot, update):
+    update.message.reply_text('<i><b>Здесь выводятся ИНН</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
@@ -471,6 +478,8 @@ dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
 
 
 dp.add_handler(MessageHandler(Filters.regex('Назад'), back_to_report))
+# КПЗ от pravo_help бота
+dp.add_handler(MessageHandler(Filters.regex('КПЗ'), kpz))
 
 
 # Клавиатура сотрудника
