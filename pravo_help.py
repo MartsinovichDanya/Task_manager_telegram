@@ -1,5 +1,6 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
+from DB import DB
 
 import os
 from dotenv import load_dotenv
