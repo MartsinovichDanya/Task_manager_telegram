@@ -67,9 +67,11 @@ dp = updater.dispatcher
 
 dp.add_handler(CommandHandler('start', start))
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
-dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
+
+dp.add_handler(MessageHandler(Filters.regex('Оплата картой для физ.лиц'), natural_person))
 dp.add_handler(MessageHandler(Filters.regex('Выставить счёт для юр.лиц'), juristic_person))
-dp.add_handler(MessageHandler(Filters.regex('Оплата картой'), natural_person))
+dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
+
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
 
 

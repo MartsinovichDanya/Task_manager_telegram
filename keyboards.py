@@ -155,7 +155,7 @@ def create_main_pravo_help_keyboard():
 
 # Клавиатура оплаты pravo_help
 def create_payment_pravo_help_keyboard():
-    pravo_help_keyboard = [['Выставить счёт для юр.лиц', 'Оплата картой'],
+    pravo_help_keyboard = [['Выставить счёт для юр.лиц', 'Оплата картой для физ.лиц'],
                            ['Главное меню']]
     pravo_help_markup = ReplyKeyboardMarkup(pravo_help_keyboard, one_time_keyboard=False)
     return pravo_help_markup
