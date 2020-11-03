@@ -5,6 +5,7 @@ from datetime import datetime
 
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
+from Models_kpz import InnModel
 
 from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
@@ -20,8 +21,6 @@ from commands import add_project, add_task, add_employee, delete_project, delete
 from commands import all_task_report, emp_report, proj_report
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
-
-import requests
 
 import os
 from dotenv import load_dotenv
@@ -440,6 +439,13 @@ def kpz(bot, update):
     update.message.reply_text('<i><b>Здесь выводятся ИНН</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
+    kpz_db = DB('kpz.db')
+    im = InnModel(kpz_db.get_connection())
+    for inn in im.get_all():
+        update.message.reply_text(f'<i><b>{inn[1]}</b></i>',
+                                  reply_markup=create_menu_keyboard(),
+                                  parse_mode='HTML')
+
 
 
 updater = Updater(TOKEN)
