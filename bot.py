@@ -11,7 +11,7 @@ from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
 from keyboards import create_employee_boss_keyboard
-from keyboards import create_main_employee_keyboard
+from keyboards import create_main_employee_keyboard, create_tasks_employee_keyboard
 from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
@@ -40,7 +40,8 @@ is_add_employee = False
 is_delete_project = False
 is_delete_task = False
 is_delete_employee = False
-is_done_task = False
+is_task_selected = False
+is_time_selected = False
 is_proj_add_task = False
 is_proj_delete_task = False
 
@@ -51,13 +52,14 @@ is_report_employee = False
 latest_project = ''
 l_d = 0
 r_d = 0
+task = ''
 
 
 # Приветствие
 def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
-    global is_done_task, is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
-    global is_report
+    global is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
+    global is_report, is_task_selected, is_time_selected
 
     is_add_project = False
     is_add_task = False
@@ -65,7 +67,8 @@ def start(bot, update):
     is_delete_project = False
     is_delete_task = False
     is_delete_employee = False
-    is_done_task = False
+    is_task_selected = False
+    is_time_selected = False
     is_proj_add_task = False
     is_proj_delete_task = False
 
@@ -288,9 +291,8 @@ def global_function(bot, update):
     # Отправляем http запрос
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global projects_list, employee_list
-    global is_done_task
     global latest_project, is_proj_add_task, is_proj_delete_task
-    global is_report, is_report_employee, is_report_proj, r_d, l_d
+    global is_report, is_report_employee, is_report_proj, r_d, l_d, task
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -379,16 +381,18 @@ def global_function(bot, update):
         delete_employee(name)
         del employee_list[employee_list.index(name)]
 
-    elif is_done_task:
-        is_done_task = False
-        params = update.message['text']
-        name, project, time = params.split(';')
-        try:
-            set_done(bot, name, project, time)
-        except TaskNotFound:
-            update.message.reply_text("<i><b>Задача или проект не найден</b></i>", reply_markup=create_main_employee_keyboard(),
+    elif is_task_selected:
+        is_task_selected = False
+        task = update.message['text']
+        update.message.reply_text("<i><b>Введите время выполнения задачи</b></i>", reply_markup=create_main_employee_keyboard(),
                                   parse_mode='HTML')
-            is_done_task = True
+        is_time_selected = True
+
+    elif is_time_selected:
+        is_time_selected = False
+        time = update.message['text']
+        project, name = task.split(': ')
+        set_done(bot, name, project, time)
 
     elif is_report:
         is_report = False
@@ -409,12 +413,10 @@ def global_function(bot, update):
 
 # Часть сотрудника нахрен
 def select_done_task(bot, update):
-    global is_done_task
-    is_done_task = True
-    update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
-                              reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-    update.message.reply_text('<i><b>Название задачи, название проекта и время</b></i>', reply_markup=create_main_employee_keyboard(),
+    global is_task_selected
+    is_task_selected = True
+
+    update.message.reply_text('<i><b>Название задачи, название проекта и время</b></i>', reply_markup=create_tasks_employee_keyboard(),
                               parse_mode='HTML')
 
 
