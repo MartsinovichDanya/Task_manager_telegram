@@ -1,5 +1,5 @@
 from telegram import ReplyKeyboardMarkup
-from Models import ProjectModel, EmployeeModel
+from Models import ProjectModel, EmployeeModel, TaskModel
 
 
 # Клавиатура Босса
@@ -124,6 +124,23 @@ def create_main_employee_keyboard():
     employee_reply_keyboard1 = [['Просмотр моих задач', 'Выполнено']]
     employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
     return employee_markup1
+
+
+def create_tasks_employee_keyboard(db, emp_id):
+    tm = TaskModel(db.get_connection())
+    pm = ProjectModel(db.get_connection())
+    emp_tasks = (f'{pm.get_name(t[4])}: {t[1]}' for t in tm.get_by_emp(emp_id))
+    employee_tasks_keyboard = []
+    temp = []
+    for t in emp_tasks:
+        temp.append(t)
+        if len(temp) == 2:
+            employee_tasks_keyboard.append(temp)
+            temp = []
+    if temp:
+        employee_tasks_keyboard.append(temp)
+    employee_tasks_markup = ReplyKeyboardMarkup(employee_tasks_keyboard, one_time_keyboard=False)
+    return employee_tasks_markup
 
 
 def create_done_employee_keyboard():
