@@ -294,7 +294,7 @@ def global_function(bot, update):
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    if update.message['text'] in projects_list and not is_delete_project:
+    if update.message['text'] in projects_list and not is_delete_project and not is_add_task and not is_add_project:
         project = update.message['text']
 
         if is_report_proj:
@@ -436,6 +436,9 @@ def employee_task_preview(bot, update):
 
 # КЫ ПЫ ЗЫ нахрен
 def kpz(bot, update):
+    if len(update.message['text']) > 3:
+        global_function(bot, update)
+        return
     update.message.reply_text('<i><b>Здесь выводятся ИНН</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -445,7 +448,6 @@ def kpz(bot, update):
         update.message.reply_text(f'<i><b>{inn[1]}</b></i>',
                                   reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
-
 
 
 updater = Updater(TOKEN)

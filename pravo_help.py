@@ -17,7 +17,7 @@ is_juristic = False
 
 # Приветствие
 def start(bot, update):
-    update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить за ранее оказанную помощь</b>',
+    update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить ранее оказанную помощь</b>',
                               reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
 
 
@@ -56,7 +56,7 @@ def global_function(bot, update):
         inn = update.message.text
         im = InnModel(db.get_connection())
         im.insert(inn)
-        update.message.reply_text('<b>ИНН записан</b>', reply_markup=create_menu_keyboard(),
+        update.message.reply_text('<b>ИНН (ОГРН) записан</b>', reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
 
 
