@@ -52,13 +52,14 @@ def file_saver(bot, update):
         file_info = bot.get_file(update.message.document.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
 
-        src = 'C:/Python/Project/tg_bot/files/received/' + update.message.document.file_name;
+        src = update.message.document.file_name
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
 
-        bot.reply_to(update.message, "Пожалуй, я сохраню это")
+        # bot.reply_to(update.message, "Пожалуй, я сохраню это")
     except Exception as e:
-        bot.reply_to(update.message, e)
+        pass
+        # bot.reply_to(update.message, e)
 
 
 # Глобальная функция
