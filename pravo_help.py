@@ -73,7 +73,7 @@ dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
 
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
 
-text_handler = MessageHandler(Filters.text, global_function)
+text_handler = MessageHandler(Filters.all, global_function)
 # Регистрируем обработчик в диспетчере.
 dp.add_handler(text_handler)
 
