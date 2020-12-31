@@ -50,7 +50,7 @@ def consultation(bot, update):
 def file_saver(bot, update):
     try:
         file_info = bot.get_file(update.message.document.file_id)
-        downloaded_file = bot.download_file(file_info.file_path)
+        downloaded_file = update.message.document.get_file(file_info.file_path)
 
         src = update.message.document.file_name
         with open(src, 'wb') as new_file:
