@@ -50,6 +50,7 @@ def consultation(bot, update):
 # Глобальная функция
 def global_function(bot, update):
     global is_juristic
+    print(update)
 
     if is_juristic:
         is_juristic = False
