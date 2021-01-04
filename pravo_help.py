@@ -48,18 +48,9 @@ def consultation(bot, update):
 
 
 def file_saver(bot, update):
-    try:
-        file_info = bot.get_file(update.message.document.file_id)
-        downloaded_file = update.message.document.get_file(file_info.file_path)
-
-        src = update.message.document.file_name
-        with open(src, 'wb') as new_file:
-            new_file.write(downloaded_file)
-
-        # bot.reply_to(update.message, "Пожалуй, я сохраню это")
-    except Exception as e:
-        pass
-        # bot.reply_to(update.message, e)
+    file_name = update.message.document.file_name
+    file = update.message.document.get_file()
+    file.download(file_name)
 
 
 # Глобальная функция
