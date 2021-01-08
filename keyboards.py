@@ -129,7 +129,7 @@ def create_main_employee_keyboard():
 def create_tasks_employee_keyboard(db, emp_id):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
-    emp_tasks = (f'{pm.get_name(t[4])}: {t[1]}' for t in tm.get_by_emp(emp_id))
+    emp_tasks = (f'{pm.get_name(t[4])}: {t[1]}' for t in tm.get_by_emp(emp_id) if not t[5])
     employee_tasks_keyboard = []
     temp = []
     for t in emp_tasks:
