@@ -77,6 +77,13 @@ def create_tasks_in_project_boss_keyboard():
     return boss_markup
 
 
+def create_kpz_boss_keyboard():
+    boss_reply_keyboard = [['Просмотр юр. вопросов', 'Просмотр ИНН'],
+                            ['Главное меню']]
+    boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
+    return boss_markup
+
+
 # ОТЧЁТЫ
 def create_report_boss_keyboard():
     # boss_reply_keyboard = [['Отчёт по Проектам', 'Отчёт по Задачам', 'Отчёт по Сотрудникам'],

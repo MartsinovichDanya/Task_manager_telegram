@@ -15,7 +15,7 @@ from keyboards import create_main_employee_keyboard, create_tasks_employee_keybo
 from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
-from keyboards import create_report_task_boss_keyboard
+from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report
@@ -441,6 +441,13 @@ def employee_task_preview(bot, update):
 
 # КЫ ПЫ ЗЫ нахрен
 def kpz(bot, update):
+    update.message.reply_text('<i><b>Выберите раздел</b></i>',
+                              reply_markup=create_kpz_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+# Просмотр ИНН
+def kpz_inn_preview(bot, update):
     if len(update.message['text']) > 3:
         global_function(bot, update)
         return
@@ -453,6 +460,13 @@ def kpz(bot, update):
         update.message.reply_text(f'<i><b>{inn[1]}</b></i>',
                                   reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
+
+
+# Просмотр юр. вопросов
+def kpz_juristic_questions(bot, update):
+    update.message.reply_text('<i><b>Здесь выводятся вопросы</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
 
 
 updater = Updater(TOKEN)
@@ -493,6 +507,8 @@ dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
 dp.add_handler(MessageHandler(Filters.regex('Назад'), back_to_report))
 # КПЗ от pravo_help бота
 dp.add_handler(MessageHandler(Filters.regex('КПЗ'), kpz))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр юр. вопросов'), kpz_juristic_questions))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр ИНН'), kpz_inn_preview))
 
 
 # Клавиатура сотрудника
