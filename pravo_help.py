@@ -39,6 +39,8 @@ def juristic_person(bot, update):
 def natural_person(bot, update):
     update.message.reply_text('<b>Переходим к "РобоКассе"</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
+    update.message.reply_text('https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=findtheowner&InvId=0&Culture=ru&Encoding=utf-8&OutSum=500&SignatureValue=ac288b7d40a1747dbe687d74aff91323', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
 
 
 # Раздел "Консультация"
