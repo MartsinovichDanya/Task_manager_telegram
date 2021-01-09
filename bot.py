@@ -448,9 +448,9 @@ def kpz(bot, update):
 
 # Просмотр ИНН
 def kpz_inn_preview(bot, update):
-    if len(update.message['text']) > 3:
-        global_function(bot, update)
-        return
+    # if len(update.message['text']) > 3:
+    #     global_function(bot, update)
+    #     return
     update.message.reply_text('<i><b>Здесь выводятся ИНН</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
