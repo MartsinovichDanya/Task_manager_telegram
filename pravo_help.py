@@ -13,6 +13,7 @@ if os.path.exists(dotenv_path):
 TOKEN = os.getenv('TOKEN2')
 db = DB('kpz.db')
 is_juristic = False
+kpz_files_dir = 'kpz_files'
 
 
 # Приветствие
@@ -52,7 +53,9 @@ def consultation(bot, update):
 def file_saver(bot, update):
     file_name = update.message.document.file_name
     file = update.message.document.get_file()
-    file.download(file_name)
+    file_id = file.file_id
+    file.download(os.path.join(kpz_files_dir, file_name))
+    update.message.reply_document(file_id)
 
 
 # Глобальная функция
