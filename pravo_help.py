@@ -54,7 +54,7 @@ def file_saver(bot, update):
     file_name = update.message.document.file_name
     file = update.message.document.get_file()
     file_id = file.file_id
-    file.download(os.path.join(kpz_files_dir, file_name))
+    file.download(os.path.join(os.getcwd(), kpz_files_dir, file_name))
     update.message.reply_document(file_id)
 
 
