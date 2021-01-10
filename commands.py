@@ -12,6 +12,9 @@ from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
 
+import os
+from dotenv import load_dotenv
+
 
 db = DB('tm.db')
 
@@ -200,30 +203,34 @@ def set_done(bot, name, project, time):
         raise TaskNotFound
 
 
-def send_email(to, text, file):
-    login = "KPZ.tasks@yandex.ru"
-    password = "kpztasks"
+def send_email(to, text, file=None):
+    dotenv_path = os.path.join(os.path.dirname(__file__), 'kpz_mail.env')
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
+
+    login = os.getenv('LOGIN')
+    password = os.getenv('PASSWORD')
     url = "smtp.yandex.ru"
-    header = 'Content-Disposition', 'attachment; filename="%s"' % file
 
     msg = MIMEMultipart()
     msg['Subject'] = 'Новое задание с PravoHelpBot'
     msg['From'] = login
     msg['To'] = to
-    body = text
-    msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(text, 'html'))
 
-    attachment = MIMEBase('application', "octet-stream")
-    try:
-        with open(file, "rb") as fh:
-            data = fh.read()
+    if file is not None:
+        header = 'Content-Disposition', 'attachment; filename="%s"' % file
+        attachment = MIMEBase('application', "octet-stream")
+        try:
+            with open(file, "rb") as fh:
+                data = fh.read()
 
-        attachment.set_payload(data)
-        encoders.encode_base64(attachment)
-        attachment.add_header(*header)
-        msg.attach(attachment)
-    except IOError:
-        print("Error opening attachment file %s" % file)
+            attachment.set_payload(data)
+            encoders.encode_base64(attachment)
+            attachment.add_header(*header)
+            msg.attach(attachment)
+        except IOError:
+            print("Error opening attachment file %s" % file)
 
     try:
         server = smtplib.SMTP_SSL(url, 465)

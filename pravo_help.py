@@ -70,7 +70,8 @@ def global_function(bot, update):
             file = update.message.document.get_file()
             file_id = file.file_id
 
-            file.download(os.path.join(os.getcwd(), kpz_files_dir, get_uniq_filename(file_name, username)))
+            new_file_name = get_uniq_filename(file_name, username)
+            file.download(os.path.join(os.getcwd(), kpz_files_dir, new_file_name))
 
             fm = FileModel(db.get_connection())
             fm.insert(file_id, file_name)
