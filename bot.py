@@ -18,7 +18,7 @@ from keyboards import create_report_projects_boss_keyboard, create_report_employ
 from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
-from commands import all_task_report, emp_report, proj_report
+from commands import all_task_report, emp_report, proj_report, get_uniq_filename
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
@@ -31,6 +31,7 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 TOKEN = os.getenv('TOKEN')
+KPZ_FILES_DIR = 'kpz_files'
 
 db = DB('tm.db')
 
@@ -477,10 +478,12 @@ def kpz_juristic_questions(bot, update):
 <b>Файл:</b> {'Не прикреплен' if task[4] == -1 else '↓'}''',
                                   reply_markup=create_menu_keyboard(), parse_mode='HTML')
         try:
-            update.message.reply_document(fm.get(task[4])[1],
+            new_file_name = get_uniq_filename(fm.get(task[4])[2], task[3][1:])
+            update.message.reply_document(os.path.join(os.getcwd(), KPZ_FILES_DIR, new_file_name),
+                                          filename=new_file_name,
                                           reply_markup=create_menu_keyboard())
-        except Exception:
-            pass
+        except Exception as e:
+            print('kpz_juristic_questions', e)
 
 
 updater = Updater(TOKEN)
