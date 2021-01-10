@@ -93,7 +93,7 @@ class FileModel:
         cursor = self.connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS files
                             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                             tg_id VARCHAR(50),
+                             tg_id VARCHAR(200),
                              file_name VARCHAR(200)
                              )''')
         cursor.close()

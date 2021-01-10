@@ -472,9 +472,9 @@ def kpz_juristic_questions(bot, update):
     fm = FileModel(kpz_db.get_connection())
     for task in ktm.get_all():
         update.message.reply_text(f'''
-        <b>Задача: <u>{task[1]}</u></b>
-        <b>Контакты Заказчика: {task[3]}</b>
-        <b>Файл:</b> {'Не прикреплен' if task[4] == -1 else '↓'}''',
+<b>Юридический вопрос: <u>{task[1]}</u></b>\n
+<b>Контакты Заказчика: {task[3]}</b>
+<b>Файл:</b> {'Не прикреплен' if task[4] == -1 else '↓'}''',
                                   reply_markup=create_menu_keyboard(), parse_mode='HTML')
         try:
             update.message.reply_document(fm.get(task[4])[1],

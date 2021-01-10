@@ -49,7 +49,7 @@ def natural_person(bot, update):
 def consultation(bot, update):
     global is_consultation
     is_consultation = True
-    update.message.reply_text('<b>Опишите проблему и задайте вопрос</b>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<b>Опишите проблему и задайте вопрос.\nВАЖНО! Вы можете отправлять юридический вопрос как с файлом, так и без него. Если к Вашему вопросу прилагается какой-либо документ, прикреплять его необходимо вместе с текстовым сообщением!</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 #
@@ -69,7 +69,7 @@ def global_function(bot, update):
     if is_consultation:
         is_consultation = False
         ktm = KpzTaskModel(db.get_connection())
-        if not update.message.doucument:
+        if not update.message.document:
             ktm.insert(update.message.text, '@'+update.message['chat']['username'])
         else:
             file_name = update.message.document.file_name
@@ -80,7 +80,7 @@ def global_function(bot, update):
 
             fm = FileModel(db.get_connection())
             fm.insert(file_id, file_name)
-            ktm.insert(update.message.text, '@' + update.message['chat']['username'],
+            ktm.insert(update.message['caption'], '@' + update.message['chat']['username'],
                        file_id=fm.get_id(file_id))
 
     if is_juristic:
@@ -95,7 +95,7 @@ def global_function(bot, update):
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
-
+dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
 dp.add_handler(CommandHandler('start', start))
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
@@ -103,7 +103,7 @@ dp.add_handler(MessageHandler(Filters.regex('Оплата картой для ф
 dp.add_handler(MessageHandler(Filters.regex('Выставить счёт для юр.лиц'), juristic_person))
 dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
 
-dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
+
 
 text_handler = MessageHandler(Filters.all, global_function)
 # Регистрируем обработчик в диспетчере.
