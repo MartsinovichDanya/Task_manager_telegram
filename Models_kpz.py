@@ -62,7 +62,7 @@ class KpzTaskModel:
         cursor.execute('''INSERT INTO tasks 
                                   (description, done, user_link, file_id) 
                                   VALUES (?,?,?,?)''',
-                       (description, user_link, done, file_id,))
+                       (description, done, user_link, file_id,))
         cursor.close()
         self.connection.commit()
 
@@ -115,6 +115,12 @@ class FileModel:
         if not row:
             return False
         return row
+
+    def get_id(self, tg_id):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM files WHERE tg_id = ?", (tg_id, ))
+        row = cursor.fetchone()
+        return row[0]
 
     def get_all(self):
         cursor = self.connection.cursor()

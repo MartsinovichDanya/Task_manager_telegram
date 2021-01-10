@@ -5,7 +5,7 @@ from datetime import datetime
 
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
-from Models_kpz import InnModel
+from Models_kpz import InnModel, KpzTaskModel, FileModel
 
 from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
@@ -465,8 +465,22 @@ def kpz_inn_preview(bot, update):
 # Просмотр юр. вопросов
 def kpz_juristic_questions(bot, update):
     update.message.reply_text('<i><b>Здесь выводятся вопросы</b></i>',
-                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
+
+    kpz_db = DB('kpz.db')
+    ktm = KpzTaskModel(kpz_db.get_connection())
+    fm = FileModel(kpz_db.get_connection())
+    for task in ktm.get_all():
+        update.message.reply_text(f'''
+        <b>Задача: <u>{task[1]}</u></b>
+        <b>Контакты Заказчика: {task[3]}</b>
+        <b>Файл:</b> {'Не прикреплен' if task[4] == -1 else '↓'}''',
+                                  reply_markup=create_menu_keyboard(), parse_mode='HTML')
+        try:
+            update.message.reply_document(fm.get(task[4])[1],
+                                          reply_markup=create_menu_keyboard())
+        except Exception:
+            pass
 
 
 updater = Updater(TOKEN)

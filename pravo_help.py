@@ -1,6 +1,6 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
-from Models_kpz import InnModel
+from Models_kpz import InnModel, KpzTaskModel, FileModel
 from DB import DB
 
 import os
@@ -13,6 +13,7 @@ if os.path.exists(dotenv_path):
 TOKEN = os.getenv('TOKEN2')
 db = DB('kpz.db')
 is_juristic = False
+is_consultation = False
 kpz_files_dir = 'kpz_files'
 
 
@@ -46,22 +47,41 @@ def natural_person(bot, update):
 
 # Раздел "Консультация"
 def consultation(bot, update):
+    global is_consultation
+    is_consultation = True
     update.message.reply_text('<b>Опишите проблему и задайте вопрос</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
-
-def file_saver(bot, update):
-    file_name = update.message.document.file_name
-    file = update.message.document.get_file()
-    file_id = file.file_id
-    file.download(os.path.join(os.getcwd(), kpz_files_dir, file_name))
-    update.message.reply_document(file_id)
+#
+# def file_saver(bot, update):
+#     file_name = update.message.document.file_name
+#     file = update.message.document.get_file()
+#     file_id = file.file_id
+#     file.download(os.path.join(os.getcwd(), kpz_files_dir, file_name))
+#     update.message.reply_document(file_id)
 
 
 # Глобальная функция
 def global_function(bot, update):
-    global is_juristic
+    global is_juristic, is_consultation
     print(update)
+
+    if is_consultation:
+        is_consultation = False
+        ktm = KpzTaskModel(db.get_connection())
+        if not update.message.doucument:
+            ktm.insert(update.message.text, '@'+update.message['chat']['username'])
+        else:
+            file_name = update.message.document.file_name
+            file = update.message.document.get_file()
+            file_id = file.file_id
+
+            file.download(os.path.join(os.getcwd(), kpz_files_dir, file_name))
+
+            fm = FileModel(db.get_connection())
+            fm.insert(file_id, file_name)
+            ktm.insert(update.message.text, '@' + update.message['chat']['username'],
+                       file_id=fm.get_id(file_id))
 
     if is_juristic:
         is_juristic = False
@@ -85,9 +105,7 @@ dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
 
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
 
-dp.add_handler(MessageHandler(Filters.document, file_saver))
-
-text_handler = MessageHandler(Filters.text, global_function)
+text_handler = MessageHandler(Filters.all, global_function)
 # Регистрируем обработчик в диспетчере.
 dp.add_handler(text_handler)
 
