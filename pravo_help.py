@@ -11,11 +11,17 @@ dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
+dotenv_path = os.path.join(os.path.dirname(__file__), 'kpz_mail.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
 TOKEN = os.getenv('TOKEN2')
+KPZ_FILES_DIR = 'kpz_files'
+BOSS_EMAIL_ADDRESS = os.getenv('BOSS_ADDRESS')
+
 db = DB('kpz.db')
 is_juristic = False
 is_consultation = False
-kpz_files_dir = 'kpz_files'
 
 
 # Приветствие
@@ -65,18 +71,27 @@ def global_function(bot, update):
         username = update.message['chat']['username']
         if not update.message.document:
             ktm.insert(update.message.text, '@'+username)
+
+            send_email(BOSS_EMAIL_ADDRESS, f'''
+<b>Юридический вопрос: <u>{update.message.text}</u></b>\n
+<b>Контакты Заказчика: {'@'+username}</b>''')
         else:
             file_name = update.message.document.file_name
             file = update.message.document.get_file()
             file_id = file.file_id
 
             new_file_name = get_uniq_filename(file_name, username)
-            file.download(os.path.join(os.getcwd(), kpz_files_dir, new_file_name))
+            file_path = os.path.join(os.getcwd(), KPZ_FILES_DIR, new_file_name)
+            file.download(file_path)
 
             fm = FileModel(db.get_connection())
             fm.insert(file_id, file_name)
-            ktm.insert(update.message['caption'], '@' + update.message['chat']['username'],
+            ktm.insert(update.message['caption'], '@'+username,
                        file_id=fm.get_id(file_id))
+
+            send_email(BOSS_EMAIL_ADDRESS, f'''
+<b>Юридический вопрос: <u>{update.message['caption']}</u></b>\n
+<b>Контакты Заказчика: {'@' + username}</b>''', file=file_path)
 
     if is_juristic:
         is_juristic = False
