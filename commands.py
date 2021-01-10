@@ -6,6 +6,11 @@ from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectA
 from keyboards import create_back_to_reports_keyboard
 
 from datetime import datetime
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+import smtplib
 
 
 db = DB('tm.db')
@@ -193,3 +198,43 @@ def set_done(bot, name, project, time):
 </b>''', parse_mode='HTML')
     else:
         raise TaskNotFound
+
+
+def send_email(to, text, file):
+    login = "KPZ.tasks@yandex.ru"
+    password = "kpztasks"
+    url = "smtp.yandex.ru"
+    header = 'Content-Disposition', 'attachment; filename="%s"' % file
+
+    msg = MIMEMultipart()
+    msg['Subject'] = 'Новое задание с PravoHelpBot'
+    msg['From'] = login
+    msg['To'] = to
+    body = text
+    msg.attach(MIMEText(body, 'plain'))
+
+    attachment = MIMEBase('application', "octet-stream")
+    try:
+        with open(file, "rb") as fh:
+            data = fh.read()
+
+        attachment.set_payload(data)
+        encoders.encode_base64(attachment)
+        attachment.add_header(*header)
+        msg.attach(attachment)
+    except IOError:
+        print("Error opening attachment file %s" % file)
+
+    try:
+        server = smtplib.SMTP_SSL(url, 465)
+        server.login(login, password)
+        server.sendmail(login, to, msg.as_string())
+        server.quit()
+    except Exception as e:
+        print(e)
+
+
+def get_uniq_filename(filename, tg_username):
+    fn, fe = filename.split('.')
+    new_file_name = fn + f'({tg_username})' + '.' + fe
+    return new_file_name

@@ -1,6 +1,7 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
 from Models_kpz import InnModel, KpzTaskModel, FileModel
+from commands import send_email, get_uniq_filename
 from DB import DB
 
 import os
@@ -52,14 +53,6 @@ def consultation(bot, update):
     update.message.reply_text('<b>Опишите проблему и задайте вопрос.\nВАЖНО! Вы можете отправлять юридический вопрос как с файлом, так и без него. Если к Вашему вопросу прилагается какой-либо документ, прикреплять его необходимо вместе с текстовым сообщением!</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
-#
-# def file_saver(bot, update):
-#     file_name = update.message.document.file_name
-#     file = update.message.document.get_file()
-#     file_id = file.file_id
-#     file.download(os.path.join(os.getcwd(), kpz_files_dir, file_name))
-#     update.message.reply_document(file_id)
-
 
 # Глобальная функция
 def global_function(bot, update):
@@ -69,14 +62,15 @@ def global_function(bot, update):
     if is_consultation:
         is_consultation = False
         ktm = KpzTaskModel(db.get_connection())
+        username = update.message['chat']['username']
         if not update.message.document:
-            ktm.insert(update.message.text, '@'+update.message['chat']['username'])
+            ktm.insert(update.message.text, '@'+username)
         else:
             file_name = update.message.document.file_name
             file = update.message.document.get_file()
             file_id = file.file_id
 
-            file.download(os.path.join(os.getcwd(), kpz_files_dir, file_name))
+            file.download(os.path.join(os.getcwd(), kpz_files_dir, get_uniq_filename(file_name, username)))
 
             fm = FileModel(db.get_connection())
             fm.insert(file_id, file_name)
