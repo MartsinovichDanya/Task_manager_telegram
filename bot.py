@@ -479,8 +479,8 @@ def kpz_juristic_questions(bot, update):
                                   reply_markup=create_menu_keyboard(), parse_mode='HTML')
         try:
             new_file_name = get_uniq_filename(fm.get(task[4])[2], task[3][1:])
-            update.message.reply_document(os.path.join(os.getcwd(), KPZ_FILES_DIR, new_file_name),
-                                          filename=new_file_name,
+            tg_doc = open(os.path.join(os.getcwd(), KPZ_FILES_DIR, new_file_name), 'rb')
+            update.message.reply_document(tg_doc, filename=new_file_name,
                                           reply_markup=create_menu_keyboard())
         except Exception as e:
             print('kpz_juristic_questions', e)
