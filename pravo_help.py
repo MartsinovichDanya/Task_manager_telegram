@@ -73,7 +73,7 @@ def global_function(bot, update):
             ktm.insert(update.message.text, '@'+username)
 
             send_email(BOSS_EMAIL_ADDRESS, f'''
-<b>Юридический вопрос: <u>{update.message.text}</u></b>\n
+<b>Юридический вопрос: <u>{update.message.text}</u></b></br>
 <b>Контакты Заказчика: {'@'+username}</b>''')
         else:
             file_name = update.message.document.file_name
