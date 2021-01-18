@@ -458,7 +458,9 @@ def kpz_inn_preview(bot, update):
     kpz_db = DB('kpz.db')
     im = InnModel(kpz_db.get_connection())
     for inn in im.get_all():
-        update.message.reply_text(f'<i><b>{inn[1]}</b></i>',
+        update.message.reply_text(f'''
+<i><b>ИНН: {inn[1]}</b></i>
+<i><b>Контакты Заказчика: {inn[2]}</b></i>''',
                                   reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
 

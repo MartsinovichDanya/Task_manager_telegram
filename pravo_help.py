@@ -95,9 +95,10 @@ def global_function(bot, update):
 
     if is_juristic:
         is_juristic = False
+        username = update.message['chat']['username']
         inn = update.message.text
         im = InnModel(db.get_connection())
-        im.insert(inn)
+        im.insert(inn, username)
         update.message.reply_text('<b>ИНН (ОГРН) записан</b>', reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
 

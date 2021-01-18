@@ -6,17 +6,18 @@ class InnModel:
         cursor = self.connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS inn_table
                             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                             inn VARCHAR(50)
+                             inn VARCHAR(50),
+                             user_link VARCHAR(100),
                              )''')
         cursor.close()
         self.connection.commit()
 
-    def insert(self, inn):
+    def insert(self, inn, user_link):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO inn_table
-                          (inn) 
-                          VALUES (?)''',
-                       (inn, ))
+                          (inn, user_link) 
+                          VALUES (?,?)''',
+                       (inn, user_link, ))
         cursor.close()
         self.connection.commit()
 
