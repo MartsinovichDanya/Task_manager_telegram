@@ -7,7 +7,7 @@ class InnModel:
         cursor.execute('''CREATE TABLE IF NOT EXISTS inn_table
                             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                              inn VARCHAR(50),
-                             user_link VARCHAR(100),
+                             user_link VARCHAR(100)
                              )''')
         cursor.close()
         self.connection.commit()
