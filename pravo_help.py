@@ -115,7 +115,6 @@ dp.add_handler(MessageHandler(Filters.regex('Выставить счёт для 
 dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
 
 
-
 text_handler = MessageHandler(Filters.all, global_function)
 # Регистрируем обработчик в диспетчере.
 dp.add_handler(text_handler)
