@@ -392,11 +392,16 @@ def global_function(bot, update):
     elif is_time_selected:
         is_time_selected = False
         time = update.message['text']
-        if not time.isdigit():
+
+        try:
+            hours, minutes = (int(el) for el in time.split(':'))
+        except Exception:
             is_time_selected = True
             update.message.reply_text("<i><b>Введено некорректное значение времени</b></i>", parse_mode='HTML')
+
         else:
             project, name = task.split(': ')
+            time = int((float(hours) + minutes/60)*1000)
             set_done(bot, name, project, time)
 
     elif is_report:

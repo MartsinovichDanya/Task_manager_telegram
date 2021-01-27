@@ -197,7 +197,7 @@ def set_done(bot, name, project, time):
 <u>Проект:</u> {pm.get_name(task[4])}
 <u>Задача:</u> {task[1]}
 <u>Описание задачи:</u> {task[2]}
-<u>Время выполнения:</u> {str(task[8]) + ' часа(-ов)'}
+<u>Время выполнения:</u> {int(task[8]/1000)} часа(-ов) {int(((task[8]/1000)%1) * 60)} минут
 </b>''', parse_mode='HTML')
     else:
         raise TaskNotFound
