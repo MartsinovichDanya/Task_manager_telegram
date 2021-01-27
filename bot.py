@@ -205,7 +205,7 @@ def task_preview(bot, update):
 <b>Проект: {pm.get_name(task[4])}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
-<b>Время выполнения: {'-' if not task[5] else str(task[8])}</b>
+<b>Время выполнения: {'-' if not task[5] else str(int(task[8]/1000))+'часа(-ов)'+str(int(((task[8]/1000)%1) * 60))+'минут'}</b>
 <b>Статус:</b> {'Выполнена' if task[5] else 'В процессе'}''', reply_markup=create_menu_keyboard(), parse_mode='HTML')
 
 
