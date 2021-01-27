@@ -110,7 +110,7 @@ def proj_report(update, l_date, r_date, proj):
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
-<b>Время выполнения: {str(task[8]) + ' часа(-ов)'}</b>
+<b>Время выполнения: {task[8].split(':')[0]} часа(-ов) {task[8].split(':')[1]} минут</b>
 <b>Статус: Выполнена</b>
 <b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
 
@@ -139,7 +139,7 @@ def emp_report(update, l_date, r_date, emp):
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
-<b>Время выполнения: {str(task[8]) + ' часа(-ов)'}</b>
+<b>Время выполнения: {task[8].split(':')[0]} часа(-ов) {task[8].split(':')[1]} минут</b>
 <b>Статус: Выполнена</b>
 <b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
 
@@ -166,7 +166,7 @@ def all_task_report(update, l_date, r_date):
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
-<b>Время выполнения: {str(task[8]) + ' часа(-ов)'}</b>
+<b>Время выполнения: {task[8].split(':')[0]} часа(-ов) {task[8].split(':')[1]} минут</b>
 <b>Статус: Выполнена</b>
 <b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
 
@@ -197,7 +197,7 @@ def set_done(bot, name, project, time):
 <u>Проект:</u> {pm.get_name(task[4])}
 <u>Задача:</u> {task[1]}
 <u>Описание задачи:</u> {task[2]}
-<u>Время выполнения:</u> {str(task[8]) + ' часа(-ов)'}
+<u>Время выполнения:</u> {task[8].split(':')[0]} часа(-ов) {task[8].split(':')[1]} минут
 </b>''', parse_mode='HTML')
     else:
         raise TaskNotFound
