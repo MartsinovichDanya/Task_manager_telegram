@@ -386,7 +386,7 @@ def global_function(bot, update):
     elif is_task_selected:
         is_task_selected = False
         task = update.message['text']
-        update.message.reply_text("<i><b>Введите время выполнения задачи</b></i>", parse_mode='HTML')
+        update.message.reply_text('<i><b>Введите время выполнения задачи.\nПример: 2:45, 3:00, 1:30.\nВАЖНО! Целое количество часов вводится также через двоеточние (1, 2, 3 часа будут записаны в виде "1:00", "2:00", "3:00" и т.д.)</b></i>', parse_mode='HTML')
         is_time_selected = True
 
     elif is_time_selected:
