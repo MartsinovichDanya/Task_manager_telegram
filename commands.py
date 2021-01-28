@@ -110,7 +110,7 @@ def proj_report(update, l_date, r_date, proj):
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
-<b>Время выполнения: {task[8].split(':')[0]} часа(-ов) {task[8].split(':')[1]} минут</b>
+<b>Время выполнения: {task[8]}</b>
 <b>Статус: Выполнена</b>
 <b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
 
@@ -139,7 +139,7 @@ def emp_report(update, l_date, r_date, emp):
 <b>Задача: {task[1]}</b>
 <b>Описание: {task[2]}</b>
 <b>Сотрудник: {em.get(task[3])[1]}</b>
-<b>Время выполнения: {task[8].split(':')[0]} часа(-ов) {task[8].split(':')[1]} минут</b>
+<b>Время выполнения: {task[8]}</b>
 <b>Статус: Выполнена</b>
 <b>Дата выполнения: {'.'.join(map(str, [date.day, date.month, date.year]))}</b>''', parse_mode='HTML')
 
