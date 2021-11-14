@@ -15,8 +15,18 @@ import smtplib
 import os
 from dotenv import load_dotenv
 
+from requests import post
+
 
 db = DB('tm.db')
+
+
+dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+EGRN_TOKEN = os.getenv('EGRN_TOKEN')
+EGRN_API_URL = "https://apiegrn.ru/api/cadaster/objectInfoFull"
 
 # boss functions
 
@@ -245,3 +255,15 @@ def get_uniq_filename(filename, tg_username):
     fn, fe = filename.split('.')
     new_file_name = fn + f'({tg_username})' + '.' + fe
     return new_file_name
+
+
+def get_cadaster_report(cad_num):
+    req = post(EGRN_API_URL,
+               headers={"Token": EGRN_TOKEN},
+               json={
+                   "query": cad_num,
+                   "deep": 0
+               })
+
+    resp = req.json()
+    return resp["EGRN"]["details"].items()
