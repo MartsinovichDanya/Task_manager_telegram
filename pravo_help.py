@@ -121,10 +121,8 @@ def global_function(bot, update):
     elif is_cadster_object:
         is_cadster_object = False
         kad_number = update.message.text
-        update.message.reply_text('<b>Ваша заявка прията. Скоро с вами свяжутся епта)</b>', reply_markup=create_menu_keyboard(),
+        update.message.reply_text('<b>Ваша заявка принята. В ближайшее время ожидайте обратную связь</b>', reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
-
-
 
 
 updater = Updater(TOKEN)
