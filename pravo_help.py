@@ -24,6 +24,8 @@ db = DB('kpz.db')
 is_juristic = False
 is_consultation = False
 
+is_cadster_object = False
+
 
 # Приветствие
 def start(bot, update):
@@ -61,6 +63,7 @@ def service(bot, update):
 
 # Раздел "Кадастровый объект"
 def cadastral_object(bot, update):
+    is_cadster_object = True
     update.message.reply_text('<b>Введите номер объекта</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
@@ -75,7 +78,7 @@ def consultation(bot, update):
 
 # Глобальная функция
 def global_function(bot, update):
-    global is_juristic, is_consultation
+    global is_juristic, is_consultation, is_cadster_object
     print(update)
 
     if is_consultation:
@@ -106,7 +109,7 @@ def global_function(bot, update):
 <b>Юридический вопрос: <u>{update.message['caption']}</u></b>\n
 <b>Контакты Заказчика: {'@' + username}</b>''', file=file_path)
 
-    if is_juristic:
+    elif is_juristic:
         is_juristic = False
         username = update.message['chat']['username']
         inn = update.message.text
@@ -115,13 +118,21 @@ def global_function(bot, update):
         update.message.reply_text('<b>ИНН (ОГРН) записан</b>', reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
 
+    elif is_cadster_object:
+        is_cadster_object = False
+        kad_number = update.message.text
+        update.message.reply_text('<b>Ваша заявка прията. Скоро с вами свяжутся епта)</b>', reply_markup=create_menu_keyboard(),
+                                  parse_mode='HTML')
+
+
+
 
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
 dp.add_handler(MessageHandler(Filters.regex('Услуги'), service))
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
-dp.add_handler(MessageHandler(Filters.regex('Кадастровый объект'), consultation))
+dp.add_handler(MessageHandler(Filters.regex('Кадастровый объект'), cadastral_object))
 dp.add_handler(CommandHandler('start', start))
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 

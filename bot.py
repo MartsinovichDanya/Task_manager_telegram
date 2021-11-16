@@ -441,7 +441,7 @@ def employee_task_preview(bot, update):
                                   reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
 
-# КЫ ПЫ ЗЫ нахрен
+# КЫ ПЫ ЗЫ нахрен блын
 def kpz(bot, update):
     update.message.reply_text('<i><b>Выберите раздел</b></i>',
                               reply_markup=create_kpz_boss_keyboard(),
