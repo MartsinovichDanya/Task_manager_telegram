@@ -1,5 +1,6 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
+from keyboards import create_service_pravo_help_keyboard
 from Models_kpz import InnModel, KpzTaskModel, FileModel
 from commands import send_email, get_uniq_filename
 from DB import DB
@@ -49,6 +50,18 @@ def natural_person(bot, update):
     update.message.reply_text('<b>Переходим к "РобоКассе"</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     update.message.reply_text('https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=findtheowner&InvId=0&Culture=ru&Encoding=utf-8&OutSum=500&SignatureValue=ac288b7d40a1747dbe687d74aff91323', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Раздел "Услуги"
+def service(bot, update):
+    update.message.reply_text('<b>Выберите тип услуги</b>', reply_markup=create_service_pravo_help_keyboard(),
+                              parse_mode='HTML')
+
+
+# Раздел "Кадастровый объект"
+def cadastral_object(bot, update):
+    update.message.reply_text('<b>Введите номер объекта</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -106,7 +119,9 @@ def global_function(bot, update):
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
+dp.add_handler(MessageHandler(Filters.regex('Услуги'), service))
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
+dp.add_handler(MessageHandler(Filters.regex('Кадастровый объект'), consultation))
 dp.add_handler(CommandHandler('start', start))
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
