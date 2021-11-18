@@ -1,8 +1,10 @@
+import json
+
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
 from keyboards import create_service_pravo_help_keyboard
 from Models_kpz import InnModel, KpzTaskModel, FileModel
-from commands import send_email, get_uniq_filename
+from commands import send_email, get_uniq_filename, get_cadaster_report
 from DB import DB
 
 import os
@@ -19,6 +21,7 @@ if os.path.exists(dotenv_path):
 TOKEN = os.getenv('TOKEN2')
 KPZ_FILES_DIR = 'kpz_files'
 BOSS_EMAIL_ADDRESS = os.getenv('BOSS_ADDRESS')
+JSON_REPORTS_DIR = 'cad_reports'
 
 db = DB('kpz.db')
 is_juristic = False
@@ -120,7 +123,10 @@ def global_function(bot, update):
 
     elif is_cadster_object:
         is_cadster_object = False
-        kad_number = update.message.text
+        cad_number = update.message.text
+        report = get_cadaster_report(cad_number)
+        with open(os.path.join(JSON_REPORTS_DIR, cad_number+'.json'), 'w') as rep_f:
+            json.dump(report, rep_f)
         update.message.reply_text('<b>Ваша заявка принята. В ближайшее время ожидайте обратную связь</b>', reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
 

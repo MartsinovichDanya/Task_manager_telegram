@@ -1,3 +1,4 @@
 *.env
 *.db
 1.py
+cad_reports

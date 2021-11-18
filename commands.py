@@ -3,7 +3,7 @@ from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
-from keyboards import create_back_to_reports_keyboard
+#from keyboards import create_back_to_reports_keyboard
 
 from datetime import datetime
 from email.mime.text import MIMEText
@@ -265,5 +265,7 @@ def get_cadaster_report(cad_num):
                    "deep": 0
                })
 
-    resp = req.json()
-    return resp["EGRN"]["details"].items()
+    json_obj = req.json()
+    resp = {"details": json_obj["EGRN"]["details"],
+            "rights": json_obj["EGRN"]["rights"]}
+    return resp

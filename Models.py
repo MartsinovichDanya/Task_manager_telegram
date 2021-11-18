@@ -297,3 +297,54 @@ class ProjectModel:
         cursor.execute('''DELETE FROM projects WHERE id = ?''', (str(pid),))
         cursor.close()
         self.connection.commit()
+
+
+class ReportModel:
+    def __init__(self, connection):
+        self.connection = connection
+
+    def init_table(self):
+        cursor = self.connection.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS reports
+                                    (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                                     name VARCHAR(22),
+                                     cad_num VARCHAR(17),
+                                     comment VARCHAR(1000),
+                                     close_date DATE
+                                     )''')
+        cursor.close()
+        self.connection.commit()
+
+    def get_all(self):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM reports")
+        rows = cursor.fetchall()
+        return rows
+
+    def get(self, rid):
+        cursor = self.connection.cursor()
+        cursor.execute('''SELECT * FROM reports WHERE id = ?''', (str(rid),))
+        row = cursor.fetchone()
+        return row
+
+    def insert(self, cad_num, comment="", close_date="2222-01-01"):
+        cursor = self.connection.cursor()
+        cursor.execute('''INSERT INTO reports 
+                                  (name, cad_num, comment, close_date) 
+                                  VALUES (?,?,?,?)''',
+                       (cad_num+".json", cad_num, comment, close_date))
+        cursor.close()
+        self.connection.commit()
+
+    def close(self, rid, comment):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE reports SET comment = ? WHERE id = ?", (comment, rid,))
+        cd = '-'.join((str(el) for el in datetime.timetuple(datetime.now())[:3]))
+        cursor.execute("UPDATE reports SET close_date = ? WHERE id = ?", (cd, rid,))
+
+
+    def delete(self, rid):
+        cursor = self.connection.cursor()
+        cursor.execute('''DELETE FROM reports WHERE id = ?''', (str(rid),))
+        cursor.close()
+        self.connection.commit()
