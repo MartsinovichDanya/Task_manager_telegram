@@ -78,7 +78,14 @@ def create_tasks_in_project_boss_keyboard():
 
 
 def create_kpz_boss_keyboard():
-    boss_reply_keyboard = [['Просмотр юр. вопросов', 'Просмотр ИНН'], ['Кадастровые объекты'],
+    boss_reply_keyboard = [['Просмотр юр. вопросов', 'Просмотр ИНН', 'Кадастровые объекты'],
+                            ['Главное меню']]
+    boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
+    return boss_markup
+
+
+def create_cadastral_options_boss_keyboard():
+    boss_reply_keyboard = [['Удалить кад. объект', 'Назначить сотруднику'],
                             ['Главное меню']]
     boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
     return boss_markup
@@ -128,7 +135,8 @@ def create_report_task_boss_keyboard():
 
 # Клавиатура сотрудника
 def create_main_employee_keyboard():
-    employee_reply_keyboard1 = [['Просмотр моих задач', 'Выполнено']]
+    employee_reply_keyboard1 = [['Просмотр моих задач', 'Выполнено'],
+                                ['Просмотр кад. отчётов']]
     employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
     return employee_markup1
 
@@ -154,6 +162,13 @@ def create_done_employee_keyboard():
     employee_reply_keyboard3 = [['Выполнено']]
     employee_markup3 = ReplyKeyboardMarkup(employee_reply_keyboard3, one_time_keyboard=False)
     return employee_markup3
+
+
+def create_comment_employee_keyboard():
+    employee_reply_keyboard1 = [['Написать комментарий'],
+                                ['Главное меню']]
+    employee_markup1 = ReplyKeyboardMarkup(employee_reply_keyboard1, one_time_keyboard=False)
+    return employee_markup1
 
 
 # Клавиатура возврата на главное меню

@@ -15,7 +15,8 @@ from keyboards import create_main_employee_keyboard, create_tasks_employee_keybo
 from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
-from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard
+from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard, create_cadastral_options_boss_keyboard
+from keyboards import create_comment_employee_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report, get_uniq_filename
@@ -173,8 +174,7 @@ def project_preview(update, project):
 <b>Исполнитель:</b> {em.get(task[3])[1]}
 <b>Время выполнения: {'-' if not task[5] else task[8]}</b> 
 <b>Статус: {'Выполнена' if task[5] else 'В процессе'}</b>
-''',
-                                  reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
+''', reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
 
 
 def employee_preview(update, employee):
@@ -441,6 +441,18 @@ def employee_task_preview(bot, update):
                                   reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
 
 
+def employee_cadastral_objects_preview(bot, update):
+    update.message.reply_text('<i><b>Выберите кадастровый отчёт</b></i>',
+                              reply_markup=create_kpz_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+def employee_write_cadastral_comment(bot, update):
+    update.message.reply_text('<i><b>Напишите по выбранному отчёту комментарий длиной до 1000 символов</b></i>',
+                              reply_markup=create_kpz_boss_keyboard(),
+                              parse_mode='HTML')
+
+
 # КЫ ПЫ ЗЫ нахрен блын
 def kpz(bot, update):
     update.message.reply_text('<i><b>Выберите раздел</b></i>',
@@ -489,6 +501,41 @@ def kpz_juristic_questions(bot, update):
             print('kpz_juristic_questions', e)
 
 
+# Просмотр Кадастровых Объектов
+def kpz_cadastral_object_preview(bot, update):
+    update.message.reply_text('<i><b>Кадастровые объекты</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+    update.message.reply_text('''
+        <b><i>Запрос 1</i></b>
+        <b>Кад. номер:</b>
+        <b>Адрес:</b>
+        <b>Дата запроса:</b>
+        ''', reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Просмотр Кадастровых Объектов
+def kpz_cadastral_object_options(bot, update):
+    update.message.reply_text('<i><b>Выберите действие</b></i>',
+                              reply_markup=create_cadastral_options_boss_keyboard(),
+                              parse_mode='HTML')
+
+
+# Удаление Кадастрового Объекта
+def kpz_delete_cadastral_object(bot, update):
+    update.message.reply_text('<i><b>Отчёт удалён</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
+# Назначение Кадастрового Объекта Сотруднику
+def kpz_share_cadastral_object(bot, update):
+    update.message.reply_text('<i><b>Выберите сотрудника</b></i>',
+                              reply_markup=create_menu_keyboard(),
+                              parse_mode='HTML')
+
+
 updater = Updater(TOKEN)
 
 dp = updater.dispatcher
@@ -529,10 +576,16 @@ dp.add_handler(MessageHandler(Filters.regex('Назад'), back_to_report))
 dp.add_handler(MessageHandler(Filters.regex('КПЗ'), kpz))
 dp.add_handler(MessageHandler(Filters.regex('Просмотр юр. вопросов'), kpz_juristic_questions))
 dp.add_handler(MessageHandler(Filters.regex('Просмотр ИНН'), kpz_inn_preview))
+dp.add_handler(MessageHandler(Filters.regex('Кадастровые объекты'), kpz_cadastral_object_preview))
+
+dp.add_handler(MessageHandler(Filters.regex('Удалить кад. объект'), start))
+dp.add_handler(MessageHandler(Filters.regex('Назначить сотруднику'), start))
 
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр моих задач'), employee_task_preview))
+dp.add_handler(MessageHandler(Filters.regex('Просмотр кад. отчётов'), employee_cadastral_objects_preview))
+dp.add_handler(MessageHandler(Filters.regex('Написать комментарий'), employee_write_cadastral_comment))
 dp.add_handler(MessageHandler(Filters.regex('Выполнено'), select_done_task))
 
 # Создаём и удаляем тестовый обработчик текстовых сообщений (команд)
