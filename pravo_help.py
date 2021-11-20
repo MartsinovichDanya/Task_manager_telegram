@@ -4,8 +4,8 @@ from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
 from keyboards import create_service_pravo_help_keyboard
 from Models_kpz import InnModel, KpzTaskModel, FileModel
-from Models import UserModel
-from commands import send_email, get_uniq_filename, get_cadastre_report
+from Models import UserModel, ReportModel
+from commands import send_email, get_uniq_filename, get_cadastre_report, prepare_report_msg
 from DB import DB
 
 import os
@@ -25,6 +25,8 @@ BOSS_EMAIL_ADDRESS = os.getenv('BOSS_ADDRESS')
 JSON_REPORTS_DIR = 'cad_reports'
 
 db = DB('kpz.db')
+rdb = DB('reports.db')
+
 is_juristic = False
 is_consultation = False
 
@@ -33,7 +35,11 @@ is_cadastre_object = False
 
 # Приветствие
 def start(bot, update):
-    update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить ранее оказанную помощь</b>',
+    if not update.message['chat']['username']:
+        update.message.reply_text('<b>где username, псина?!</b>',
+            reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
+    else:
+        update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить ранее оказанную помощь</b>',
                               reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
 
 
@@ -125,39 +131,24 @@ def global_function(bot, update):
 
     elif is_cadastre_object:
         is_cadastre_object = False
+
         um = UserModel(db.get_connection())
+        rm = ReportModel(rdb)
+
         cad_number = update.message.text
         username = update.message['chat']['username']
         report = get_cadastre_report(cad_number)
+
         with open(os.path.join(JSON_REPORTS_DIR, cad_number+'.json'), 'w') as rep_f:
             json.dump(report, rep_f)
+
+        rm.insert(cad_number, report['details']['Адрес (местоположение)'])
+
         update.message.reply_text('<b>Ваша заявка принята. В ближайшее время ожидайте обратную связь</b>', reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
-        bot.sendMessage(um.get_boss_id(), f'''
-        <b>Внимание! Новый кадастровый объект. 
-        Клиент: @{username}</b>
-        
-        <b><u>Подробнее:</u></b>
-            <b>Тип объекта:</b> {get_cadastre_report(cad_number)["details"]["Тип объекта"]}
-            <b>Кадастровый номер:</b> {get_cadastre_report(cad_number)["details"]["Кадастровый номер"]}
-            <b>Статус объекта:</b> {get_cadastre_report(cad_number)["details"]["Статус объекта"]}
-            <b>Дата постановки на кадастровый учет:</b> {get_cadastre_report(cad_number)["details"]["Дата постановки на кадастровый учет"]}
-            <b>Категория земель:</b> {get_cadastre_report(cad_number)["details"]["Категория земель"]}
-            <b>Разрешенное использование:</b> {get_cadastre_report(cad_number)["details"]["Разрешенное использование"]}
-            <b>Площадь:</b> {get_cadastre_report(cad_number)["details"]["Площадь"]}
-            <b>Единица измерения (код):</b> {get_cadastre_report(cad_number)["details"]["Единица измерения (код)"]}
-            <b>Кадастровая стоимость:</b> {get_cadastre_report(cad_number)["details"]["Кадастровая стоимость"]}
-            <b>Дата определения стоимости:</b> {get_cadastre_report(cad_number)["details"]["Дата определения стоимости"]}
-            <b>Дата внесения стоимости:</b> {get_cadastre_report(cad_number)["details"]["Дата внесения стоимости"]}
-            <b>Дата утверждения стоимости:</b> {get_cadastre_report(cad_number)["details"]["Дата утверждения стоимости"]}
-            <b>Адрес (местоположение):</b> {get_cadastre_report(cad_number)["details"]["Адрес (местоположение)"]}
-            <b>Дата обновления информации:</b> {get_cadastre_report(cad_number)["details"]["Дата обновления информации"]}
-            <b>Форма собственности:</b> {get_cadastre_report(cad_number)["details"]["Форма собственности"]}
-            <b>Количество правообладателей:</b> {get_cadastre_report(cad_number)["details"]["Количество правообладателей"]}
-            <b>Кадастровый инженер:</b> {get_cadastre_report(cad_number)["details"]["Кадастровый инженер"]}
-            
-        <b><u>Права:</u></b>
-        ''', parse_mode='HTML')
+
+        msg = prepare_report_msg(username, report)
+        bot.sendMessage(um.get_boss_id(), msg, parse_mode='HTML')
 
 
 updater = Updater(TOKEN)

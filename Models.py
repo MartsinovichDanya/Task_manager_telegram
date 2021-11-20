@@ -149,8 +149,8 @@ class TaskModel:
         cursor = self.connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS tasks
                                     (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                     name VARCHAR(50),
-                                     description VARCHAR(200),
+                                     name VARCHAR(256),
+                                     description VARCHAR(4096),
                                      emp_id INTEGER,
                                      project_id INTEGER,
                                      done BOOL,
@@ -309,7 +309,9 @@ class ReportModel:
                                     (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                      name VARCHAR(22),
                                      cad_num VARCHAR(17),
-                                     comment VARCHAR(1000),
+                                     address VARCHAR(4096),
+                                     assignee VARCHAR(50),
+                                     comment VARCHAR(4096),
                                      close_date DATE
                                      )''')
         cursor.close()
@@ -327,14 +329,18 @@ class ReportModel:
         row = cursor.fetchone()
         return row
 
-    def insert(self, cad_num, comment="", close_date="2222-01-01"):
+    def insert(self, cad_num, address, assignee="", comment="", close_date="2222-01-01"):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO reports 
-                                  (name, cad_num, comment, close_date) 
-                                  VALUES (?,?,?,?)''',
-                       (cad_num+".json", cad_num, comment, close_date))
+                                  (name, cad_num, address, assignee, comment, close_date) 
+                                  VALUES (?,?,?,?,?,?)''',
+                       (cad_num+".json", cad_num, address, assignee, comment, close_date))
         cursor.close()
         self.connection.commit()
+
+    def set_assignee(self, rid, assignee):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE reports SET assignee = ? WHERE id = ?", (assignee, rid,))
 
     def close(self, rid, comment):
         cursor = self.connection.cursor()

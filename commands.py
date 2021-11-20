@@ -313,6 +313,15 @@ def get_cadastre_report(cad_num):
     return resp
 
 
+def prepare_report_msg(username, report):
+    msg = [f'''<b>Внимание! Новый кадастровый объект. Клиент: @{username}</b>
+    <b><u>Подробнее:</u></b>''']
+    for key, val in report['details'].items():
+        msg.append(f'<b>{key}:</b> {val}')
+
+    return '\n'.join(msg)
+
+
 def set_commented_cadastral_object(bot, name, project, time):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
