@@ -348,6 +348,8 @@ class ReportModel:
     def set_assignee(self, rid, assignee):
         cursor = self.connection.cursor()
         cursor.execute("UPDATE reports SET assignee = ? WHERE id = ?", (assignee, rid,))
+        cursor.close()
+        self.connection.commit()
 
     def close(self, rid, comment):
         cursor = self.connection.cursor()
