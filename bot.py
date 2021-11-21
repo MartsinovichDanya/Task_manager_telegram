@@ -356,6 +356,14 @@ def global_function(bot, update):
             update.message.reply_text('<i><b>Отчёт назначен</b></i>',
                                       reply_markup=create_menu_keyboard(),
                                       parse_mode='HTML')
+            em = EmployeeModel(db.get_connection())
+            emp_id = em.get_id(employee)
+            report_data = rm.get(cad_report_id)
+            bot.sendMessage(emp_id, f'''
+У Вас новый кадастровый отчёт
+<b>Кад. номер: </b>{report_data[2]}
+<b>Адрес: </b>{report_data[3]}''', parse_mode='HTML')
+
         else:
             update.message.reply_text(f"<i><b>Просмотр задач сотрудника: {employee}</b></i>",
                                       reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
@@ -466,6 +474,14 @@ def global_function(bot, update):
         update.message.reply_text('<i><b>Отчёт закрыт</b></i>',
                                   reply_markup=create_menu_keyboard(),
                                   parse_mode='HTML')
+        um = UserModel(db.get_connection())
+        boss_id = um.get_boss_id()
+        report_data = rm.get(cad_report_id)
+        bot.sendMessage(boss_id, f'''
+{report_data[4]} оставил(а) комментарий к кад. отчету {report_data[0]}
+<b>Кад. номер: </b>{report_data[2]}
+<b>Адрес: </b>{report_data[3]}
+<b>Комментарий : </b>{comment}''', parse_mode='HTML')
 
 
 # Часть сотрудника нахрен

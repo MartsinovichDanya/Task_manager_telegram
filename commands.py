@@ -308,9 +308,13 @@ def get_cadastre_report(cad_num):
                })
 
     json_obj = req.json()
-    resp = {"details": json_obj["EGRN"]["details"],
-            "rights": json_obj["EGRN"]["rights"]}
-    return resp
+
+    if 'error' in json_obj:
+        return {'error_code': json_obj['error']['code']}
+    else:
+        resp = {"details": json_obj["EGRN"]["details"],
+                "rights": json_obj["EGRN"]["rights"]}
+        return resp
 
 
 def prepare_report_msg(username, report):
