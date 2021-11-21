@@ -324,6 +324,18 @@ def prepare_report_msg(username, report):
     for key, val in report['details'].items():
         msg.append(f'<b>{key}:</b> {val}')
 
+    msg.append('<b><u>Права:</u></b>')
+    for el in report['rights']:
+        msg.append(f"<b>Номер:</b> {el['number']}")
+        msg.append(f"<b>Дата:</b> {el['date']}")
+        msg.append(f"<b>Тип:</b> {el['type']}")
+
+        msg.append('<b><u>Ограничения:</u></b>')
+        for limit in el['limits']:
+            msg.append(f"   <b>Номер:</b> {limit['number']}")
+            msg.append(f"   <b>Дата:</b> {limit['date']}")
+            msg.append(f"   <b>Тип:</b> {limit['type']}")
+
     return '\n'.join(msg)
 
 
