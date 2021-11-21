@@ -25,6 +25,7 @@ BOSS_EMAIL_ADDRESS = os.getenv('BOSS_ADDRESS')
 JSON_REPORTS_DIR = 'cad_reports'
 
 db = DB('kpz.db')
+tm_db = DB('tm.db')
 rdb = DB('reports.db')
 
 is_juristic = False
@@ -35,6 +36,7 @@ is_cadastre_object = False
 
 # Приветствие
 def start(bot, update):
+    print(update)
     if not update.message['chat']['username']:
         update.message.reply_text('<b>где username, псина?!</b>',
             reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
@@ -71,7 +73,7 @@ def service(bot, update):
                               parse_mode='HTML')
 
 
-# Раздел "Кадастровые объекты"
+# Раздел "Кадастровый объект"
 def cadastral_objects(bot, update):
     global is_cadastre_object
     is_cadastre_object = True
@@ -132,14 +134,14 @@ def global_function(bot, update):
     elif is_cadastre_object:
         is_cadastre_object = False
 
-        um = UserModel(db.get_connection())
-        rm = ReportModel(rdb)
+        um = UserModel(tm_db.get_connection())
+        rm = ReportModel(rdb.get_connection())
 
         cad_number = update.message.text
         username = update.message['chat']['username']
         report = get_cadastre_report(cad_number)
 
-        with open(os.path.join(JSON_REPORTS_DIR, cad_number+'.json'), 'w') as rep_f:
+        with open(os.path.join(JSON_REPORTS_DIR, (cad_number + '.json').replace(':', '')), 'w') as rep_f:
             json.dump(report, rep_f)
 
         rm.insert(cad_number, report['details']['Адрес (местоположение)'])
@@ -148,6 +150,7 @@ def global_function(bot, update):
                                   parse_mode='HTML')
 
         msg = prepare_report_msg(username, report)
+        # bot.sendMessage('1027909953', msg, parse_mode='HTML')
         bot.sendMessage(um.get_boss_id(), msg, parse_mode='HTML')
 
 
@@ -156,7 +159,7 @@ updater = Updater(TOKEN)
 dp = updater.dispatcher
 dp.add_handler(MessageHandler(Filters.regex('Услуги'), service))
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
-dp.add_handler(MessageHandler(Filters.regex('Кадастровые объекты'), cadastral_objects))
+dp.add_handler(MessageHandler(Filters.regex('Кадастровый объект'), cadastral_objects))
 dp.add_handler(CommandHandler('start', start))
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
