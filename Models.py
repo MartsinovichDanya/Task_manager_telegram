@@ -332,8 +332,8 @@ class ReportModel:
 
     def get_by_assignee(self, username):
         cursor = self.connection.cursor()
-        cursor.execute('''SELECT * FROM reports WHERE  assignee = ?''', (str(username),))
-        row = cursor.fetchone()
+        cursor.execute('''SELECT * FROM reports WHERE  assignee = ?''', (username,))
+        row = cursor.fetchall()
         return row
 
     def insert(self, name, cad_num, address, client, assignee="", comment="", close_date="2222-01-01"):

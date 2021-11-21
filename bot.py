@@ -320,14 +320,14 @@ def global_function(bot, update):
                               parse_mode='HTML')
     if update.message['text'].isdigit() and (is_select_cad_report or is_employee_select_cad_report):
         cad_report_id = int(update.message['text'])
-        rm = ReportModel(rdb)
+        rm = ReportModel(rdb.get_connection())
         report_metadata = rm.get(cad_report_id)
         report_file_name = report_metadata[1]
 
         with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'r') as rep_f:
             full_report = json.load(rep_f)
 
-        msg = prepare_report_msg(full_report, report_metadata[7])
+        msg = prepare_report_msg(report_metadata[7], full_report)
         if is_select_cad_report:
             update.message.reply_text(msg, reply_markup=create_cadastral_options_boss_keyboard(),
                                   parse_mode='HTML')
@@ -353,7 +353,7 @@ def global_function(bot, update):
             emp_report(update, l_d, r_d, employee)
         elif is_cad_report_assign_employee:
             is_cad_report_assign_employee = False
-            rm = ReportModel(rdb)
+            rm = ReportModel(rdb.get_connection())
             rm.set_assignee(cad_report_id, employee)
             update.message.reply_text('<i><b>Отчёт назначен</b></i>',
                                       reply_markup=create_menu_keyboard(),
@@ -650,7 +650,7 @@ dp.add_handler(MessageHandler(Filters.regex('Просмотр ИНН'), kpz_inn_
 dp.add_handler(MessageHandler(Filters.regex('Кадастровые объекты'), kpz_cadastral_object_preview))
 
 dp.add_handler(MessageHandler(Filters.regex('Удалить кад. объект'), start))
-dp.add_handler(MessageHandler(Filters.regex('Назначить сотруднику'), start))
+dp.add_handler(MessageHandler(Filters.regex('Назначить сотруднику'), kpz_share_cadastral_object))
 
 
 # Клавиатура сотрудника

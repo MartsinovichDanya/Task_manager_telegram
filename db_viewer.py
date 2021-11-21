@@ -29,5 +29,5 @@ def view_rdb():
     print(rm.get_all())
 
 
-# view_tm_db()
+view_tm_db()
 view_rdb()
