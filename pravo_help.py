@@ -144,7 +144,6 @@ def global_function(bot, update):
         report = get_cadastre_report(cad_number)
         report_file_name = cad_number.replace(':', '') + '.json'
 
-
         with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'w') as rep_f:
             json.dump(report, rep_f)
 

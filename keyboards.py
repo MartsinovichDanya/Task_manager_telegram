@@ -129,6 +129,13 @@ def create_cadastral_options_boss_keyboard():
     return boss_markup
 
 
+def create_cadastral_options_employee_keyboard():
+    employee_reply_keyboard = [['Написать комментарий'],
+                            ['Главное меню']]
+    employee_markup = ReplyKeyboardMarkup(employee_reply_keyboard, one_time_keyboard=False)
+    return employee_markup
+
+
 # ОТЧЁТЫ
 def create_report_boss_keyboard():
     # boss_reply_keyboard = [['Отчёт по Проектам', 'Отчёт по Задачам', 'Отчёт по Сотрудникам'],

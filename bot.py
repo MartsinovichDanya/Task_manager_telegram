@@ -17,6 +17,7 @@ from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
 from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard, create_cadastral_options_boss_keyboard
 from keyboards import create_comment_employee_keyboard, create_cad_reports_boss_keyboard
+from keyboards import create_cadastral_options_employee_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report, get_uniq_filename, prepare_report_msg
@@ -25,6 +26,7 @@ from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectA
 
 import os
 from dotenv import load_dotenv
+import json
 
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
@@ -33,6 +35,7 @@ if os.path.exists(dotenv_path):
 
 TOKEN = os.getenv('TOKEN')
 KPZ_FILES_DIR = 'kpz_files'
+JSON_REPORTS_DIR = 'cad_reports'
 
 db = DB('tm.db')
 rdb = DB('reports.db')
@@ -53,13 +56,16 @@ is_report_proj = False
 is_report_employee = False
 
 is_select_cad_report = False
+is_employee_select_cad_report = False
 is_cad_report_assign_employee = False
 is_delete_cad_report = False
+is_comment_cad_report = False
 
 latest_project = ''
 l_d = 0
 r_d = 0
 task = ''
+cad_report_id = 0
 
 
 # Приветствие
@@ -67,7 +73,7 @@ def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
     global is_report, is_task_selected, is_time_selected, is_select_cad_report, is_cad_report_assign_employee
-    global is_delete_cad_report
+    global is_delete_cad_report, is_comment_cad_report, is_employee_select_cad_report
 
     is_add_project = False
     is_add_task = False
@@ -85,8 +91,10 @@ def start(bot, update):
     is_report_employee = False
 
     is_select_cad_report = False
+    is_employee_select_cad_report = False
     is_cad_report_assign_employee = False
     is_delete_cad_report = False
+    is_comment_cad_report = False
 
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
@@ -305,10 +313,29 @@ def global_function(bot, update):
     global latest_project, is_proj_add_task, is_proj_delete_task
     global is_report, is_report_employee, is_report_proj, r_d, l_d, task
     global is_time_selected, is_task_selected
+    global is_delete_cad_report, is_comment_cad_report, is_select_cad_report, is_cad_report_assign_employee
+    global is_employee_select_cad_report, cad_report_id
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    if update.message['text'] in projects_list and not is_delete_project and not is_add_task and not is_add_project:
+    if update.message['text'].isdigit() and (is_select_cad_report or is_employee_select_cad_report):
+        cad_report_id = int(update.message['text'])
+        rm = ReportModel(rdb)
+        report_metadata = rm.get(cad_report_id)
+        report_file_name = report_metadata[1]
+
+        with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'r') as rep_f:
+            full_report = json.load(rep_f)
+
+        msg = prepare_report_msg(full_report, report_metadata[7])
+        if is_select_cad_report:
+            update.message.reply_text(msg, reply_markup=create_cadastral_options_boss_keyboard(),
+                                  parse_mode='HTML')
+        else:
+            update.message.reply_text(msg, reply_markup=create_cadastral_options_employee_keyboard(),
+                                      parse_mode='HTML')
+
+    elif update.message['text'] in projects_list and not is_delete_project and not is_add_task and not is_add_project:
         project = update.message['text']
 
         if is_report_proj:
@@ -324,6 +351,13 @@ def global_function(bot, update):
 
         if is_report_employee:
             emp_report(update, l_d, r_d, employee)
+        elif is_cad_report_assign_employee:
+            is_cad_report_assign_employee = False
+            rm = ReportModel(rdb)
+            rm.set_assignee(cad_report_id, employee)
+            update.message.reply_text('<i><b>Отчёт назначен</b></i>',
+                                      reply_markup=create_menu_keyboard(),
+                                      parse_mode='HTML')
         else:
             update.message.reply_text(f"<i><b>Просмотр задач сотрудника: {employee}</b></i>",
                                       reply_markup=create_tasks_in_project_boss_keyboard(), parse_mode='HTML')
@@ -452,6 +486,9 @@ def employee_task_preview(bot, update):
 
 
 def employee_cadastral_objects_preview(bot, update):
+    global is_employee_select_cad_report
+    is_employee_select_cad_report = True
+
     rm = ReportModel(rdb.get_connection())
     username = update.message['chat']['username']
     cad_reports = rm.get_by_assignee(username)
@@ -469,7 +506,9 @@ def employee_cadastral_objects_preview(bot, update):
 
 
 def employee_write_cadastral_comment(bot, update):
-    update.message.reply_text('<i><b>Напишите по выбранному отчёту комментарий длиной до 1000 символов</b></i>',
+    global is_comment_cad_report
+    is_comment_cad_report = True
+    update.message.reply_text('<i><b>Напишите по выбранному отчёту комментарий длиной до 4096 символов</b></i>',
                               reply_markup=create_kpz_boss_keyboard(),
                               parse_mode='HTML')
 
@@ -524,6 +563,9 @@ def kpz_juristic_questions(bot, update):
 
 # Просмотр Кадастровых Объектов
 def kpz_cadastral_object_preview(bot, update):
+    global is_select_cad_report
+    is_select_cad_report = True
+
     rm = ReportModel(rdb.get_connection())
     cad_reports = rm.get_all()
 
