@@ -312,7 +312,7 @@ def global_function(bot, update):
     global is_report, is_report_employee, is_report_proj, r_d, l_d, task
     global is_time_selected, is_task_selected
     global is_select_cad_report, is_cad_report_assign_employee
-    global is_employee_select_cad_report, is_comment_cad_repor, cad_report_id
+    global is_employee_select_cad_report, is_comment_cad_report, cad_report_id
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -533,7 +533,7 @@ def employee_write_cadastral_comment(bot, update):
     global is_comment_cad_report
     is_comment_cad_report = True
     update.message.reply_text('<i><b>Напишите по выбранному отчёту комментарий длиной до 4096 символов</b></i>',
-                              reply_markup=create_kpz_boss_keyboard(),
+                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -672,7 +672,7 @@ dp.add_handler(MessageHandler(Filters.regex('Просмотр юр. вопрос
 dp.add_handler(MessageHandler(Filters.regex('Просмотр ИНН'), kpz_inn_preview))
 dp.add_handler(MessageHandler(Filters.regex('Кадастровые объекты'), kpz_cadastral_object_preview))
 
-dp.add_handler(MessageHandler(Filters.regex('Удалить кад. объект'), start))
+dp.add_handler(MessageHandler(Filters.regex('Удалить кад. объект'), kpz_delete_cadastral_object))
 dp.add_handler(MessageHandler(Filters.regex('Назначить сотруднику'), kpz_share_cadastral_object))
 
 
