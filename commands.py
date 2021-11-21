@@ -98,47 +98,6 @@ def delete_employee(name):
     tm.delete_by_emp(uid)
 
 
-def add_cadastral_object(bot, name, description, emp_name, project_name, boss_link):
-    em = EmployeeModel(db.get_connection())
-    pm = ProjectModel(db.get_connection())
-    tm = TaskModel(db.get_connection())
-    emp_id = em.get_id(emp_name)
-    if not emp_id:
-        raise UserNotFound
-    proj_id = pm.get_id(project_name)
-    if not proj_id:
-        raise ProjectNotFound
-    tm.insert(name, description, emp_id, proj_id, boss_link, 0)
-    em.add_project(emp_id, pm.get_id(project_name))
-
-    cad_number = None
-    bot.sendMessage(emp_id, '<b>Внимание! Новый кадастровый объект.</b>', parse_mode='HTML')
-    bot.sendMessage(emp_id, f'''
-        Клиент: @</b>
-        
-        <b><u>Подробнее:</u></b>
-            <b>Тип объекта:</b> {get_cadastre_report(cad_number)["details"]["Тип объекта"]}
-            <b>Кадастровый номер:</b> {get_cadastre_report(cad_number)["details"]["Кадастровый номер"]}
-            <b>Статус объекта:</b> {get_cadastre_report(cad_number)["details"]["Статус объекта"]}
-            <b>Дата постановки на кадастровый учет:</b> {get_cadastre_report(cad_number)["details"]["Дата постановки на кадастровый учет"]}
-            <b>Категория земель:</b> {get_cadastre_report(cad_number)["details"]["Категория земель"]}
-            <b>Разрешенное использование:</b> {get_cadastre_report(cad_number)["details"]["Разрешенное использование"]}
-            <b>Площадь:</b> {get_cadastre_report(cad_number)["details"]["Площадь"]}
-            <b>Единица измерения (код):</b> {get_cadastre_report(cad_number)["details"]["Единица измерения (код)"]}
-            <b>Кадастровая стоимость:</b> {get_cadastre_report(cad_number)["details"]["Кадастровая стоимость"]}
-            <b>Дата определения стоимости:</b> {get_cadastre_report(cad_number)["details"]["Дата определения стоимости"]}
-            <b>Дата внесения стоимости:</b> {get_cadastre_report(cad_number)["details"]["Дата внесения стоимости"]}
-            <b>Дата утверждения стоимости:</b> {get_cadastre_report(cad_number)["details"]["Дата утверждения стоимости"]}
-            <b>Адрес (местоположение):</b> {get_cadastre_report(cad_number)["details"]["Адрес (местоположение)"]}
-            <b>Дата обновления информации:</b> {get_cadastre_report(cad_number)["details"]["Дата обновления информации"]}
-            <b>Форма собственности:</b> {get_cadastre_report(cad_number)["details"]["Форма собственности"]}
-            <b>Количество правообладателей:</b> {get_cadastre_report(cad_number)["details"]["Количество правообладателей"]}
-            <b>Кадастровый инженер:</b> {get_cadastre_report(cad_number)["details"]["Кадастровый инженер"]}
-            
-        <b><u>Права:</u></b>
-        ''', parse_mode='HTML')
-
-
 # report functions
 def proj_report(update, l_date, r_date, proj):
     em = EmployeeModel(db.get_connection())
@@ -309,7 +268,7 @@ def get_cadastre_report(cad_num):
 
     json_obj = req.json()
 
-    if 'error' in json_obj:
+    if json_obj['error']:
         return {'error_code': json_obj['error']['code']}
     else:
         resp = {"details": json_obj["EGRN"]["details"],
@@ -326,45 +285,18 @@ def prepare_report_msg(username, report):
 
     msg.append('<b><u>Права:</u></b>')
     for el in report['rights']:
-        msg.append(f"<b>Номер:</b> {el['number']}")
-        msg.append(f"<b>Дата:</b> {el['date']}")
-        msg.append(f"<b>Тип:</b> {el['type']}")
+        msg.append(f"<b>Номер:</b> {el['number'] if 'number' in el.keys() else '-'}")
+        msg.append(f"<b>Дата:</b> {el['date'] if 'date' in el.keys() else '-'}")
+        msg.append(f"<b>Тип:</b> {el['type'] if 'type' in el.keys() else '-'}")
 
-        msg.append('<b><u>Ограничения:</u></b>')
-        for limit in el['limits']:
-            msg.append(f"   <b>Номер:</b> {limit['number']}")
-            msg.append(f"   <b>Дата:</b> {limit['date']}")
-            msg.append(f"   <b>Тип:</b> {limit['type']}")
+        if el['limits']:
+            msg.append('<b><u>Ограничения:</u></b>')
+            for limit in el['limits']:
+                msg.append(f"   <b>Номер:</b> {limit['number'] if 'number' in el.keys() else '-'}")
+                msg.append(f"   <b>Дата:</b> {limit['date'] if 'date' in el.keys() else '-'}")
+                msg.append(f"   <b>Тип:</b> {limit['type'] if 'type' in el.keys() else '-'}")
+                msg.append("\n")
+        else:
+            msg.append('<b><u>Ограничения: -</u></b>')
 
     return '\n'.join(msg)
-
-
-def set_commented_cadastral_object(bot, name, project, time):
-    tm = TaskModel(db.get_connection())
-    pm = ProjectModel(db.get_connection())
-    um = UserModel(db.get_connection())
-    em = EmployeeModel(db.get_connection())
-
-    project_id = pm.get_id(project)
-    tid = tm.search(name, project_id)
-    boss_id = um.get_boss_id()
-
-    if tid:
-        tm.set_done(tid)
-        tm.set_done_date(tid)
-        tm.set_timer(tid, time)
-        task = tm.get(tid)
-        bot.sendMessage(boss_id, f'''
-<b>Внимание! Новый комментарий</b>
-
-<b><u>Исполнитель</u></b>: 
-<b><u>Кадастровый объект</u></b>:
-    <b>Кад. номер:</b> 
-    <b>Адрес:</b> 
-    <b>Дата запроса:</b> 
-    <b>Время выполнения:</b> 
-<b><u>Комментарий:</u></b> 
-    
-''', parse_mode='HTML')
-    else:
-        raise TaskNotFound

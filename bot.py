@@ -478,7 +478,7 @@ def global_function(bot, update):
         boss_id = um.get_boss_id()
         report_data = rm.get(cad_report_id)
         bot.sendMessage(boss_id, f'''
-{report_data[4]} оставил(а) комментарий к кад. отчету {report_data[0]}
+<b>{report_data[4]} оставил(а) комментарий к <i>Запросу №{report_data[0]}</i></b>
 <b>Кад. номер: </b>{report_data[2]}
 <b>Адрес: </b>{report_data[3]}
 <b>Комментарий : </b>{comment}''', parse_mode='HTML')

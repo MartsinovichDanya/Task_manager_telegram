@@ -356,6 +356,8 @@ class ReportModel:
         cursor.execute("UPDATE reports SET comment = ? WHERE id = ?", (comment, rid,))
         cd = '-'.join((str(el) for el in datetime.timetuple(datetime.now())[:3]))
         cursor.execute("UPDATE reports SET close_date = ? WHERE id = ?", (cd, rid,))
+        cursor.close()
+        self.connection.commit()
 
 
     def delete(self, rid):

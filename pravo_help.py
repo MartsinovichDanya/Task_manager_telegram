@@ -38,7 +38,7 @@ is_cadastre_object = False
 def start(bot, update):
     print(update)
     if not update.message['chat']['username']:
-        update.message.reply_text('<b>где username, псина?!</b>',
+        update.message.reply_text('<b>Пожалуйста, установите username в профиле</b>',
             reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
     else:
         update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить ранее оказанную помощь</b>',
@@ -145,19 +145,15 @@ def global_function(bot, update):
 
         if 'error_code' in report:
             if report['error_code'] == 400:
-                update.message.reply_text('<b>Введенное значение не является кадастровым номером. СУКА БЛЯТЬ!</b>',
+                update.message.reply_text('<b>Введенное значение не является кадастровым номером</b>',
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
             elif report['error_code'] == 500:
-                update.message.reply_text('<b>Сервис поиска кадастровых объектов временно не доступен. ЁПТА!</b>',
+                update.message.reply_text('<b>Сервис поиска кадастровых объектов временно не доступен</b>',
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
             elif report['error_code'] == 503:
                 update.message.reply_text('<b>Непредвиденная ошибка сервиса поиска кадастровых объектов. Мы уже работаем над этим.</b>',
-                                          reply_markup=create_menu_keyboard(),
-                                          parse_mode='HTML')
-            else:
-                update.message.reply_text('<b>Бля, ну я хуй знает</b>',
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
         else:
