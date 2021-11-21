@@ -58,7 +58,6 @@ is_report_employee = False
 is_select_cad_report = False
 is_employee_select_cad_report = False
 is_cad_report_assign_employee = False
-is_delete_cad_report = False
 is_comment_cad_report = False
 
 latest_project = ''
@@ -73,7 +72,7 @@ def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
     global is_report, is_task_selected, is_time_selected, is_select_cad_report, is_cad_report_assign_employee
-    global is_delete_cad_report, is_comment_cad_report, is_employee_select_cad_report
+    global is_employee_select_cad_report, is_comment_cad_report
 
     is_add_project = False
     is_add_task = False
@@ -93,7 +92,6 @@ def start(bot, update):
     is_select_cad_report = False
     is_employee_select_cad_report = False
     is_cad_report_assign_employee = False
-    is_delete_cad_report = False
     is_comment_cad_report = False
 
     um = UserModel(db.get_connection())
@@ -313,8 +311,8 @@ def global_function(bot, update):
     global latest_project, is_proj_add_task, is_proj_delete_task
     global is_report, is_report_employee, is_report_proj, r_d, l_d, task
     global is_time_selected, is_task_selected
-    global is_delete_cad_report, is_comment_cad_report, is_select_cad_report, is_cad_report_assign_employee
-    global is_employee_select_cad_report, cad_report_id
+    global is_select_cad_report, is_cad_report_assign_employee
+    global is_employee_select_cad_report, is_comment_cad_repor, cad_report_id
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -460,6 +458,15 @@ def global_function(bot, update):
                                       parse_mode='HTML')
             report(bot, update)
 
+    elif is_comment_cad_report:
+        is_comment_cad_report = False
+        comment = update.message['text']
+        rm = ReportModel(rdb.get_connection())
+        rm.close(cad_report_id, comment)
+        update.message.reply_text('<i><b>Отчёт закрыт</b></i>',
+                                  reply_markup=create_menu_keyboard(),
+                                  parse_mode='HTML')
+
 
 # Часть сотрудника нахрен
 def select_done_task(bot, update):
@@ -490,7 +497,8 @@ def employee_cadastral_objects_preview(bot, update):
     is_employee_select_cad_report = True
 
     rm = ReportModel(rdb.get_connection())
-    username = update.message['chat']['username']
+    um = UserModel(db.get_connection())
+    username = um.get(update.message.from_user.id)[1]
     cad_reports = rm.get_by_assignee(username)
 
     for cad_report in cad_reports:
@@ -591,12 +599,11 @@ def kpz_cadastral_object_options(bot, update):
 
 # Удаление Кадастрового Объекта
 def kpz_delete_cadastral_object(bot, update):
-    global is_delete_cad_report
-    is_delete_cad_report = True
+    rm = ReportModel(rdb.get_connection())
+    rm.delete(cad_report_id)
     update.message.reply_text('<i><b>Отчёт удалён</b></i>',
-                              reply_markup=create_cad_reports_boss_keyboard(rdb),
+                              reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-
 
 # Назначение Кадастрового Объекта Сотруднику
 def kpz_share_cadastral_object(bot, update):
