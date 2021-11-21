@@ -1,4 +1,4 @@
-from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
+from Models import UserModel, TaskModel, ProjectModel, EmployeeModel, ReportModel
 from DB import DB
 
 
@@ -23,4 +23,11 @@ def view_tm_db():
     print('Задачи: ', tm.get_all())
 
 
-view_tm_db()
+def view_rdb():
+    rdb = DB('reports.db')
+    rm = ReportModel(rdb.get_connection())
+    print(rm.get_all())
+
+
+# view_tm_db()
+view_rdb()

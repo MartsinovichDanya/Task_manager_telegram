@@ -133,6 +133,8 @@ def global_function(bot, update):
 
     elif is_cadastre_object:
         is_cadastre_object = False
+        update.message.reply_text('<b>Обработка заявки. Пожалуйста, подождите</b>', reply_markup=create_menu_keyboard(),
+                                  parse_mode='HTML')
 
         um = UserModel(tm_db.get_connection())
         rm = ReportModel(rdb.get_connection())
@@ -141,6 +143,7 @@ def global_function(bot, update):
         username = update.message['chat']['username']
         report = get_cadastre_report(cad_number)
         report_file_name = cad_number.replace(':', '') + '.json'
+
 
         with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'w') as rep_f:
             json.dump(report, rep_f)

@@ -313,7 +313,7 @@ class ReportModel:
                                      assignee VARCHAR(50),
                                      comment VARCHAR(4096),
                                      close_date DATE,
-                                     client VARCHAR(50),
+                                     client VARCHAR(50)
                                      )''')
         cursor.close()
         self.connection.commit()
@@ -340,7 +340,7 @@ class ReportModel:
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO reports 
                                   (name, cad_num, address, assignee, comment, close_date, client) 
-                                  VALUES (?,?,?,?,?,?)''',
+                                  VALUES (?,?,?,?,?,?,?)''',
                        (name, cad_num, address, assignee, comment, close_date, client))
         cursor.close()
         self.connection.commit()

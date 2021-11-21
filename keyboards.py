@@ -53,7 +53,7 @@ def create_projects_boss_keyboard(db):
 
 def create_cad_reports_boss_keyboard(rdb):
     rm = ReportModel(rdb.get_connection())
-    cad_reports = [el[0] for el in rm.get_all()]
+    cad_reports = [str(el[0]) for el in rm.get_all()]
     boss_reply_keyboard3 = []
 
     temp = []
@@ -72,7 +72,7 @@ def create_cad_reports_boss_keyboard(rdb):
 
 def create_cad_reports_employee_keyboard(rdb, username):
     rm = ReportModel(rdb.get_connection())
-    cad_reports = [el[0] for el in rm.get_by_assignee(username)]
+    cad_reports = [str(el[0]) for el in rm.get_by_assignee(username)]
     boss_reply_keyboard3 = []
 
     temp = []

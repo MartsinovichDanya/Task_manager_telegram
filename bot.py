@@ -458,15 +458,14 @@ def employee_cadastral_objects_preview(bot, update):
 
     for cad_report in cad_reports:
         update.message.reply_text(f'''
-                    <b><i>Запрос {cad_report[0]}</i></b>
-                    <b>Клиент: </b>@{cad_report[7]}
-                    <b>Кад. номер: </b>{cad_report[2]}
-                    <b>Адрес: </b>{cad_report[3]}
-                    <b>Комментарий: </b>{cad_report[5]}
-                    <b>Ответственный: </b>{cad_report[4]}
-                    <b>Дата закрытия: </b>{cad_report[6]}
-                    ''', reply_markup=create_cad_reports_employee_keyboard(rdb, username),
-                                  parse_mode='HTML')
+<b><i>Запрос {cad_report[0]}</i></b>
+<b>Клиент: </b>@{cad_report[7]}
+<b>Кад. номер: </b>{cad_report[2]}
+<b>Адрес: </b>{cad_report[3]}
+<b>Комментарий: </b>{cad_report[5] if cad_report[5] else '-'}
+<b>Дата закрытия: </b>{cad_report[6] if cad_report[6]!='2222-01-01' else 'Открыт'}
+''', reply_markup=create_cad_reports_employee_keyboard(rdb, username),
+              parse_mode='HTML')
 
 
 def employee_write_cadastral_comment(bot, update):
@@ -530,15 +529,15 @@ def kpz_cadastral_object_preview(bot, update):
 
     for cad_report in cad_reports:
         update.message.reply_text(f'''
-                <b><i>Запрос {cad_report[0]}</i></b>
-                <b>Клиент: </b>@{cad_report[7]}
-                <b>Кад. номер: </b>{cad_report[2]}
-                <b>Адрес: </b>{cad_report[3]}
-                <b>Комментарий: </b>{cad_report[5] if cad_report[5] else 'Пока не прокомментировано'}
-                <b>Ответственный: </b>{cad_report[4] if cad_report[4] else 'Пока не назначен'}
-                <b>Дата закрытия: </b>{cad_report[6] if cad_report[6]!='2222-01-01' else 'Открыт'}
-                ''', reply_markup=create_cad_reports_boss_keyboard(rdb),
-                                  parse_mode='HTML')
+<b><i>Запрос {cad_report[0]}</i></b>
+<b>Клиент: </b>@{cad_report[7]}
+<b>Кад. номер: </b>{cad_report[2]}
+<b>Адрес: </b>{cad_report[3]}
+<b>Комментарий: </b>{cad_report[5] if cad_report[5] else '-'}
+<b>Ответственный: </b>{cad_report[4] if cad_report[4] else '-'}
+<b>Дата закрытия: </b>{cad_report[6] if cad_report[6]!='2222-01-01' else 'Открыт'}
+''', reply_markup=create_cad_reports_boss_keyboard(rdb),
+                  parse_mode='HTML')
 
 
 # Просмотр Кадастровых Объектов
