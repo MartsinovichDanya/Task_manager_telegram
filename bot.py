@@ -4,22 +4,22 @@ from telegram import ReplyKeyboardRemove
 from datetime import datetime
 
 from DB import DB
-from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
+from Models import UserModel, TaskModel, ProjectModel, EmployeeModel, ReportModel
 from Models_kpz import InnModel, KpzTaskModel, FileModel
 
 from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
-from keyboards import create_employee_boss_keyboard
+from keyboards import create_employee_boss_keyboard, create_cad_reports_employee_keyboard
 from keyboards import create_main_employee_keyboard, create_tasks_employee_keyboard
 from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
 from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard, create_cadastral_options_boss_keyboard
-from keyboards import create_comment_employee_keyboard
+from keyboards import create_comment_employee_keyboard, create_cad_reports_boss_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
-from commands import all_task_report, emp_report, proj_report, get_uniq_filename
+from commands import all_task_report, emp_report, proj_report, get_uniq_filename, prepare_report_msg
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
@@ -35,6 +35,7 @@ TOKEN = os.getenv('TOKEN')
 KPZ_FILES_DIR = 'kpz_files'
 
 db = DB('tm.db')
+rdb = DB('reports.db')
 
 is_add_project = False
 is_add_task = False
@@ -51,6 +52,10 @@ is_report = False
 is_report_proj = False
 is_report_employee = False
 
+is_select_cad_report = False
+is_cad_report_assign_employee = False
+is_delete_cad_report = False
+
 latest_project = ''
 l_d = 0
 r_d = 0
@@ -61,7 +66,8 @@ task = ''
 def start(bot, update):
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
-    global is_report, is_task_selected, is_time_selected
+    global is_report, is_task_selected, is_time_selected, is_select_cad_report, is_cad_report_assign_employee
+    global is_delete_cad_report
 
     is_add_project = False
     is_add_task = False
@@ -77,6 +83,10 @@ def start(bot, update):
     is_report = False
     is_report_proj = False
     is_report_employee = False
+
+    is_select_cad_report = False
+    is_cad_report_assign_employee = False
+    is_delete_cad_report = False
 
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
@@ -442,9 +452,21 @@ def employee_task_preview(bot, update):
 
 
 def employee_cadastral_objects_preview(bot, update):
-    update.message.reply_text('<i><b>Выберите кадастровый отчёт</b></i>',
-                              reply_markup=create_kpz_boss_keyboard(),
-                              parse_mode='HTML')
+    rm = ReportModel(rdb.get_connection())
+    username = update.message['chat']['username']
+    cad_reports = rm.get_by_assignee(username)
+
+    for cad_report in cad_reports:
+        update.message.reply_text(f'''
+                    <b><i>Запрос {cad_report[0]}</i></b>
+                    <b>Клиент: </b>@{cad_report[7]}
+                    <b>Кад. номер: </b>{cad_report[2]}
+                    <b>Адрес: </b>{cad_report[3]}
+                    <b>Комментарий: </b>{cad_report[5]}
+                    <b>Ответственный: </b>{cad_report[4]}
+                    <b>Дата закрытия: </b>{cad_report[6]}
+                    ''', reply_markup=create_cad_reports_employee_keyboard(rdb, username),
+                                  parse_mode='HTML')
 
 
 def employee_write_cadastral_comment(bot, update):
@@ -503,16 +525,20 @@ def kpz_juristic_questions(bot, update):
 
 # Просмотр Кадастровых Объектов
 def kpz_cadastral_object_preview(bot, update):
-    update.message.reply_text('<i><b>Кадастровые объекты</b></i>',
-                              reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
-    update.message.reply_text('''
-        <b><i>Запрос 1</i></b>
-        <b>Кад. номер:</b>
-        <b>Адрес:</b>
-        <b>Дата запроса:</b>
-        ''', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
+    rm = ReportModel(rdb.get_connection())
+    cad_reports = rm.get_all()
+
+    for cad_report in cad_reports:
+        update.message.reply_text(f'''
+                <b><i>Запрос {cad_report[0]}</i></b>
+                <b>Клиент: </b>@{cad_report[7]}
+                <b>Кад. номер: </b>{cad_report[2]}
+                <b>Адрес: </b>{cad_report[3]}
+                <b>Комментарий: </b>{cad_report[5] if cad_report[5] else 'Пока не прокомментировано'}
+                <b>Ответственный: </b>{cad_report[4] if cad_report[4] else 'Пока не назначен'}
+                <b>Дата закрытия: </b>{cad_report[6] if cad_report[6]!='2222-01-01' else 'Открыт'}
+                ''', reply_markup=create_cad_reports_boss_keyboard(rdb),
+                                  parse_mode='HTML')
 
 
 # Просмотр Кадастровых Объектов
@@ -524,15 +550,19 @@ def kpz_cadastral_object_options(bot, update):
 
 # Удаление Кадастрового Объекта
 def kpz_delete_cadastral_object(bot, update):
+    global is_delete_cad_report
+    is_delete_cad_report = True
     update.message.reply_text('<i><b>Отчёт удалён</b></i>',
-                              reply_markup=create_menu_keyboard(),
+                              reply_markup=create_cad_reports_boss_keyboard(rdb),
                               parse_mode='HTML')
 
 
 # Назначение Кадастрового Объекта Сотруднику
 def kpz_share_cadastral_object(bot, update):
+    global is_cad_report_assign_employee
+    is_cad_report_assign_employee = True
     update.message.reply_text('<i><b>Выберите сотрудника</b></i>',
-                              reply_markup=create_menu_keyboard(),
+                              reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
 
 

@@ -1,5 +1,5 @@
 from telegram import ReplyKeyboardMarkup
-from Models import ProjectModel, EmployeeModel, TaskModel
+from Models import ProjectModel, EmployeeModel, TaskModel, ReportModel
 
 
 # Клавиатура Босса
@@ -39,6 +39,44 @@ def create_projects_boss_keyboard(db):
 
     temp = []
     for p in projects:
+        temp.append(p)
+        if len(temp) == 4:
+            boss_reply_keyboard3.append(temp)
+            temp = []
+    if temp:
+        boss_reply_keyboard3.append(temp)
+
+    boss_reply_keyboard3.append(['Главное меню'])
+    boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
+    return boss_markup3
+
+
+def create_cad_reports_boss_keyboard(rdb):
+    rm = ReportModel(rdb.get_connection())
+    cad_reports = [el[0] for el in rm.get_all()]
+    boss_reply_keyboard3 = []
+
+    temp = []
+    for p in cad_reports:
+        temp.append(p)
+        if len(temp) == 4:
+            boss_reply_keyboard3.append(temp)
+            temp = []
+    if temp:
+        boss_reply_keyboard3.append(temp)
+
+    boss_reply_keyboard3.append(['Главное меню'])
+    boss_markup3 = ReplyKeyboardMarkup(boss_reply_keyboard3, one_time_keyboard=False)
+    return boss_markup3
+
+
+def create_cad_reports_employee_keyboard(rdb, username):
+    rm = ReportModel(rdb.get_connection())
+    cad_reports = [el[0] for el in rm.get_by_assignee(username)]
+    boss_reply_keyboard3 = []
+
+    temp = []
+    for p in cad_reports:
         temp.append(p)
         if len(temp) == 4:
             boss_reply_keyboard3.append(temp)

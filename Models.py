@@ -312,7 +312,8 @@ class ReportModel:
                                      address VARCHAR(4096),
                                      assignee VARCHAR(50),
                                      comment VARCHAR(4096),
-                                     close_date DATE
+                                     close_date DATE,
+                                     client VARCHAR(50),
                                      )''')
         cursor.close()
         self.connection.commit()
@@ -329,12 +330,18 @@ class ReportModel:
         row = cursor.fetchone()
         return row
 
-    def insert(self, cad_num, address, assignee="", comment="", close_date="2222-01-01"):
+    def get_by_assignee(self, username):
+        cursor = self.connection.cursor()
+        cursor.execute('''SELECT * FROM reports WHERE  assignee = ?''', (str(username),))
+        row = cursor.fetchone()
+        return row
+
+    def insert(self, name, cad_num, address, client, assignee="", comment="", close_date="2222-01-01"):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO reports 
-                                  (name, cad_num, address, assignee, comment, close_date) 
+                                  (name, cad_num, address, assignee, comment, close_date, client) 
                                   VALUES (?,?,?,?,?,?)''',
-                       (cad_num+".json", cad_num, address, assignee, comment, close_date))
+                       (name, cad_num, address, assignee, comment, close_date, client))
         cursor.close()
         self.connection.commit()
 
