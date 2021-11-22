@@ -38,10 +38,13 @@ is_cadastre_object = False
 def start(bot, update):
     print(update)
     if not update.message['chat']['username']:
-        update.message.reply_text('<b>Пожалуйста, установите username в профиле</b>',
+        update.message.reply_text('''
+<b>Пожалуйста, установите username в профиле.</b>
+<b>Инструкция:</b> на мобильном устройстве перейдите в "Настройки", нажмите на "Имя пользователя" и напишите свой никнейм.
+Это нужно для того, чтобы мы могли с Вами связаться в Telegram''',
             reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
     else:
-        update.message.reply_text('<b>Выберите раздел "Консультация", если хотите рассказать о проблеме и задать вопрос, или раздел "Оплата", чтобы оплатить ранее оказанную помощь</b>',
+        update.message.reply_text('<b>Перейдите в раздел "Услуги", чтобы выбрать предоставляемые опции, или раздел "Оплата", чтобы оплатить ранее оказанную услугу</b>',
                               reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
 
 
@@ -77,7 +80,7 @@ def service(bot, update):
 def cadastral_objects(bot, update):
     global is_cadastre_object
     is_cadastre_object = True
-    update.message.reply_text('<b>Введите номер объекта</b>', reply_markup=create_menu_keyboard(),
+    update.message.reply_text('<b>Введите кадастровый номер объекта</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
 
 
@@ -149,7 +152,7 @@ def global_function(bot, update):
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
             elif report['error_code'] == 500:
-                update.message.reply_text('<b>Сервис поиска кадастровых объектов временно не доступен</b>',
+                update.message.reply_text('<b>Сервис поиска кадастровых объектов временно недоступен</b>',
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
             elif report['error_code'] == 503:
@@ -168,7 +171,6 @@ def global_function(bot, update):
                                       parse_mode='HTML')
 
         msg = prepare_report_msg(username, report)
-        # bot.sendMessage('1027909953', msg, parse_mode='HTML')
         bot.sendMessage(um.get_boss_id(), msg, parse_mode='HTML')
 
 

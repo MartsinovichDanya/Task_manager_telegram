@@ -546,9 +546,6 @@ def kpz(bot, update):
 
 # Просмотр ИНН
 def kpz_inn_preview(bot, update):
-    # if len(update.message['text']) > 3:
-    #     global_function(bot, update)
-    #     return
     update.message.reply_text('<i><b>Здесь выводятся ИНН</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -564,7 +561,7 @@ def kpz_inn_preview(bot, update):
 
 # Просмотр юр. вопросов
 def kpz_juristic_questions(bot, update):
-    update.message.reply_text('<i><b>Здесь выводятся вопросы</b></i>',
+    update.message.reply_text('<i><b>Здесь выводятся юр. вопросы</b></i>',
                               parse_mode='HTML')
 
     kpz_db = DB('kpz.db')
@@ -606,7 +603,7 @@ def kpz_cadastral_object_preview(bot, update):
                   parse_mode='HTML')
 
 
-# Просмотр Кадастровых Объектов
+# Опции Кадастровых Объектов
 def kpz_cadastral_object_options(bot, update):
     update.message.reply_text('<i><b>Выберите действие</b></i>',
                               reply_markup=create_cadastral_options_boss_keyboard(),
@@ -625,6 +622,7 @@ def kpz_delete_cadastral_object(bot, update):
     update.message.reply_text('<i><b>Отчёт удалён</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
+
 
 # Назначение Кадастрового Объекта Сотруднику
 def kpz_share_cadastral_object(bot, update):

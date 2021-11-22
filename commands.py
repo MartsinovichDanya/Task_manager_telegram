@@ -278,7 +278,8 @@ def get_cadastre_report(cad_num):
 
 def prepare_report_msg(username, report):
     msg = [f'''
-<b>Внимание! Новый кадастровый объект. Клиент: @{username}</b>
+<b>Внимание! Новый кадастровый объект. 
+Клиент: @{username}</b>
 <b><u>Подробнее:</u></b>''']
     for key, val in report['details'].items():
         msg.append(f'<b>{key}:</b> {val}')
