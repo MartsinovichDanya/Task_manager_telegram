@@ -179,7 +179,7 @@ updater = Updater(TOKEN)
 dp = updater.dispatcher
 dp.add_handler(MessageHandler(Filters.regex('Услуги'), service))
 dp.add_handler(MessageHandler(Filters.regex('Консультация'), consultation))
-dp.add_handler(MessageHandler(Filters.regex('Кадастровый объект'), cadastral_objects))
+dp.add_handler(MessageHandler(Filters.regex('Информация ЕГРН об объекте'), cadastral_objects))
 dp.add_handler(CommandHandler('start', start))
 dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 

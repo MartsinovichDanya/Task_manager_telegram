@@ -248,7 +248,7 @@ def create_payment_pravo_help_keyboard():
 
 # Клавиатура услуг pravo_help
 def create_service_pravo_help_keyboard():
-    pravo_help_keyboard = [['Консультация', 'Кадастровый объект'],
+    pravo_help_keyboard = [['Консультация', 'Информация ЕГРН об объекте'],
                            ['Главное меню']]
     pravo_help_markup = ReplyKeyboardMarkup(pravo_help_keyboard, one_time_keyboard=False)
     return pravo_help_markup
