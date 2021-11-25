@@ -1,5 +1,7 @@
 *.env
 *.db
+*.pyc
+*.xml
 1.py
 cad_reports
 kpz_files
