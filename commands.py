@@ -285,19 +285,23 @@ def prepare_report_msg(username, report):
         msg.append(f'<b>{key}:</b> {val}')
 
     msg.append('<b><u>Права:</u></b>')
-    for el in report['rights']:
-        msg.append(f"<b>Номер:</b> {el['number'] if 'number' in el.keys() else '-'}")
-        msg.append(f"<b>Дата:</b> {el['date'] if 'date' in el.keys() else '-'}")
-        msg.append(f"<b>Тип:</b> {el['type'] if 'type' in el.keys() else '-'}")
+    if 'rights' in report.keys():
+        for el in report['rights']:
+            msg.append(f"<b>Номер:</b> {el['number'] if 'number' in el.keys() else '-'}")
+            msg.append(f"<b>Дата:</b> {el['date'] if 'date' in el.keys() else '-'}")
+            msg.append(f"<b>Тип:</b> {el['type'] if 'type' in el.keys() else '-'}")
 
-        if el['limits']:
-            msg.append('<b><u>Ограничения:</u></b>')
-            for limit in el['limits']:
-                msg.append(f"   <b>Номер:</b> {limit['number'] if 'number' in el.keys() else '-'}")
-                msg.append(f"   <b>Дата:</b> {limit['date'] if 'date' in el.keys() else '-'}")
-                msg.append(f"   <b>Тип:</b> {limit['type'] if 'type' in el.keys() else '-'}")
-                msg.append("\n")
-        else:
-            msg.append('<b><u>Ограничения: -</u></b>')
+            if 'limits' in el.keys():
+                msg.append('<b><u>Ограничения:</u></b>')
+                for limit in el['limits']:
+                    msg.append(f"   <b>Номер:</b> {limit['number'] if 'number' in el.keys() else '-'}")
+                    msg.append(f"   <b>Дата:</b> {limit['date'] if 'date' in el.keys() else '-'}")
+                    msg.append(f"   <b>Тип:</b> {limit['type'] if 'type' in el.keys() else '-'}")
+                    msg.append("\n")
+            else:
+                msg.append('<b><u>Ограничения: -</u></b>')
 
-    return '\n'.join(msg)
+    result_msg = '\n'.join(msg)
+    if len(result_msg) > 4095:
+        return 'Внимание! Неполный отчёт - слишком большое сообщение\n' + result_msg[:2000]
+    return result_msg
