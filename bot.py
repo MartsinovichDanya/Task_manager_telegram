@@ -317,8 +317,8 @@ def global_function(bot, update):
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    if (update.message['text'].replace(':', '')).isdigit() and (is_select_cad_report or is_employee_select_cad_report):
-        cad_report_id = update.message['text']
+    if update.message['text'].isdigit() and (is_select_cad_report or is_employee_select_cad_report):
+        cad_report_id = int(update.message['text'])
         rm = ReportModel(rdb.get_connection())
         report_metadata = rm.get(cad_report_id)
         # report_file_name = report_metadata[1]

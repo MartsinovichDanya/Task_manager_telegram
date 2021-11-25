@@ -326,7 +326,7 @@ class ReportModel:
 
     def get(self, rid):
         cursor = self.connection.cursor()
-        cursor.execute('''SELECT * FROM reports WHERE cad_num = ?''', (str(rid),))
+        cursor.execute('''SELECT * FROM reports WHERE id = ?''', (str(rid),))
         row = cursor.fetchone()
         return row
 
