@@ -160,11 +160,11 @@ def global_function(bot, update):
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
         else:
-            report_file_name = cad_number.replace(':', '') + '.json'
-            with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'w') as rep_f:
-                json.dump(report, rep_f)
+            # report_file_name = cad_number.replace(':', '') + '.json'
+            # with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'w') as rep_f:
+            #     json.dump(report, rep_f)
 
-            rm.insert(report_file_name, cad_number, report['details']['Адрес (местоположение)'], username)
+            rm.insert('NONE_FILE', cad_number, report['details']['Адрес (местоположение)'], username)
 
             update.message.reply_text('<b>Ваша заявка принята. В ближайшее время ожидайте обратную связь</b>',
                                       reply_markup=create_menu_keyboard(),

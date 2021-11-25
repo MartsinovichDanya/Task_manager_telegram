@@ -21,6 +21,7 @@ from keyboards import create_cadastral_options_employee_keyboard
 
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report, get_uniq_filename, prepare_report_msg
+from commands import get_cadastre_report
 
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
 
@@ -316,14 +317,16 @@ def global_function(bot, update):
 
     update.message.reply_text('<i><b>Команда выполнена</b></i>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    if update.message['text'].isdigit() and (is_select_cad_report or is_employee_select_cad_report):
-        cad_report_id = int(update.message['text'])
+    if (update.message['text'].replace(':', '')).isdigit() and (is_select_cad_report or is_employee_select_cad_report):
+        cad_report_id = update.message['text']
         rm = ReportModel(rdb.get_connection())
         report_metadata = rm.get(cad_report_id)
-        report_file_name = report_metadata[1]
+        # report_file_name = report_metadata[1]
 
-        with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'r') as rep_f:
-            full_report = json.load(rep_f)
+        # with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'r') as rep_f:
+        #     full_report = json.load(rep_f)
+
+        full_report = get_cadastre_report(report_metadata[2])
 
         msg = prepare_report_msg(report_metadata[7], full_report)
         if is_select_cad_report:
