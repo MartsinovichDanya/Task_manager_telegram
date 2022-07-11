@@ -110,28 +110,28 @@ def create_employee_boss_keyboard(db):
 
 def create_tasks_in_project_boss_keyboard():
     boss_reply_keyboard = [['Добавить задачу в проект', 'Удалить задачу из проекта'],
-                            ['Главное меню']]
+                           ['Главное меню']]
     boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
     return boss_markup
 
 
 def create_kpz_boss_keyboard():
     boss_reply_keyboard = [['Просмотр юр. вопросов', 'Просмотр ИНН', 'Кадастровые объекты'],
-                            ['Главное меню']]
+                           ['Главное меню']]
     boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
     return boss_markup
 
 
 def create_cadastral_options_boss_keyboard():
     boss_reply_keyboard = [['Удалить кад. объект', 'Назначить сотруднику'],
-                            ['Главное меню']]
+                           ['Главное меню']]
     boss_markup = ReplyKeyboardMarkup(boss_reply_keyboard, one_time_keyboard=False)
     return boss_markup
 
 
 def create_cadastral_options_employee_keyboard():
     employee_reply_keyboard = [['Написать комментарий'],
-                            ['Главное меню']]
+                               ['Главное меню']]
     employee_markup = ReplyKeyboardMarkup(employee_reply_keyboard, one_time_keyboard=False)
     return employee_markup
 

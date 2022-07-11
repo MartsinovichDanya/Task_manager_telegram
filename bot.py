@@ -1,12 +1,8 @@
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from telegram import ReplyKeyboardRemove
-
-from datetime import datetime
-
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel, ReportModel
 from Models_kpz import InnModel, KpzTaskModel, FileModel
-
 from keyboards import create_main_boss_keyboard, create_projects_boss_keyboard
 from keyboards import create_menu_keyboard, create_project_options_boss_keyboard
 from keyboards import create_employee_options_boss_keyboard, create_task_options_boss_keyboard
@@ -16,19 +12,14 @@ from keyboards import create_tasks_in_project_boss_keyboard
 from keyboards import create_report_boss_keyboard
 from keyboards import create_report_projects_boss_keyboard, create_report_employee_boss_keyboard
 from keyboards import create_report_task_boss_keyboard, create_kpz_boss_keyboard, create_cadastral_options_boss_keyboard
-from keyboards import create_comment_employee_keyboard, create_cad_reports_boss_keyboard
+from keyboards import create_cad_reports_boss_keyboard
 from keyboards import create_cadastral_options_employee_keyboard
-
 from commands import add_project, add_task, add_employee, delete_project, delete_task, delete_employee, set_done
 from commands import all_task_report, emp_report, proj_report, get_uniq_filename, prepare_report_msg
 from commands import get_cadastre_report
-
-from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
-
+from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
 import os
 from dotenv import load_dotenv
-import json
-
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
 if os.path.exists(dotenv_path):
@@ -100,7 +91,8 @@ def start(bot, update):
     print(update.message['chat']['username'])
     # Левый чувак
     if not um.get(tg_id):
-        update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>', reply_markup=ReplyKeyboardRemove(),
+        update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>',
+                                  reply_markup=ReplyKeyboardRemove(),
                                   parse_mode='HTML')
     # Босс
     elif um.get(tg_id)[2]:
@@ -108,7 +100,8 @@ def start(bot, update):
                                   parse_mode='HTML')
     # Сотрудник
     else:
-        update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=create_main_employee_keyboard(), parse_mode='HTML')
+        update.message.reply_text('<b>Добро пожаловать!</b>', reply_markup=create_main_employee_keyboard(),
+                                  parse_mode='HTML')
 
 
 # Раздел "Отчёты"
@@ -131,7 +124,8 @@ def report(bot, update):
 def project_report(bot, update):
     global is_report_proj
     is_report_proj = True
-    update.message.reply_text('<b>Раздел "Отчёты по Проектам"</b>', reply_markup=create_report_projects_boss_keyboard(db),
+    update.message.reply_text('<b>Раздел "Отчёты по Проектам"</b>',
+                              reply_markup=create_report_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
@@ -331,7 +325,7 @@ def global_function(bot, update):
         msg = prepare_report_msg(report_metadata[7], full_report)
         if is_select_cad_report:
             update.message.reply_text(msg, reply_markup=create_cadastral_options_boss_keyboard(),
-                                  parse_mode='HTML')
+                                      parse_mode='HTML')
         else:
             update.message.reply_text(msg, reply_markup=create_cadastral_options_employee_keyboard(),
                                       parse_mode='HTML')
@@ -394,7 +388,7 @@ def global_function(bot, update):
             name, description, emp_name, project_name = params.split(';')
 
         try:
-            add_task(bot, name, description, emp_name, project_name, '@'+update.message['chat']['username'])
+            add_task(bot, name, description, emp_name, project_name, '@' + update.message['chat']['username'])
         except ProjectNotFound:
             update.message.reply_text("Проект не найден")
             is_add_task = True
@@ -439,7 +433,9 @@ def global_function(bot, update):
     elif is_task_selected:
         is_task_selected = False
         task = update.message['text']
-        update.message.reply_text('<i><b>Введите время выполнения задачи.\nПример: 2:45, 3:00, 1:30.\nВАЖНО! Целое количество часов вводится также через двоеточние (1, 2, 3 часа будут записаны в виде "1:00", "2:00", "3:00" и т.д.)</b></i>', parse_mode='HTML')
+        update.message.reply_text(
+            '<i><b>Введите время выполнения задачи.\nПример: 2:45, 3:00, 1:30.\nВАЖНО! Целое количество часов вводится также через двоеточние (1, 2, 3 часа будут записаны в виде "1:00", "2:00", "3:00" и т.д.)</b></i>',
+            parse_mode='HTML')
         is_time_selected = True
 
     elif is_time_selected:
@@ -455,7 +451,8 @@ def global_function(bot, update):
 
     elif is_report:
         is_report = False
-        update.message.reply_text('<i><b>Выберите тип отчёта</b></i>', reply_markup=create_report_employee_boss_keyboard(),
+        update.message.reply_text('<i><b>Выберите тип отчёта</b></i>',
+                                  reply_markup=create_report_employee_boss_keyboard(),
                                   parse_mode='HTML')
         l_string, r_string = update.message['text'].split('-')
         l_day, l_month, l_year = [int(el) for el in l_string.split('.')]
@@ -492,7 +489,8 @@ def select_done_task(bot, update):
     global is_task_selected
     is_task_selected = True
 
-    update.message.reply_text('<i><b>Выберите задачу</b></i>', reply_markup=create_tasks_employee_keyboard(db, update.message.from_user.id),
+    update.message.reply_text('<i><b>Выберите задачу</b></i>',
+                              reply_markup=create_tasks_employee_keyboard(db, update.message.from_user.id),
                               parse_mode='HTML')
 
 
@@ -527,9 +525,9 @@ def employee_cadastral_objects_preview(bot, update):
 <b>Кад. номер: </b>{cad_report[2]}
 <b>Адрес: </b>{cad_report[3]}
 <b>Комментарий: </b>{cad_report[5] if cad_report[5] else '-'}
-<b>Дата закрытия: </b>{cad_report[6] if cad_report[6]!='2222-01-01' else 'Открыт'}
+<b>Дата закрытия: </b>{cad_report[6] if cad_report[6] != '2222-01-01' else 'Открыт'}
 ''', reply_markup=create_cad_reports_employee_keyboard(rdb, username),
-              parse_mode='HTML')
+                                  parse_mode='HTML')
 
 
 def employee_write_cadastral_comment(bot, update):
@@ -601,9 +599,9 @@ def kpz_cadastral_object_preview(bot, update):
 <b>Адрес: </b>{cad_report[3]}
 <b>Комментарий: </b>{cad_report[5] if cad_report[5] else '-'}
 <b>Ответственный: </b>{cad_report[4] if cad_report[4] else '-'}
-<b>Дата закрытия: </b>{cad_report[6] if cad_report[6]!='2222-01-01' else 'Открыт'}
+<b>Дата закрытия: </b>{cad_report[6] if cad_report[6] != '2222-01-01' else 'Открыт'}
 ''', reply_markup=create_cad_reports_boss_keyboard(rdb),
-                  parse_mode='HTML')
+                                  parse_mode='HTML')
 
 
 # Опции Кадастровых Объектов
@@ -642,7 +640,6 @@ dp = updater.dispatcher
 
 dp.add_handler(CommandHandler("start", start))
 
-
 # Клавиатура Босса
 dp.add_handler(MessageHandler(Filters.regex('Добавить задачу в проект'), write_proj_add_task))
 dp.add_handler(MessageHandler(Filters.regex('Удалить задачу из проекта'), write_proj_delete_task))
@@ -670,7 +667,6 @@ dp.add_handler(MessageHandler(Filters.regex('Отчёты по Задачам'),
 dp.add_handler(MessageHandler(Filters.regex('Отчёты по Сотрудникам'), employee_report))
 dp.add_handler(MessageHandler(Filters.regex('Отчёты'), report))
 
-
 dp.add_handler(MessageHandler(Filters.regex('Назад'), back_to_report))
 # КПЗ от pravo_help бота
 dp.add_handler(MessageHandler(Filters.regex('КПЗ'), kpz))
@@ -680,7 +676,6 @@ dp.add_handler(MessageHandler(Filters.regex('Кадастровые объект
 
 dp.add_handler(MessageHandler(Filters.regex('Удалить кад. объект'), kpz_delete_cadastral_object))
 dp.add_handler(MessageHandler(Filters.regex('Назначить сотруднику'), kpz_share_cadastral_object))
-
 
 # Клавиатура сотрудника
 dp.add_handler(MessageHandler(Filters.regex('Просмотр моих задач'), employee_task_preview))

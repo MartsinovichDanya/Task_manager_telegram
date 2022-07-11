@@ -28,7 +28,7 @@ class UserModel:
         cursor.execute('''INSERT INTO users 
                           (id, user_name, boss) 
                           VALUES (?,?,?)''',
-                       (tg_id, user_name, boss, ))
+                       (tg_id, user_name, boss,))
         cursor.close()
         self.connection.commit()
 
@@ -88,13 +88,13 @@ class EmployeeModel:
         cursor.execute('''INSERT INTO staff
                                   (id, name, projects) 
                                   VALUES (?,?,?)''',
-                       (tg_id, name, project_id, ))
+                       (tg_id, name, project_id,))
         cursor.close()
         self.connection.commit()
 
     def get(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM staff WHERE id = ?", (str(tg_id), ))
+        cursor.execute("SELECT * FROM staff WHERE id = ?", (str(tg_id),))
         row = cursor.fetchone()
         if not row:
             return False
@@ -116,7 +116,7 @@ class EmployeeModel:
 
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM staff WHERE project_id IN projects", (str(project_id), ))
+        cursor.execute("SELECT * FROM staff WHERE project_id IN projects", (str(project_id),))
         rows = cursor.fetchall()
         return rows
 
@@ -136,7 +136,7 @@ class EmployeeModel:
 
     def delete(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM staff WHERE id = ?''', (str(tg_id), ))
+        cursor.execute('''DELETE FROM staff WHERE id = ?''', (str(tg_id),))
         cursor.close()
         self.connection.commit()
 
@@ -172,7 +172,7 @@ class TaskModel:
 
     def get(self, tid):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (str(tid), ))
+        cursor.execute("SELECT * FROM tasks WHERE id = ?", (str(tid),))
         row = cursor.fetchone()
         return row
 
@@ -184,7 +184,7 @@ class TaskModel:
 
     def delete(self, project_id, task_name):
         cursor = self.connection.cursor()
-        cursor.execute('''DELETE FROM tasks WHERE project_id = ? AND name = ?''', (str(project_id), task_name, ))
+        cursor.execute('''DELETE FROM tasks WHERE project_id = ? AND name = ?''', (str(project_id), task_name,))
         cursor.close()
         self.connection.commit()
 
@@ -202,14 +202,14 @@ class TaskModel:
 
     def get_by_project(self, project_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id), ))
+        cursor.execute("SELECT * FROM tasks WHERE project_id = ?", (str(project_id),))
         rows = cursor.fetchall()
         cursor.close()
         return rows
 
     def get_by_emp(self, emp_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE emp_id = ?", (str(emp_id), ))
+        cursor.execute("SELECT * FROM tasks WHERE emp_id = ?", (str(emp_id),))
         rows = cursor.fetchall()
         return rows
 
@@ -262,7 +262,7 @@ class ProjectModel:
 
     def get_name(self, pid):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM projects WHERE id = ?", (str(pid), ))
+        cursor.execute("SELECT * FROM projects WHERE id = ?", (str(pid),))
         row = cursor.fetchone()
         if not row:
             return False
@@ -358,7 +358,6 @@ class ReportModel:
         cursor.execute("UPDATE reports SET close_date = ? WHERE id = ?", (cd, rid,))
         cursor.close()
         self.connection.commit()
-
 
     def delete(self, rid):
         cursor = self.connection.cursor()

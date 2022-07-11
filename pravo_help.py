@@ -1,4 +1,3 @@
-import json
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
 from keyboards import create_service_pravo_help_keyboard
@@ -6,7 +5,6 @@ from Models_kpz import InnModel, KpzTaskModel, FileModel
 from Models import UserModel, ReportModel
 from commands import send_email, get_uniq_filename, get_cadastre_report, prepare_report_msg
 from DB import DB
-
 import os
 from dotenv import load_dotenv
 
@@ -41,12 +39,12 @@ def start(bot, update):
 <b>Пожалуйста, установите username в профиле.</b>
 <b>Инструкция:</b> на мобильном устройстве перейдите в "Настройки", нажмите на "Имя пользователя" и напишите свой никнейм.
 Это нужно для того, чтобы мы могли с Вами связаться в Telegram''',
-            reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
+                                  reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
     else:
         update.message.reply_text('''Чтобы получить информацию об объекте: выберите раздел «Услуги», а затем в разделе «Информация ЕГРН об объекте», введите кадастровый номер объекта.
 
 <b>ВАЖНО! Бот запрашивает Росреестра в режиме он-лайн, поэтому информация не всегда оперативно выдается, иногда надо подождать.</b>''',
-                              reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
+                                  reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
 
 
 # Раздел "Оплата"
@@ -67,8 +65,10 @@ def juristic_person(bot, update):
 def natural_person(bot, update):
     update.message.reply_text('<b>Переходим к "РобоКассе"</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
-    update.message.reply_text('https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=findtheowner&InvId=0&Culture=ru&Encoding=utf-8&OutSum=500&SignatureValue=ac288b7d40a1747dbe687d74aff91323', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
+    update.message.reply_text(
+        'https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=findtheowner&InvId=0&Culture=ru&Encoding=utf-8&OutSum=500&SignatureValue=ac288b7d40a1747dbe687d74aff91323',
+        reply_markup=create_menu_keyboard(),
+        parse_mode='HTML')
 
 
 # Раздел "Услуги"
@@ -89,8 +89,10 @@ def cadastral_objects(bot, update):
 def consultation(bot, update):
     global is_consultation
     is_consultation = True
-    update.message.reply_text('<b>Опишите проблему и задайте вопрос.\nВАЖНО! Вы можете отправлять юридический вопрос как с файлом, так и без него. Если к Вашему вопросу прилагается какой-либо документ, прикреплять его необходимо вместе с текстовым сообщением!</b>', reply_markup=create_menu_keyboard(),
-                              parse_mode='HTML')
+    update.message.reply_text(
+        '<b>Опишите проблему и задайте вопрос.\nВАЖНО! Вы можете отправлять юридический вопрос как с файлом, так и без него. Если к Вашему вопросу прилагается какой-либо документ, прикреплять его необходимо вместе с текстовым сообщением!</b>',
+        reply_markup=create_menu_keyboard(),
+        parse_mode='HTML')
 
 
 # Глобальная функция
@@ -103,11 +105,11 @@ def global_function(bot, update):
         ktm = KpzTaskModel(db.get_connection())
         username = update.message['chat']['username']
         if not update.message.document:
-            ktm.insert(update.message.text, '@'+username)
+            ktm.insert(update.message.text, '@' + username)
 
             send_email(BOSS_EMAIL_ADDRESS, f'''
 <b>Юридический вопрос: <u>{update.message.text}</u></b><br>
-<b>Контакты Заказчика: {'@'+username}</b>''')
+<b>Контакты Заказчика: {'@' + username}</b>''')
         else:
             file_name = update.message.document.file_name
             file = update.message.document.get_file()
@@ -119,7 +121,7 @@ def global_function(bot, update):
 
             fm = FileModel(db.get_connection())
             fm.insert(file_id, file_name)
-            ktm.insert(update.message['caption'], '@'+username,
+            ktm.insert(update.message['caption'], '@' + username,
                        file_id=fm.get_id(file_id))
 
             send_email(BOSS_EMAIL_ADDRESS, f'''
@@ -157,9 +159,10 @@ def global_function(bot, update):
                                           reply_markup=create_menu_keyboard(),
                                           parse_mode='HTML')
             elif report['error_code'] == 503:
-                update.message.reply_text('<b>Непредвиденная ошибка сервиса поиска кадастровых объектов. Мы уже работаем над этим.</b>',
-                                          reply_markup=create_menu_keyboard(),
-                                          parse_mode='HTML')
+                update.message.reply_text(
+                    '<b>Непредвиденная ошибка сервиса поиска кадастровых объектов. Мы уже работаем над этим.</b>',
+                    reply_markup=create_menu_keyboard(),
+                    parse_mode='HTML')
         else:
             # report_file_name = cad_number.replace(':', '') + '.json'
             # with open(os.path.join(JSON_REPORTS_DIR, report_file_name), 'w') as rep_f:

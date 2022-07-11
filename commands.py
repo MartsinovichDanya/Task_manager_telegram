@@ -1,25 +1,18 @@
 from DB import DB
 from Models import UserModel, TaskModel, ProjectModel, EmployeeModel
-
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist, TaskNotFound
-
 from keyboards import create_back_to_reports_keyboard
-
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
-
 import os
 from dotenv import load_dotenv
-
 from requests import post
 
-
 db = DB('tm.db')
-
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
 if os.path.exists(dotenv_path):
@@ -28,9 +21,8 @@ if os.path.exists(dotenv_path):
 EGRN_TOKEN = os.getenv('EGRN_TOKEN')
 EGRN_API_URL = "https://apiegrn.ru/api/cadaster/objectInfoFull"
 
+
 # boss functions
-
-
 def add_project(name):
     pm = ProjectModel(db.get_connection())
     if pm.get_id(name):
@@ -185,7 +177,6 @@ def all_task_report(update, l_date, r_date):
 
 
 # employee functions
-
 def set_done(bot, name, project, time):
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())

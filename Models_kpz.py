@@ -17,7 +17,7 @@ class InnModel:
         cursor.execute('''INSERT INTO inn_table
                           (inn, user_link) 
                           VALUES (?,?)''',
-                       (inn, user_link, ))
+                       (inn, user_link,))
         cursor.close()
         self.connection.commit()
 
@@ -105,7 +105,7 @@ class FileModel:
         cursor.execute('''INSERT INTO files
                           (tg_id, file_name) 
                           VALUES (?,?)''',
-                       (tg_id, file_name, ))
+                       (tg_id, file_name,))
         cursor.close()
         self.connection.commit()
 
@@ -119,7 +119,7 @@ class FileModel:
 
     def get_id(self, tg_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM files WHERE tg_id = ?", (tg_id, ))
+        cursor.execute("SELECT * FROM files WHERE tg_id = ?", (tg_id,))
         row = cursor.fetchone()
         return row[0]
 
