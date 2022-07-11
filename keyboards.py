@@ -233,7 +233,8 @@ def create_back_to_reports_keyboard():
 
 # Главная клавиатура pravo_help
 def create_main_pravo_help_keyboard():
-    pravo_help_keyboard = [['Услуги', 'Оплата']]
+    # pravo_help_keyboard = [['Услуги', 'Оплата']]
+    pravo_help_keyboard = [['Услуги']]
     pravo_help_markup = ReplyKeyboardMarkup(pravo_help_keyboard, one_time_keyboard=False)
     return pravo_help_markup
 

@@ -618,7 +618,7 @@ def kpz_delete_cadastral_object(bot, update):
     rm = ReportModel(rdb.get_connection())
 
     report_file_name = rm.get(cad_report_id)[1]
-    os.remove(os.path.join(JSON_REPORTS_DIR, report_file_name))
+    # os.remove(os.path.join(JSON_REPORTS_DIR, report_file_name))
 
     rm.delete(cad_report_id)
 

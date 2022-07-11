@@ -1,5 +1,4 @@
 import json
-
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from keyboards import create_main_pravo_help_keyboard, create_payment_pravo_help_keyboard, create_menu_keyboard
 from keyboards import create_service_pravo_help_keyboard
@@ -44,7 +43,9 @@ def start(bot, update):
 Это нужно для того, чтобы мы могли с Вами связаться в Telegram''',
             reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
     else:
-        update.message.reply_text('<b>Перейдите в раздел "Услуги", чтобы выбрать предоставляемые опции, или раздел "Оплата", чтобы оплатить ранее оказанную услугу</b>',
+        update.message.reply_text('''Чтобы получить информацию об объекте: выберите раздел «Услуги», а затем в разделе «Информация ЕГРН об объекте», введите кадастровый номер объекта.
+
+<b>ВАЖНО! Бот запрашивает Росреестра в режиме он-лайн, поэтому информация не всегда оперативно выдается, иногда надо подождать.</b>''',
                               reply_markup=create_main_pravo_help_keyboard(), parse_mode='HTML')
 
 
@@ -185,7 +186,7 @@ dp.add_handler(MessageHandler(Filters.regex('Главное меню'), start))
 
 dp.add_handler(MessageHandler(Filters.regex('Оплата картой для физ.лиц'), natural_person))
 dp.add_handler(MessageHandler(Filters.regex('Выставить счёт для юр.лиц'), juristic_person))
-dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
+# dp.add_handler(MessageHandler(Filters.regex('Оплата'), payment))
 
 
 text_handler = MessageHandler(Filters.all, global_function)
