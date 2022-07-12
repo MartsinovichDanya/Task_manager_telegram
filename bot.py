@@ -485,7 +485,7 @@ def global_function(bot, update):
 <b>Комментарий : </b>{comment}''', parse_mode='HTML')
 
 
-# Часть сотрудника нахрен
+# Часть сотрудника
 def select_done_task(bot, update):
     global is_task_selected
     is_task_selected = True
@@ -539,7 +539,7 @@ def employee_write_cadastral_comment(bot, update):
                               parse_mode='HTML')
 
 
-# КЫ ПЫ ЗЫ нахрен блын
+# КПЗ
 def kpz(bot, update):
     update.message.reply_text('<i><b>Выберите раздел</b></i>',
                               reply_markup=create_kpz_boss_keyboard(),
