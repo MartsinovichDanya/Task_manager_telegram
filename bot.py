@@ -21,6 +21,13 @@ from commands import get_cadastre_report
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
 import os
 from dotenv import load_dotenv
+from loguru import logger
+
+logger.add('task_manager.log.json', format='{time} | {name} | {level} | {message}', level='INFO', rotation='1 month',
+           compression='zip',
+           serialize=True)
+
+logger.info('Start polling: Task Manager Bot')
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
 if os.path.exists(dotenv_path):

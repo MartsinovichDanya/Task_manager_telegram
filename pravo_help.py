@@ -7,6 +7,13 @@ from commands import send_email, get_uniq_filename, get_cadastre_report, prepare
 from DB import DB
 import os
 from dotenv import load_dotenv
+from loguru import logger
+
+logger.add('pravo_help.log.json', format='{time} | {name} | {level} | {message}', level='INFO', rotation='1 month',
+           compression='zip',
+           serialize=True)
+
+logger.info('Start polling: Pravo_help Bot')
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
 if os.path.exists(dotenv_path):
