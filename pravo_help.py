@@ -40,7 +40,9 @@ is_cadastre_object = False
 
 # Приветствие
 def start(bot, update):
-    print(update)
+    logger.info(
+        f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     if not update.message['chat']['username']:
         update.message.reply_text('''
 <b>Пожалуйста, установите username в профиле.</b>
@@ -56,12 +58,16 @@ def start(bot, update):
 
 # Раздел "Оплата"
 def payment(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Выберите способ оплаты</b>', reply_markup=create_payment_pravo_help_keyboard(),
                               parse_mode='HTML')
 
 
 # Раздел "Оплата" (Выставить счёт (юр. лицо))
 def juristic_person(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_juristic
     is_juristic = True
     update.message.reply_text('<b>Напишите свой ИНН (ОГРН)</b>', reply_markup=create_menu_keyboard(),
@@ -70,6 +76,8 @@ def juristic_person(bot, update):
 
 # Раздел "Оплата" (Оплата картой (физ. лицо))
 def natural_person(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Переходим к "РобоКассе"</b>', reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
     update.message.reply_text(
@@ -80,12 +88,16 @@ def natural_person(bot, update):
 
 # Раздел "Услуги"
 def service(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Выберите тип услуги</b>', reply_markup=create_service_pravo_help_keyboard(),
                               parse_mode='HTML')
 
 
 # Раздел "Кадастровый объект"
 def cadastral_objects(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_cadastre_object
     is_cadastre_object = True
     update.message.reply_text('<b>Введите кадастровый номер объекта</b>', reply_markup=create_menu_keyboard(),
@@ -94,6 +106,8 @@ def cadastral_objects(bot, update):
 
 # Раздел "Консультация"
 def consultation(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_consultation
     is_consultation = True
     update.message.reply_text(
@@ -104,8 +118,9 @@ def consultation(bot, update):
 
 # Глобальная функция
 def global_function(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_juristic, is_consultation, is_cadastre_object
-    print(update)
 
     if is_consultation:
         is_consultation = False
