@@ -3,7 +3,7 @@ venv
 __pycache__
 *.env
 *.db
-1.py
+folder_for_tests
 cad_reports
 kpz_files
 logs
