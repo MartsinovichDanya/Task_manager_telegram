@@ -21,6 +21,13 @@ from commands import get_cadastre_report
 from exceptions import UserNotFound, UserAlreadyExist, ProjectNotFound, ProjectAlreadyExist
 import os
 from dotenv import load_dotenv
+from loguru import logger
+
+logger.add('task_manager.log.json', format='{time} | {name} | {level} | {message}', level='INFO', rotation='1 month',
+           compression='zip',
+           serialize=True)
+
+logger.info('Start polling: Task Manager Bot')
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'Task_manager_telegram.env')
 if os.path.exists(dotenv_path):
@@ -62,6 +69,8 @@ cad_report_id = 0
 
 # Приветствие
 def start(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global is_proj_add_task, is_proj_delete_task, is_report_proj, is_report_employee
     global is_report, is_task_selected, is_time_selected, is_select_cad_report, is_cad_report_assign_employee
@@ -89,7 +98,6 @@ def start(bot, update):
 
     um = UserModel(db.get_connection())
     tg_id = update.message.from_user.id
-    print(update.message['chat']['username'])
     # Левый чувак
     if not um.get(tg_id):
         update.message.reply_text(f'<b>Вас нет в нашей базе данных.\nВаш ID: {tg_id}</b>',
@@ -107,11 +115,15 @@ def start(bot, update):
 
 # Раздел "Отчёты"
 def back_to_report(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<i><b>Выберите тип отчёта</b></i>', reply_markup=create_report_employee_boss_keyboard(),
                               parse_mode='HTML')
 
 
 def report(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_report
     is_report = True
 
@@ -123,6 +135,8 @@ def report(bot, update):
 
 
 def project_report(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_report_proj
     is_report_proj = True
     update.message.reply_text('<b>Раздел "Отчёты по Проектам"</b>',
@@ -131,6 +145,8 @@ def project_report(bot, update):
 
 
 def employee_report(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_report_employee
     is_report_employee = True
     update.message.reply_text('<b>Раздел "Отчёты по Сотрудникам"</b>', reply_markup=create_employee_boss_keyboard(db),
@@ -138,6 +154,8 @@ def employee_report(bot, update):
 
 
 def task_report(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Раздел "Отчёты по Задачам"</b>', reply_markup=create_report_task_boss_keyboard(),
                               parse_mode='HTML')
     all_task_report(update, l_d, r_d)
@@ -145,28 +163,38 @@ def task_report(bot, update):
 
 # Главное меню
 def project_options(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Раздел "Проекты"</b>', reply_markup=create_project_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
 def employee_options(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Раздел "Сотрудники"</b>', reply_markup=create_employee_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
 def task_options(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Раздел "Задачи"</b>', reply_markup=create_task_options_boss_keyboard(),
                               parse_mode='HTML')
 
 
 # Выбор проекта/сотрудника
 def select_project(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Выберите проект из предложенного списка</b>',
                               reply_markup=create_projects_boss_keyboard(db),
                               parse_mode='HTML')
 
 
 def select_employee(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<b>Выберите сотрудника из предложенного списка</b>',
                               reply_markup=create_employee_boss_keyboard(db),
                               parse_mode='HTML')
@@ -174,6 +202,8 @@ def select_employee(bot, update):
 
 # Просмотр
 def project_preview(update, project):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
@@ -190,6 +220,8 @@ def project_preview(update, project):
 
 
 def employee_preview(update, employee):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
@@ -206,6 +238,8 @@ def employee_preview(update, employee):
 
 
 def task_preview(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     tm = TaskModel(db.get_connection())
     em = EmployeeModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
@@ -223,6 +257,8 @@ def task_preview(bot, update):
 
 # Проекты
 def write_add_project(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_add_project
     is_add_project = True
     update.message.reply_text(
@@ -232,6 +268,8 @@ def write_add_project(bot, update):
 
 
 def write_delete_project(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_delete_project
     is_delete_project = True
     update.message.reply_text('<i><b>Напишите название проекта, который Вы хотели бы удалить</b></i>',
@@ -241,6 +279,8 @@ def write_delete_project(bot, update):
 
 # Задачи
 def write_add_task(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_add_task
     is_add_task = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
@@ -252,6 +292,8 @@ def write_add_task(bot, update):
 
 
 def write_delete_task(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_delete_task
     is_delete_task = True
     update.message.reply_text('<i><b>Напишите название проекта и название задачи</b></i>',
@@ -261,6 +303,8 @@ def write_delete_task(bot, update):
 
 # Задачи в проекте
 def write_proj_add_task(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_proj_add_task, is_add_task
     is_proj_add_task, is_add_task = True, True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
@@ -272,6 +316,8 @@ def write_proj_add_task(bot, update):
 
 
 def write_proj_delete_task(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_proj_delete_task, is_delete_task
     is_proj_delete_task, is_delete_task = True, True
     update.message.reply_text('<i><b>Напишите название задачи, которую Вы хотели бы удалить в данном проекте</b></i>',
@@ -281,6 +327,8 @@ def write_proj_delete_task(bot, update):
 
 # Сотрудники
 def write_add_employee(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_add_employee
     is_add_employee = True
     update.message.reply_text('<i><b>Используйте ";" для разделения требуемых параметров</b></i>',
@@ -292,6 +340,8 @@ def write_add_employee(bot, update):
 
 
 def write_delete_employee(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_delete_employee
     is_delete_employee = True
     update.message.reply_text('<i><b>Напишите имя сотрудника, которого Вы хотели бы удалить</b></i>',
@@ -301,6 +351,8 @@ def write_delete_employee(bot, update):
 
 # Глобальная функция
 def global_function(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     # Отправляем http запрос
     global is_add_project, is_add_task, is_add_employee, is_delete_project, is_delete_task, is_delete_employee
     global projects_list, employee_list
@@ -485,8 +537,10 @@ def global_function(bot, update):
 <b>Комментарий : </b>{comment}''', parse_mode='HTML')
 
 
-# Часть сотрудника нахрен
+# Часть сотрудника
 def select_done_task(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_task_selected
     is_task_selected = True
 
@@ -496,6 +550,8 @@ def select_done_task(bot, update):
 
 
 def employee_task_preview(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     tm = TaskModel(db.get_connection())
     pm = ProjectModel(db.get_connection())
     tasks = (task for task in tm.get_by_emp(update.message.from_user.id) if not task[5])
@@ -511,6 +567,8 @@ def employee_task_preview(bot, update):
 
 
 def employee_cadastral_objects_preview(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_employee_select_cad_report
     is_employee_select_cad_report = True
 
@@ -532,6 +590,8 @@ def employee_cadastral_objects_preview(bot, update):
 
 
 def employee_write_cadastral_comment(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_comment_cad_report
     is_comment_cad_report = True
     update.message.reply_text('<i><b>Напишите по выбранному отчёту комментарий длиной до 4096 символов</b></i>',
@@ -539,8 +599,10 @@ def employee_write_cadastral_comment(bot, update):
                               parse_mode='HTML')
 
 
-# КЫ ПЫ ЗЫ нахрен блын
+# КПЗ
 def kpz(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<i><b>Выберите раздел</b></i>',
                               reply_markup=create_kpz_boss_keyboard(),
                               parse_mode='HTML')
@@ -548,6 +610,8 @@ def kpz(bot, update):
 
 # Просмотр ИНН
 def kpz_inn_preview(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<i><b>Здесь выводятся ИНН</b></i>',
                               reply_markup=create_menu_keyboard(),
                               parse_mode='HTML')
@@ -563,6 +627,8 @@ def kpz_inn_preview(bot, update):
 
 # Просмотр юр. вопросов
 def kpz_juristic_questions(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<i><b>Здесь выводятся юр. вопросы</b></i>',
                               parse_mode='HTML')
 
@@ -581,11 +647,13 @@ def kpz_juristic_questions(bot, update):
             update.message.reply_document(tg_doc, filename=new_file_name,
                                           reply_markup=create_menu_keyboard())
         except Exception as e:
-            print('kpz_juristic_questions', e)
+            logger.error(f'kpz_juristic_questions(): {e}')
 
 
 # Просмотр Кадастровых Объектов
 def kpz_cadastral_object_preview(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_select_cad_report
     is_select_cad_report = True
 
@@ -607,6 +675,8 @@ def kpz_cadastral_object_preview(bot, update):
 
 # Опции Кадастровых Объектов
 def kpz_cadastral_object_options(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     update.message.reply_text('<i><b>Выберите действие</b></i>',
                               reply_markup=create_cadastral_options_boss_keyboard(),
                               parse_mode='HTML')
@@ -614,6 +684,8 @@ def kpz_cadastral_object_options(bot, update):
 
 # Удаление Кадастрового Объекта
 def kpz_delete_cadastral_object(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     rm = ReportModel(rdb.get_connection())
 
     report_file_name = rm.get(cad_report_id)[1]
@@ -628,6 +700,8 @@ def kpz_delete_cadastral_object(bot, update):
 
 # Назначение Кадастрового Объекта Сотруднику
 def kpz_share_cadastral_object(bot, update):
+    logger.info(f'{update.message["chat"]["id"]} ({update.message["chat"]["username"]} - {update.message["chat"]["first_name"]} {update.message["chat"]["last_name"]}) | "{update.message.text}"')
+
     global is_cad_report_assign_employee
     is_cad_report_assign_employee = True
     update.message.reply_text('<i><b>Выберите сотрудника</b></i>',
