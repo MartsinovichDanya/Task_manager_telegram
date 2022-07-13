@@ -23,7 +23,7 @@ import os
 from dotenv import load_dotenv
 from loguru import logger
 
-logger.add('task_manager.log.json', format='{time} | {name} | {level} | {message}', level='INFO', rotation='1 month',
+logger.add('logs/task_manager.log.json', format='{time} | {name} | {level} | {message}', level='INFO', rotation='1 month',
            compression='zip',
            serialize=True)
 
